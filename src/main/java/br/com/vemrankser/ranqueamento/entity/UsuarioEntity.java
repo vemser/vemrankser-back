@@ -1,13 +1,13 @@
 package br.com.vemrankser.ranqueamento.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.Set;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -17,15 +17,21 @@ import javax.persistence.Id;
 public class UsuarioEntity {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "USUARIO_SEQUENCIA")
+    @SequenceGenerator(name = "USUARIO_SEQUENCIA", sequenceName = "SEQ_USUARIO", allocationSize = 1)
+    @Column(name = "id_usuario")
     private Integer idUsuario;
 
-    private Integer idTrilha;
+    @Column(name = "foto")
+    private Byte[] foto;
 
+    @Column(name = "nome")
     private String nome;
 
+    @Column(name = "login")
     private String login;
 
-    @Column(name = email)
+    @Column(name = "email")
     private String email;
 
     @Column(name = "senha")
@@ -45,5 +51,14 @@ public class UsuarioEntity {
 
     @Column(name = "especialidade")
     private String especialidade;
+
+    @JsonIgnore
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "USUARIO_CARGO",
+            joinColumns = @JoinColumn(name = "ID_USUARIO"),
+            inverseJoinColumns = @JoinColumn(name = "ID_CARGO")
+    )
+    private Set<CargoEntity> cargos;
 
 }
