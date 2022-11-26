@@ -14,7 +14,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Getter
 @Setter
-@Entity
+@Entity(name = "COMENTARIO")
 public class ComentarioEntity {
 
     @Id
@@ -27,11 +27,7 @@ public class ComentarioEntity {
     private String comentario;
 
     @JsonIgnore
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "COMENTARIO_ATIVIDADE",
-            joinColumns = @JoinColumn(name = "id_comentario"),
-            inverseJoinColumns = @JoinColumn(name = "id_atividade")
-    )
-    private Set<AtividadeEntity> atividades = new HashSet<>();
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_atividade", referencedColumnName = "id_atividade")
+    private AtividadeEntity atividade;
 }

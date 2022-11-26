@@ -8,7 +8,6 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -16,7 +15,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Getter
 @Setter
-@Entity
+@Entity(name = "ATIVIDADE")
 public class AtividadeEntity {
 
     @Id
@@ -50,11 +49,6 @@ public class AtividadeEntity {
     private Integer statusAtividade;
 
     @JsonIgnore
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "COMENTARIO_ATIVIDADE",
-            joinColumns = @JoinColumn(name = "id_atividade"),
-            inverseJoinColumns = @JoinColumn(name = "id_comentario")
-    )
+    @OneToMany(mappedBy = "comentario", fetch = FetchType.LAZY)
     private Set<ComentarioEntity> comentarios = new HashSet<>();
 }
