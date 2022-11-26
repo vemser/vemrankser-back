@@ -1,5 +1,5 @@
 package br.com.vemrankser.ranqueamento.dto;
 
-public class UsuarioCreateDTO {
+public class AlunoCreateDTO {
 
 }
