@@ -25,6 +25,7 @@ public class UsuarioEntity {
 
     private String login;
 
+    @Column(name = email)
     private String email;
 
     @Column(name = "senha")
