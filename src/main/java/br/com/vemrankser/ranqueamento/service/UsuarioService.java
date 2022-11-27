@@ -12,6 +12,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -37,9 +38,16 @@ public class UsuarioService {
         return usuarioRepository.findByEmail(email);
     }
 
-    public PageDTO<UsuarioDTO> listarUsuarios(Integer pagina, Integer tamanho) {
-        PageRequest pageRequest = PageRequest.of(pagina, tamanho);
-        Page<UsuarioEntity> allAlunos = usuarioRepository.findAll(pageRequest);
+    public UsuarioDTO findByNome(String nome) throws RegraDeNegocioException {
+        UsuarioEntity usuarioEntity = usuarioRepository.findByNomeContainingIgnoreCase(nome)
+                .orElseThrow(() -> new RegraDeNegocioException("Nome não encontrado!"));
+        return objectMapper.convertValue(usuarioEntity, UsuarioDTO.class);
+    }
+
+    public PageDTO<UsuarioDTO> listarUsuarios(Integer pagina, Integer tamanho, String sort, String nome) {
+        Sort ordenacao = Sort.by(sort.toLowerCase());
+        PageRequest pageRequest = PageRequest.of(pagina, tamanho, ordenacao);
+        Page<UsuarioEntity> allAlunos = usuarioRepository.findByNomeIgnoreCaseContaining(nome, pageRequest);
 
         List<UsuarioDTO> usuarioDTOS = allAlunos.getContent().stream()
                 .map(usuarioEntity -> objectMapper.convertValue(usuarioEntity, UsuarioDTO.class))

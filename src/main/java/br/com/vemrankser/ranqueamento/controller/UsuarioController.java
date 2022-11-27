@@ -50,8 +50,8 @@ public class UsuarioController {
             }
     )
     @PostMapping("/cadastro")
-    public ResponseEntity<UsuarioDTO> cadastrar(@Valid @RequestBody UsuarioCreateDTO usuario,TipoPerfil tipoPerfil) throws RegraDeNegocioException, RegraDeNegocioException {
-        return new ResponseEntity<>(usuarioService.cadastrar(usuario,tipoPerfil), HttpStatus.CREATED);
+    public ResponseEntity<UsuarioDTO> cadastrar(@Valid @RequestBody UsuarioCreateDTO usuario, TipoPerfil tipoPerfil) throws RegraDeNegocioException, RegraDeNegocioException {
+        return new ResponseEntity<>(usuarioService.cadastrar(usuario, tipoPerfil), HttpStatus.CREATED);
     }
 
     @Operation(summary = "Atualizar conta do usuário", description = "Atualizar sua conta do aplicativo")
@@ -77,8 +77,22 @@ public class UsuarioController {
             }
     )
     @GetMapping("/lista-usuarios")
-    public ResponseEntity<PageDTO<UsuarioDTO>> listUsuarios(Integer pagina, Integer tamanho) {
-        return new ResponseEntity<>(usuarioService.listarUsuarios(pagina, tamanho), HttpStatus.OK);
+    public ResponseEntity<PageDTO<UsuarioDTO>> listUsuarios(Integer pagina, Integer tamanho, String sort, String nome) {
+        return new ResponseEntity<>(usuarioService.listarUsuarios(pagina, tamanho, sort, nome), HttpStatus.OK);
+    }
+
+
+    @Operation(summary = "Pega a um usuário pelo nome", description = "Resgata um usuário pelo nome do banco de dados")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "Foi resgatado com sucesso"),
+                    @ApiResponse(responseCode = "404", description = "Não encontrado"),
+                    @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção")
+            }
+    )
+    @GetMapping("/find-nome")
+    public ResponseEntity<UsuarioDTO> findByNome(String nome) throws RegraDeNegocioException {
+        return new ResponseEntity<>(usuarioService.findByNome(nome), HttpStatus.OK);
     }
 
 
