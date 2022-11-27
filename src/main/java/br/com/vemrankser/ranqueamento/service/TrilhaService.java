@@ -10,7 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -26,6 +26,19 @@ public class TrilhaService {
         trilhaRepository.save(trilha);
         TrilhaDTO trilhaDTO = objectMapper.convertValue(trilha, TrilhaDTO.class);
         return trilhaDTO;
-
     }
+
+    private List<TrilhaDTO> listarTrilha() {
+        return trilhaRepository.findAll()
+                .stream()
+                .map(trilha -> objectMapper.convertValue(trilha, TrilhaDTO.class))
+                .toList();
+    }
+
+    public TrilhaEntity buscarPorIdTrilha(Integer idTrilha) throws RegraDeNegocioException {
+        return trilhaRepository.findById(idTrilha)
+                .orElseThrow(() -> new RegraDeNegocioException("Trilha não encontrada."));
+    }
+
+
 }
