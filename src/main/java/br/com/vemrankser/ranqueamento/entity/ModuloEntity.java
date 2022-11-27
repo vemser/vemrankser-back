@@ -1,5 +1,6 @@
 package br.com.vemrankser.ranqueamento.entity;
 
+import br.com.vemrankser.ranqueamento.enums.StatusModulo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -34,7 +35,7 @@ public class ModuloEntity {
     private LocalDateTime dataFim;
 
     @Column(name = "status_modulo")
-    private Integer statusModulo;
+    private StatusModulo statusModulo;
 
     @JsonIgnore
     @ManyToMany(fetch = FetchType.LAZY)
