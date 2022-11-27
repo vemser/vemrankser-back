@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+
 @RequiredArgsConstructor
 @Slf4j
 @Service
@@ -19,7 +21,7 @@ public class TrilhaService {
 
     private final ObjectMapper objectMapper;
 
-    public TrilhaDTO create(TrilhaCreateDTO trilhaNova) throws RegraDeNegocioException {
+    public TrilhaDTO adiocionar(TrilhaCreateDTO trilhaNova) throws RegraDeNegocioException {
         TrilhaEntity trilha = objectMapper.convertValue(trilhaNova, TrilhaEntity.class);
         trilhaRepository.save(trilha);
         TrilhaDTO trilhaDTO = objectMapper.convertValue(trilha, TrilhaDTO.class);

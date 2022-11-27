@@ -27,19 +27,19 @@ import javax.validation.Valid;
 public class TrilhaController {
 
     private final TrilhaService trilhaService;
-    @Operation(summary = "Cadastro de Trilha", description = "Cadastrar Trilha para os módulos")
+    @Operation(summary = "Adicionar Trilha", description = "Adicionar uma nova trilha ")
     @ApiResponses(
             value = {
-                    @ApiResponse(responseCode = "200", description = "Cadastro de Trilha realizado com sucesso"),
+                    @ApiResponse(responseCode = "200", description = "Trilha adicionada com sucesso"),
                     @ApiResponse(responseCode = "403", description = "Você não tem permissão para acessar este recurso"),
                     @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção")
             }
     )
     @PostMapping
-    public ResponseEntity<TrilhaDTO> create(@RequestBody @Valid TrilhaCreateDTO trilhaCreateDTO) throws RegraDeNegocioException {
+    public ResponseEntity<TrilhaDTO> adiocionar(@RequestBody @Valid TrilhaCreateDTO trilhaCreateDTO) throws RegraDeNegocioException {
         log.info("Criando Trilha...");
-        TrilhaDTO e = trilhaService.create(trilhaCreateDTO);
+        TrilhaDTO trilhaDTO = trilhaService.adiocionar(trilhaCreateDTO);
         log.info("Trilha Criada com sucesso!!");
-        return new ResponseEntity<>(e, HttpStatus.OK);
+        return new ResponseEntity<>(trilhaDTO, HttpStatus.OK);
     }
 }

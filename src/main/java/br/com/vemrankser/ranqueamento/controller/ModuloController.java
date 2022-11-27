@@ -27,19 +27,19 @@ public class ModuloController {
 
     private final ModuloService moduloService;
 
-    @Operation(summary = "Cadastro de Modulo", description = "Cadastrar modulos")
+    @Operation(summary = "Adicionar novo Modulo", description = "Adicionar novos modulos")
     @ApiResponses(
             value = {
-                    @ApiResponse(responseCode = "200", description = "Cadastro de modulo realizado com sucesso"),
+                    @ApiResponse(responseCode = "200", description = "Modulo adicionado com sucesso"),
                     @ApiResponse(responseCode = "403", description = "Você não tem permissão para acessar este recurso"),
                     @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção")
             }
     )
-    @PostMapping("/cadastrar-modulo")
-    public ResponseEntity<ModuloDTO> create(@RequestBody @Valid ModuloCreateDTO modulo) {
+    @PostMapping("/adicionar-modulo")
+    public ResponseEntity<ModuloDTO> adicionar(@RequestBody @Valid ModuloCreateDTO modulo) {
         log.info("Criando modulo....");
-        ModuloDTO moduloDTO = moduloService.create(modulo);
-        log.info("Criando modulo....");
+        ModuloDTO moduloDTO = moduloService.adicionar(modulo);
+        log.info("Modulo Criado com sucesso....");
         return new ResponseEntity<>(moduloDTO, HttpStatus.OK);
     }
 }

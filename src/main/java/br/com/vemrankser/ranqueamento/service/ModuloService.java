@@ -11,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+
 @RequiredArgsConstructor
 @Slf4j
 @Service
@@ -20,7 +22,7 @@ public class ModuloService {
     private final ObjectMapper objectMapper;
 
 
-    public ModuloDTO create(ModuloCreateDTO modulo) {
+    public ModuloDTO adicionar(ModuloCreateDTO modulo) {
         ModuloEntity moduloEntityNovo = objectMapper.convertValue(modulo, ModuloEntity.class);
         moduloEntityNovo.setStatusModulo(StatusModulo.S);
         moduloRepository.save(moduloEntityNovo);
