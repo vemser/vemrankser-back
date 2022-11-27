@@ -26,7 +26,6 @@ public class TrilhaService {
         trilhaRepository.save(trilha);
         TrilhaDTO trilhaDTO = objectMapper.convertValue(trilha, TrilhaDTO.class);
         return trilhaDTO;
-
     }
 
     private List<TrilhaDTO> listarTrilha() {
