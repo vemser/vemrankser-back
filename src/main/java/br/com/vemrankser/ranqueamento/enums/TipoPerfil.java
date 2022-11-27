@@ -10,7 +10,7 @@ public enum TipoPerfil {
         this.tipoPerfil = role;
     }
 
-    public int getCargo() {
+    public Integer getCargo() {
         return tipoPerfil;
     }
 }
