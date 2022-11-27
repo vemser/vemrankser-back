@@ -42,9 +42,9 @@ public class UsuarioEntity implements UserDetails {
 
     @Column(name = "status")
     private Integer statusUsuario;
-
-    @Column(name = "tipo_perfil")
-    private Integer tipoPerfil;
+//
+//    @Column(name = "tipo_perfil")
+//    private Integer tipoPerfil;
 
     @Column(name = "cidade")
     private String cidade;
@@ -63,6 +63,15 @@ public class UsuarioEntity implements UserDetails {
             inverseJoinColumns = @JoinColumn(name = "ID_CARGO")
     )
     private Set<CargoEntity> cargos;
+
+    @JsonIgnore
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "TRILHA_USUARIO",
+            joinColumns = @JoinColumn(name = "ID_USUARIO"),
+            inverseJoinColumns = @JoinColumn(name = "ID_TRILHA")
+    )
+    private Set<TrilhaEntity> trilhas;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

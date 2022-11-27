@@ -4,6 +4,7 @@ import br.com.vemrankser.ranqueamento.dto.LoginDTO;
 import br.com.vemrankser.ranqueamento.dto.PageDTO;
 import br.com.vemrankser.ranqueamento.dto.UsuarioCreateDTO;
 import br.com.vemrankser.ranqueamento.dto.UsuarioDTO;
+import br.com.vemrankser.ranqueamento.enums.TipoPerfil;
 import br.com.vemrankser.ranqueamento.exceptions.RegraDeNegocioException;
 import br.com.vemrankser.ranqueamento.service.AuthService;
 import br.com.vemrankser.ranqueamento.service.UsuarioService;
@@ -49,8 +50,8 @@ public class UsuarioController {
             }
     )
     @PostMapping("/cadastro")
-    public ResponseEntity<UsuarioDTO> cadastrar(@Valid @RequestBody UsuarioCreateDTO usuario) throws RegraDeNegocioException, RegraDeNegocioException {
-        return new ResponseEntity<>(usuarioService.cadastrar(usuario), HttpStatus.CREATED);
+    public ResponseEntity<UsuarioDTO> cadastrar(@Valid @RequestBody UsuarioCreateDTO usuario,TipoPerfil tipoPerfil) throws RegraDeNegocioException, RegraDeNegocioException {
+        return new ResponseEntity<>(usuarioService.cadastrar(usuario,tipoPerfil), HttpStatus.CREATED);
     }
 
     @Operation(summary = "Atualizar conta do usuário", description = "Atualizar sua conta do aplicativo")

@@ -1,11 +1,11 @@
 package br.com.vemrankser.ranqueamento.service;
 
-import br.com.vemrankser.ranqueamento.dto.UsuarioDTO;
 import br.com.vemrankser.ranqueamento.dto.PageDTO;
 import br.com.vemrankser.ranqueamento.dto.UsuarioCreateDTO;
+import br.com.vemrankser.ranqueamento.dto.UsuarioDTO;
 import br.com.vemrankser.ranqueamento.entity.CargoEntity;
-import br.com.vemrankser.ranqueamento.enums.TipoPerfil;
 import br.com.vemrankser.ranqueamento.entity.UsuarioEntity;
+import br.com.vemrankser.ranqueamento.enums.TipoPerfil;
 import br.com.vemrankser.ranqueamento.exceptions.RegraDeNegocioException;
 import br.com.vemrankser.ranqueamento.repository.UsuarioRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -52,14 +52,14 @@ public class UsuarioService {
                 usuarioDTOS);
     }
 
-    public UsuarioDTO cadastrar(UsuarioCreateDTO usuario) throws RegraDeNegocioException {
+    public UsuarioDTO cadastrar(UsuarioCreateDTO usuario, TipoPerfil tipoPerfil) throws RegraDeNegocioException {
         String senhaCriptografada = passwordEncoder.encode(usuario.getSenha());
         UsuarioEntity usuarioEntity = objectMapper.convertValue(usuario, UsuarioEntity.class);
-        CargoEntity cargo = cargoService.findById(TipoPerfil.ALUNO.getCargo());
+        CargoEntity cargo = cargoService.findById(tipoPerfil.getCargo());
         usuarioEntity.setCargos(Set.of(cargo));
         usuarioEntity.setStatusUsuario(USUARIO_ATIVO);
         usuarioEntity.setSenha(senhaCriptografada);
-        usuarioEntity.setTipoPerfil(TipoPerfil.ALUNO.getCargo());
+        // usuarioEntity.setTipoPerfil(TipoPerfil.ALUNO.getCargo());
 
         return objectMapper.convertValue(usuarioRepository.save(usuarioEntity), UsuarioDTO.class);
     }
@@ -80,7 +80,8 @@ public class UsuarioService {
         usuarioEncontrado.setSenha(passwordEncoder.encode(usuarioAtualizar.getSenha()));
         usuarioEncontrado.setStatusUsuario(usuarioAtualizar.getStatusUsuario());
         usuarioEncontrado.setAtuacao(usuarioEncontrado.getAtuacao());
-        usuarioEncontrado.setTipoPerfil(usuarioEncontrado.getTipoPerfil());
+
+        //  usuarioEncontrado.setTipoPerfil(usuarioEncontrado.getTipoPerfil());
 
         usuarioRepository.save(usuarioEncontrado);
 
