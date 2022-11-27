@@ -11,7 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -29,5 +29,17 @@ public class ModuloService {
         ModuloDTO moduloDTO = objectMapper.convertValue(moduloEntityNovo, ModuloDTO.class);
         return moduloDTO;
 
+    }
+
+    public ModuloEntity buscarPorIdModulo(Integer idModulo) throws RegraDeNegocioException {
+        return moduloRepository.findById(idModulo)
+                .orElseThrow(() -> new RegraDeNegocioException("Modulo não encontrado."));
+    }
+
+    private List<ModuloDTO> listarModulo() {
+        return moduloRepository.findAll()
+                .stream()
+                .map(modulo -> objectMapper.convertValue(modulo, ModuloDTO.class))
+                .toList();
     }
 }
