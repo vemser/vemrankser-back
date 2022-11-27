@@ -46,6 +46,10 @@ public class ModuloEntity {
             inverseJoinColumns = @JoinColumn(name = "id_trilha")
     )
     private Set<TrilhaEntity> trilhas = new HashSet<>();
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "atividade", fetch = FetchType.LAZY)
+    private Set<AtividadeEntity> atividades  = new HashSet<>();
 }
 
 

@@ -19,7 +19,7 @@ import java.util.List;
 public class AtividadeService {
 
     private final AtividadeRepository atividadeRepository;
-
+    private final ModuloService moduloService;
     private final ObjectMapper objectMapper;
 
 
@@ -52,8 +52,11 @@ public class AtividadeService {
                 .toList();
     }
 
+
     public AtividadeEntity buscarPorIdAtividade(Integer idAtividade) throws RegraDeNegocioException {
         return atividadeRepository.findById(idAtividade)
                 .orElseThrow(() -> new RegraDeNegocioException("Atividade não encontrada."));
     }
+
+
 }

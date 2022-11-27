@@ -51,4 +51,10 @@ public class AtividadeEntity {
     @JsonIgnore
     @OneToMany(mappedBy = "comentario", fetch = FetchType.LAZY)
     private Set<ComentarioEntity> comentarios = new HashSet<>();
+
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_modulo", referencedColumnName = "id_modulo")
+    private ModuloEntity modulo;
+
 }
