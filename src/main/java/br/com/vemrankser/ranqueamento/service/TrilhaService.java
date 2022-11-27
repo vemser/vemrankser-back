@@ -14,9 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -38,16 +36,14 @@ public class TrilhaService {
     public TrilhaDTO adicionarAlunoTrilha(Integer idTrilha, Integer idAluno) throws RegraDeNegocioException {
         UsuarioEntity alunoEncontrado = usuarioService.findById(idAluno);
         TrilhaEntity trilhaEntity = buscarPorIdTrilha(idTrilha);
-        Set<UsuarioEntity> usuarioEntitySet = new HashSet<>();
-        usuarioEntitySet.add(alunoEncontrado);
-        trilhaEntity.setUsuarios(usuarioEntitySet);
+        trilhaEntity.getUsuarios().add(alunoEncontrado);
         trilhaRepository.save(trilhaEntity);
         return objectMapper.convertValue(trilhaEntity, TrilhaDTO.class);
     }
 
     public PageDTO<TrilhaDTO> listarUsuariosNaTrilha(Integer pagina, Integer tamanho, String nome) {
         PageRequest pageRequest = PageRequest.of(pagina, tamanho);
-        Page<TrilhaEntity> allAlunos = trilhaRepository.findByNome(nome, pageRequest);
+        Page<TrilhaEntity> allAlunos = trilhaRepository.findAllByNomeContaining(nome, pageRequest);
 
         List<TrilhaDTO> trilhaDTOS = allAlunos.getContent().stream()
                 .map(trilha -> objectMapper.convertValue(trilha, TrilhaDTO.class))
