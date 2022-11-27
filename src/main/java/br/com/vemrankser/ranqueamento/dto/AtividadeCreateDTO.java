@@ -3,9 +3,7 @@ package br.com.vemrankser.ranqueamento.dto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
-import javax.validation.constraints.FutureOrPresent;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.*;
 import java.time.LocalDateTime;
 
 @Data
@@ -23,6 +21,7 @@ public class AtividadeCreateDTO {
     @Schema(description = "Peso da atividade", example = "2")
     private Integer pesoAtividade;
 
+    @FutureOrPresent
     @Schema(description = "Data de início da atividade", example = "15/02/2023")
     private LocalDateTime dataCriacao;
 
@@ -30,15 +29,8 @@ public class AtividadeCreateDTO {
     @Schema(description = "Data final para entrega da atividade", example = "16/02/2023")
     private LocalDateTime dataEntrega;
 
-    @Schema(description = "Pontução da atividade", example = "90")
-    private Integer pontuacao;
-
     @Schema(description = "Envio de link para correção", example = "www.github.com")
     private String link;
-
-    @NotNull
-    @Schema(description = "Atividade ativada ou desativada", example = "ATIVO")
-    private Integer statusAtividade;
 
     @Schema(description = "Instrutor", example = "Rafael Lazari")
     private String nomeInstrutor;
