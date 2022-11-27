@@ -36,15 +36,15 @@ public class AtividadeController {
                     @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção")
             }
     )
-    @PostMapping
-    public ResponseEntity<AtividadeCreateDTO> create(@RequestBody @Valid AtividadeCreateDTO atividadeCreateDTO) throws RegraDeNegocioException {
-
-        log.info("Criando nova atidade....");
-        AtividadeDTO atividadeDTO = atividadeService.adicionar(atividadeCreateDTO);
-        log.info("Atividade criada com sucesso!");
-
-        return new ResponseEntity<>(atividadeDTO, HttpStatus.OK);
-    }
+//    @PostMapping
+//    public ResponseEntity<AtividadeCreateDTO> create(@RequestBody @Valid AtividadeCreateDTO atividadeCreateDTO) throws RegraDeNegocioException {
+//
+//        log.info("Criando nova atidade....");
+////        AtividadeDTO atividadeDTO = atividadeService.adicionar(atividadeCreateDTO);
+//        log.info("Atividade criada com sucesso!");
+//
+//        return new ResponseEntity<>(atividadeDTO, HttpStatus.OK);
+//    }
 
 
     @GetMapping("/paginado")

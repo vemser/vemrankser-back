@@ -23,9 +23,10 @@ public class AtividadeService {
     private final ObjectMapper objectMapper;
 
 
-    public AtividadeDTO adicionar(AtividadeCreateDTO atividadeCreateDTO) throws RegraDeNegocioException {
+    public AtividadeDTO adicionar(AtividadeCreateDTO atividadeCreateDTO, Integer idModulo) throws RegraDeNegocioException {
+        moduloService.buscarPorIdModulo(idModulo);
         AtividadeEntity atividadeEntity = objectMapper.convertValue(atividadeCreateDTO, AtividadeEntity.class);
-//        atividadeEntity.setUsuario();
+//        atividadeEntity.setI
         atividadeRepository.save(atividadeEntity);
 
         return objectMapper.convertValue(atividadeEntity, AtividadeDTO.class);

@@ -24,6 +24,12 @@ public class AtividadeEntity {
     @Column(name = "id_atividade")
     private Integer idAtividade;
 
+    @Column(name = "id_comentario", insertable = false, updatable = false)
+    private Integer idComentario;
+
+    @Column(name = "id_modulo", insertable = false, updatable = false)
+    private Integer idModulo;
+
     @Column(name = "titulo")
     private String titulo;
 
