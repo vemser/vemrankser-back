@@ -32,10 +32,6 @@ public class AtividadeCreateDTO {
     @Schema(description = "Envio de link para correção", example = "www.github.com")
     private String link;
 
-    @NotNull
-    @Schema(description = "Atividade ativada ou desativada", example = "ATIVO")
-    private Integer statusAtividade;
-
     @Schema(description = "Instrutor", example = "Rafael Lazari")
     private String nomeInstrutor;
 }

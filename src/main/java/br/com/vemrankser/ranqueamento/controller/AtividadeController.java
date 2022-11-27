@@ -1,6 +1,11 @@
 package br.com.vemrankser.ranqueamento.controller;
 
-import br.com.vemrankser.ranqueamento.dto.*;
+import br.com.vemrankser.ranqueamento.dto.AtividadeAvaliarDTO;
+import br.com.vemrankser.ranqueamento.dto.AtividadeCreateDTO;
+import br.com.vemrankser.ranqueamento.dto.AtividadeDTO;
+import br.com.vemrankser.ranqueamento.dto.AtividadePaginacaoDTO;
+import br.com.vemrankser.ranqueamento.entity.AtividadeEntity;
+import br.com.vemrankser.ranqueamento.enums.AtividadeStatus;
 import br.com.vemrankser.ranqueamento.exceptions.RegraDeNegocioException;
 import br.com.vemrankser.ranqueamento.service.AtividadeService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -15,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @Validated
@@ -45,6 +51,14 @@ public class AtividadeController {
     }
 
 
+    @Operation(summary = "Listar atividade com paginação", description = "Listar atividade com paginação")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "Listar de atividade com paginação, êxito"),
+                    @ApiResponse(responseCode = "403", description = "Você não tem permissão para acessar este recurso"),
+                    @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção")
+            }
+    )
     @GetMapping("/listar-paginado")
     public ResponseEntity<AtividadePaginacaoDTO<AtividadeDTO>> listarAtividadePaginado(Integer pagina, Integer tamanho) throws RegraDeNegocioException {
         return ResponseEntity.ok(atividadeService.listarAtividades(pagina, tamanho));
@@ -62,5 +76,18 @@ public class AtividadeController {
     public ResponseEntity<AtividadeAvaliarDTO> avaliarAtividade(@PathVariable(name = "idAtividade") Integer idAtividade, @RequestBody AtividadeAvaliarDTO atividadeAvaliarDTO) throws RegraDeNegocioException {
         return new ResponseEntity<>(atividadeService.avaliarAtividade(atividadeAvaliarDTO, idAtividade), HttpStatus.OK);
 
+    }
+
+    @Operation(summary = "Listar atividade por status", description = "Listar atividade por status")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "201", description = "Listar atividade por status com sucesso"),
+                    @ApiResponse(responseCode = "403", description = "Você não tem permissão para acessar este recurso"),
+                    @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção")
+            }
+    )
+    @GetMapping("/listar-status")
+    public ResponseEntity<List<Optional<AtividadeEntity>>> listarAtibuscarAtividadePorStatusvidadePaginado(Integer atividadeStatus) throws RegraDeNegocioException {
+        return ResponseEntity.ok(atividadeService.buscarAtividadePorStatus(atividadeStatus));
     }
 }
