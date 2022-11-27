@@ -1,5 +1,6 @@
 package br.com.vemrankser.ranqueamento.service;
 
+import br.com.vemrankser.ranqueamento.dto.AtividadeAvaliarDTO;
 import br.com.vemrankser.ranqueamento.dto.AtividadeCreateDTO;
 import br.com.vemrankser.ranqueamento.dto.AtividadeDTO;
 import br.com.vemrankser.ranqueamento.dto.AtividadePaginacaoDTO;
@@ -27,6 +28,7 @@ public class AtividadeService {
     public AtividadeDTO adicionar(AtividadeCreateDTO atividadeCreateDTO, Integer idModulo) throws RegraDeNegocioException {
         ModuloEntity moduloEntity = moduloService.buscarPorIdModulo(idModulo);
         AtividadeEntity atividadeEntity = objectMapper.convertValue(atividadeCreateDTO, AtividadeEntity.class);
+
         atividadeEntity.setIdModulo(moduloEntity.getIdModulo());
         atividadeEntity.setModulo(moduloEntity);
         atividadeRepository.save(atividadeEntity);
@@ -48,11 +50,13 @@ public class AtividadeService {
         return new AtividadePaginacaoDTO<>(atividadeEntity.getTotalElements(), atividadeEntity.getTotalPages(), pagina, tamanho, atividadeDTOList);
     }
 
-    public List<AtividadeDTO> listarTodasAtividades() {
-        return atividadeRepository.findAll()
-                .stream()
-                .map(atividade -> objectMapper.convertValue(atividade, AtividadeDTO.class))
-                .toList();
+    public AtividadeAvaliarDTO avaliarAtividade(AtividadeAvaliarDTO atividadeAvaliarDTO, Integer idAtividade) throws RegraDeNegocioException {
+        AtividadeEntity atividadeAvaliacao = buscarPorIdAtividade(idAtividade);
+
+        atividadeAvaliacao.setPontuacao(atividadeAvaliarDTO.getPontuacao());
+        atividadeRepository.save(atividadeAvaliacao);
+
+        return objectMapper.convertValue(atividadeAvaliacao, AtividadeAvaliarDTO.class);
     }
 
 

@@ -1,8 +1,6 @@
 package br.com.vemrankser.ranqueamento.controller;
 
-import br.com.vemrankser.ranqueamento.dto.AtividadeCreateDTO;
-import br.com.vemrankser.ranqueamento.dto.AtividadeDTO;
-import br.com.vemrankser.ranqueamento.dto.AtividadePaginacaoDTO;
+import br.com.vemrankser.ranqueamento.dto.*;
 import br.com.vemrankser.ranqueamento.exceptions.RegraDeNegocioException;
 import br.com.vemrankser.ranqueamento.service.AtividadeService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -47,13 +45,22 @@ public class AtividadeController {
     }
 
 
-    @GetMapping("/paginado")
+    @GetMapping("/listar-paginado")
     public ResponseEntity<AtividadePaginacaoDTO<AtividadeDTO>> listarAtividadePaginado(Integer pagina, Integer tamanho) throws RegraDeNegocioException {
         return ResponseEntity.ok(atividadeService.listarAtividades(pagina, tamanho));
     }
 
-    @GetMapping
-    public ResponseEntity<List<AtividadeDTO>> list() throws RegraDeNegocioException {
-        return ResponseEntity.ok(atividadeService.listarTodasAtividades());
+    @Operation(summary = "Avaliar atividade do aluno", description = "Avaliar atividade do aluno")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "201", description = "Atividade avalida com sucesso"),
+                    @ApiResponse(responseCode = "403", description = "Você não tem permissão para acessar este recurso"),
+                    @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção")
+            }
+    )
+    @PutMapping("/avaliar/{idAtividade}")
+    public ResponseEntity<AtividadeAvaliarDTO> avaliarAtividade(@PathVariable(name = "idAtividade") Integer idAtividade, @RequestBody AtividadeAvaliarDTO atividadeAvaliarDTO) throws RegraDeNegocioException {
+        return new ResponseEntity<>(atividadeService.avaliarAtividade(atividadeAvaliarDTO, idAtividade), HttpStatus.OK);
+
     }
 }
