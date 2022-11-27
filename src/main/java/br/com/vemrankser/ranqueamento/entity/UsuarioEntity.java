@@ -26,7 +26,8 @@ public class UsuarioEntity implements UserDetails {
     private Integer idUsuario;
 
     @Column(name = "foto")
-    private Byte[] foto;
+    @Lob
+    private byte[] foto;
 
     @Column(name = "nome")
     private String nome;

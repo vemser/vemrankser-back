@@ -1,9 +1,6 @@
 package br.com.vemrankser.ranqueamento.controller;
 
-import br.com.vemrankser.ranqueamento.dto.LoginDTO;
-import br.com.vemrankser.ranqueamento.dto.PageDTO;
-import br.com.vemrankser.ranqueamento.dto.UsuarioCreateDTO;
-import br.com.vemrankser.ranqueamento.dto.UsuarioDTO;
+import br.com.vemrankser.ranqueamento.dto.*;
 import br.com.vemrankser.ranqueamento.enums.TipoPerfil;
 import br.com.vemrankser.ranqueamento.exceptions.RegraDeNegocioException;
 import br.com.vemrankser.ranqueamento.service.AuthService;
@@ -13,11 +10,14 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.io.IOException;
 
 @RestController
 @Validated
@@ -95,5 +95,32 @@ public class UsuarioController {
         return new ResponseEntity<>(usuarioService.findByNome(nome), HttpStatus.OK);
     }
 
+
+    @Operation(summary = "Coloca a foto no usuário", description = "Coloca a foto no usuário do banco de dados")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "Foi atualizado com sucesso"),
+                    @ApiResponse(responseCode = "404", description = "Não encontrado"),
+                    @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção")
+            }
+    )
+    @PutMapping(value = "/upload-imagem/{idUsuario}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<UsuarioDTO> uploadImagem(@RequestPart(value = "file") MultipartFile file, @PathVariable(value = "idUsuario") Integer idUsuario) throws RegraDeNegocioException, IOException {
+        return new ResponseEntity<>(usuarioService.uploadImagem(file, idUsuario), HttpStatus.OK);
+    }
+
+
+    @Operation(summary = "Pega foto do usuário", description = "Resgata a foto do usuário pelo nome do banco de dados")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "Foi resgatado com sucesso"),
+                    @ApiResponse(responseCode = "404", description = "Não encontrado"),
+                    @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção")
+            }
+    )
+    @GetMapping("/find-foto/{idUsuario}")
+    public ResponseEntity<UsuarioFotoDTO> pegarFotoUsuario(@PathVariable(name = "idUsuario") Integer idUsuario) throws RegraDeNegocioException {
+        return new ResponseEntity<>(usuarioService.pegarImagemUsuario(idUsuario), HttpStatus.OK);
+    }
 
 }

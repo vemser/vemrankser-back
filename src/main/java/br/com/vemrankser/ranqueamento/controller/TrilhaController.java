@@ -1,5 +1,6 @@
 package br.com.vemrankser.ranqueamento.controller;
 
+import br.com.vemrankser.ranqueamento.dto.PageDTO;
 import br.com.vemrankser.ranqueamento.dto.TrilhaCreateDTO;
 import br.com.vemrankser.ranqueamento.dto.TrilhaDTO;
 import br.com.vemrankser.ranqueamento.exceptions.RegraDeNegocioException;
@@ -12,10 +13,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -27,6 +25,7 @@ import javax.validation.Valid;
 public class TrilhaController {
 
     private final TrilhaService trilhaService;
+
     @Operation(summary = "Adicionar Trilha", description = "Adicionar uma nova trilha ")
     @ApiResponses(
             value = {
@@ -36,10 +35,37 @@ public class TrilhaController {
             }
     )
     @PostMapping
-    public ResponseEntity<TrilhaDTO> adiocionar(@RequestBody @Valid TrilhaCreateDTO trilhaCreateDTO) throws RegraDeNegocioException {
+    public ResponseEntity<TrilhaDTO> adicionarTrilha(@RequestBody @Valid TrilhaCreateDTO trilhaCreateDTO) throws RegraDeNegocioException {
         log.info("Criando Trilha...");
-        TrilhaDTO trilhaDTO = trilhaService.adiocionar(trilhaCreateDTO);
+        TrilhaDTO trilhaDTO = trilhaService.adicionar(trilhaCreateDTO);
         log.info("Trilha Criada com sucesso!!");
         return new ResponseEntity<>(trilhaDTO, HttpStatus.OK);
+    }
+
+    @Operation(summary = "Adicionar Trilha", description = "Adicionar uma nova trilha ")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "Trilha adicionada com sucesso"),
+                    @ApiResponse(responseCode = "403", description = "Você não tem permissão para acessar este recurso"),
+                    @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção")
+            }
+    )
+    @PostMapping("/adicionar-aluno/{idTrilha}/{idAluno}")
+    public ResponseEntity<TrilhaDTO> adicionarAluno(@PathVariable(name = "idTrilha") Integer idTrilha, @PathVariable(name = "idAluno") Integer idAluno) throws RegraDeNegocioException {
+        TrilhaDTO trilhaDTO = trilhaService.adicionarAlunoTrilha(idTrilha, idAluno);
+        return new ResponseEntity<>(trilhaDTO, HttpStatus.OK);
+    }
+
+    @Operation(summary = "Pega a lista de usuários na trilha", description = "Resgata a lista de usuários na trilha do banco de dados")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "Foi resgatado com sucesso"),
+                    @ApiResponse(responseCode = "404", description = "Não encontrado"),
+                    @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção")
+            }
+    )
+    @GetMapping("/lista-usuarios")
+    public ResponseEntity<PageDTO<TrilhaDTO>> listUsuarios(Integer pagina, Integer tamanho, String nome) {
+        return new ResponseEntity<>(trilhaService.listarUsuariosNaTrilha(pagina, tamanho, nome), HttpStatus.OK);
     }
 }

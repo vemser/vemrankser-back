@@ -3,6 +3,7 @@ package br.com.vemrankser.ranqueamento.service;
 import br.com.vemrankser.ranqueamento.dto.PageDTO;
 import br.com.vemrankser.ranqueamento.dto.UsuarioCreateDTO;
 import br.com.vemrankser.ranqueamento.dto.UsuarioDTO;
+import br.com.vemrankser.ranqueamento.dto.UsuarioFotoDTO;
 import br.com.vemrankser.ranqueamento.entity.CargoEntity;
 import br.com.vemrankser.ranqueamento.entity.UsuarioEntity;
 import br.com.vemrankser.ranqueamento.enums.TipoPerfil;
@@ -15,7 +16,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -71,6 +75,19 @@ public class UsuarioService {
 
         return objectMapper.convertValue(usuarioRepository.save(usuarioEntity), UsuarioDTO.class);
     }
+
+    public UsuarioDTO uploadImagem(MultipartFile imagem,Integer idUsuario) throws RegraDeNegocioException, IOException {
+        UsuarioEntity usuarioEncontrado = findById(idUsuario);
+        usuarioEncontrado.setFoto(imagem.getBytes());
+        return objectMapper.convertValue(usuarioRepository.save(usuarioEncontrado), UsuarioDTO.class);
+    }
+
+    public UsuarioFotoDTO pegarImagemUsuario(Integer idUsuario) throws RegraDeNegocioException {
+        UsuarioEntity usuarioEntity = findById(idUsuario);
+
+        return objectMapper.convertValue(usuarioEntity,UsuarioFotoDTO.class);
+    }
+
 
     //
 //    public UsuarioDTO desativarConta(Integer idUsuario) throws RegraDeNegocioException {
