@@ -48,7 +48,7 @@ public class ModuloEntity {
     private Set<TrilhaEntity> trilhas = new HashSet<>();
 
     @JsonIgnore
-    @OneToMany(mappedBy = "atividade", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "modulo", fetch = FetchType.LAZY)
     private Set<AtividadeEntity> atividades  = new HashSet<>();
 }
 
