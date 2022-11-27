@@ -4,6 +4,7 @@ import br.com.vemrankser.ranqueamento.dto.AtividadeCreateDTO;
 import br.com.vemrankser.ranqueamento.dto.AtividadeDTO;
 import br.com.vemrankser.ranqueamento.dto.AtividadePaginacaoDTO;
 import br.com.vemrankser.ranqueamento.entity.AtividadeEntity;
+import br.com.vemrankser.ranqueamento.entity.ModuloEntity;
 import br.com.vemrankser.ranqueamento.exceptions.RegraDeNegocioException;
 import br.com.vemrankser.ranqueamento.repository.AtividadeRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -24,9 +25,10 @@ public class AtividadeService {
 
 
     public AtividadeDTO adicionar(AtividadeCreateDTO atividadeCreateDTO, Integer idModulo) throws RegraDeNegocioException {
-        moduloService.buscarPorIdModulo(idModulo);
+        ModuloEntity moduloEntity = moduloService.buscarPorIdModulo(idModulo);
         AtividadeEntity atividadeEntity = objectMapper.convertValue(atividadeCreateDTO, AtividadeEntity.class);
-//        atividadeEntity.setI
+        atividadeEntity.setIdModulo(moduloEntity.getIdModulo());
+        atividadeEntity.setModulo(moduloEntity);
         atividadeRepository.save(atividadeEntity);
 
         return objectMapper.convertValue(atividadeEntity, AtividadeDTO.class);

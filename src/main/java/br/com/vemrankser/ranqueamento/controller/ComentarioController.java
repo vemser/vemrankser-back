@@ -37,11 +37,11 @@ public class ComentarioController {
             }
     )
     @PostMapping
-    public ResponseEntity<ComentarioCreateDTO> create(@RequestBody @Valid ComentarioCreateDTO comentarioCreateDTO) throws RegraDeNegocioException {
+    public ResponseEntity<ComentarioCreateDTO> create(@RequestBody @Valid ComentarioCreateDTO comentarioCreateDTO, Integer idAtividade) throws RegraDeNegocioException {
 
-        log.info("Criando nova atidade....");
-        ComentarioDTO comentarioDTO = comentarioService.adicionar(comentarioCreateDTO);
-        log.info("Atividade criada com sucesso!");
+        log.info("Criando novo comentario....");
+        ComentarioDTO comentarioDTO = comentarioService.adicionar(comentarioCreateDTO, idAtividade);
+        log.info("Comentario criado com sucesso!");
 
         return new ResponseEntity<>(comentarioDTO, HttpStatus.OK);
     }

@@ -7,8 +7,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -23,11 +21,14 @@ public class ComentarioEntity {
     @Column(name = "id_comentario")
     private Integer idComentario;
 
+    @Column(name = "id_atividade", insertable = false, updatable = false)
+    private Integer idAtividade;
+
     @Column(name = "comentario")
     private String comentario;
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_atividade", referencedColumnName = "id_atividade")
+    @JoinColumn(name = "ID_ATIVIDADE", referencedColumnName = "ID_ATIVIDADE")
     private AtividadeEntity atividade;
 }

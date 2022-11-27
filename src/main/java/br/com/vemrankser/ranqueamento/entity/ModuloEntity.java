@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -47,8 +46,8 @@ public class ModuloEntity {
     )
     private Set<TrilhaEntity> trilhas = new HashSet<>();
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "modulo", fetch = FetchType.LAZY)
+//    @JsonIgnore
+    @OneToMany(mappedBy = "modulo", fetch = FetchType.EAGER)
     private Set<AtividadeEntity> atividades  = new HashSet<>();
 }
 

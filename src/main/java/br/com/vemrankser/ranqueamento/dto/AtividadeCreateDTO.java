@@ -39,4 +39,7 @@ public class AtividadeCreateDTO {
     @NotNull
     @Schema(description = "Atividade ativada ou desativada", example = "ATIVO")
     private Integer statusAtividade;
+
+    @Schema(description = "Instrutor", example = "Rafael Lazari")
+    private String nomeInstrutor;
 }

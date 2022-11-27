@@ -21,11 +21,8 @@ public class AtividadeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ATIVIDADE_SEQUENCIA")
     @SequenceGenerator(name = "ATIVIDADE_SEQUENCIA", sequenceName = "SEQ_ATIVIDADE", allocationSize = 1)
-    @Column(name = "id_atividade")
+    @Column(name = "ID_ATIVIDADE")
     private Integer idAtividade;
-
-    @Column(name = "id_comentario", insertable = false, updatable = false)
-    private Integer idComentario;
 
     @Column(name = "id_modulo", insertable = false, updatable = false)
     private Integer idModulo;
@@ -54,8 +51,11 @@ public class AtividadeEntity {
     @Column(name = "status_Atividade")
     private Integer statusAtividade;
 
+    @Column(name = "nome_instrutor")
+    private String nomeInstrutor;
+
     @JsonIgnore
-    @OneToMany(mappedBy = "comentario", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "atividade", fetch = FetchType.LAZY)
     private Set<ComentarioEntity> comentarios = new HashSet<>();
 
     @JsonIgnore
