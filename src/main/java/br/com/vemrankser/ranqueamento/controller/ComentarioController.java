@@ -1,14 +1,14 @@
 package br.com.vemrankser.ranqueamento.controller;
 
-import br.com.vemrankser.ranqueamento.dto.TrilhaCreateDTO;
-import br.com.vemrankser.ranqueamento.dto.TrilhaDTO;
+import br.com.vemrankser.ranqueamento.dto.ComentarioCreateDTO;
+import br.com.vemrankser.ranqueamento.dto.ComentarioDTO;
 import br.com.vemrankser.ranqueamento.exceptions.RegraDeNegocioException;
-import br.com.vemrankser.ranqueamento.service.TrilhaService;
+import br.com.vemrankser.ranqueamento.service.ComentarioService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -19,27 +19,30 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 
-@RestController
 @Validated
-@Log4j2
+@Slf4j
 @RequiredArgsConstructor
-@RequestMapping("/trilha")
-public class TrilhaController {
+@RestController
+@RequestMapping("/comentario")
+public class ComentarioController {
 
-    private final TrilhaService trilhaService;
-    @Operation(summary = "Adicionar Trilha", description = "Adicionar uma nova trilha ")
+    private final ComentarioService comentarioService;
+
+    @Operation(summary = "Comentario de atividade", description = "Cadastrar comentario para atividade")
     @ApiResponses(
             value = {
-                    @ApiResponse(responseCode = "200", description = "Trilha adicionada com sucesso"),
+                    @ApiResponse(responseCode = "200", description = "Cadastro de comentario com sucesso"),
                     @ApiResponse(responseCode = "403", description = "Você não tem permissão para acessar este recurso"),
                     @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção")
             }
     )
     @PostMapping
-    public ResponseEntity<TrilhaDTO> adiocionar(@RequestBody @Valid TrilhaCreateDTO trilhaCreateDTO) throws RegraDeNegocioException {
-        log.info("Criando Trilha...");
-        TrilhaDTO trilhaDTO = trilhaService.adiocionar(trilhaCreateDTO);
-        log.info("Trilha Criada com sucesso!!");
-        return new ResponseEntity<>(trilhaDTO, HttpStatus.OK);
+    public ResponseEntity<ComentarioCreateDTO> create(@RequestBody @Valid ComentarioCreateDTO comentarioCreateDTO) throws RegraDeNegocioException {
+
+        log.info("Criando nova atidade....");
+        ComentarioDTO comentarioDTO = comentarioService.adicionar(comentarioCreateDTO);
+        log.info("Atividade criada com sucesso!");
+
+        return new ResponseEntity<>(comentarioDTO, HttpStatus.OK);
     }
 }

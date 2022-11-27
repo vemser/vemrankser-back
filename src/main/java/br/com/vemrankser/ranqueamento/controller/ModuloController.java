@@ -1,14 +1,13 @@
 package br.com.vemrankser.ranqueamento.controller;
 
-import br.com.vemrankser.ranqueamento.dto.TrilhaCreateDTO;
-import br.com.vemrankser.ranqueamento.dto.TrilhaDTO;
-import br.com.vemrankser.ranqueamento.exceptions.RegraDeNegocioException;
-import br.com.vemrankser.ranqueamento.service.TrilhaService;
+import br.com.vemrankser.ranqueamento.dto.ModuloCreateDTO;
+import br.com.vemrankser.ranqueamento.dto.ModuloDTO;
+import br.com.vemrankser.ranqueamento.service.ModuloService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -20,26 +19,27 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 
 @RestController
-@Validated
-@Log4j2
 @RequiredArgsConstructor
-@RequestMapping("/trilha")
-public class TrilhaController {
+@Slf4j
+@Validated
+@RequestMapping("/modulo")
+public class ModuloController {
 
-    private final TrilhaService trilhaService;
-    @Operation(summary = "Adicionar Trilha", description = "Adicionar uma nova trilha ")
+    private final ModuloService moduloService;
+
+    @Operation(summary = "Adicionar novo Modulo", description = "Adicionar novos modulos")
     @ApiResponses(
             value = {
-                    @ApiResponse(responseCode = "200", description = "Trilha adicionada com sucesso"),
+                    @ApiResponse(responseCode = "200", description = "Modulo adicionado com sucesso"),
                     @ApiResponse(responseCode = "403", description = "Você não tem permissão para acessar este recurso"),
                     @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção")
             }
     )
-    @PostMapping
-    public ResponseEntity<TrilhaDTO> adiocionar(@RequestBody @Valid TrilhaCreateDTO trilhaCreateDTO) throws RegraDeNegocioException {
-        log.info("Criando Trilha...");
-        TrilhaDTO trilhaDTO = trilhaService.adiocionar(trilhaCreateDTO);
-        log.info("Trilha Criada com sucesso!!");
-        return new ResponseEntity<>(trilhaDTO, HttpStatus.OK);
+    @PostMapping("/adicionar-modulo")
+    public ResponseEntity<ModuloDTO> adicionar(@RequestBody @Valid ModuloCreateDTO modulo) {
+        log.info("Criando modulo....");
+        ModuloDTO moduloDTO = moduloService.adicionar(modulo);
+        log.info("Modulo Criado com sucesso....");
+        return new ResponseEntity<>(moduloDTO, HttpStatus.OK);
     }
 }

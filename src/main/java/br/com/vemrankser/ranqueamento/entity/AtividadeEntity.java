@@ -36,8 +36,8 @@ public class AtividadeEntity {
     @Column(name = "data_criacao")
     private LocalDateTime dataCriacao;
 
-    @Column(name = "data_fim")
-    private LocalDateTime dataFim;
+    @Column(name = "data_entrega")
+    private LocalDateTime dataEntrega;
 
     @Column(name = "pontuacao")
     private Integer pontuacao;

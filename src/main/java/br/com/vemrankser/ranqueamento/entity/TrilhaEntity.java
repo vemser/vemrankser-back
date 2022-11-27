@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -31,7 +31,7 @@ public class TrilhaEntity {
     private Integer edicao;
 
     @Column(name = "ano_edicao")
-    private LocalDateTime anoEdicao;
+    private LocalDate anoEdicao;
 
     @JsonIgnore
     @ManyToMany(fetch = FetchType.LAZY)
