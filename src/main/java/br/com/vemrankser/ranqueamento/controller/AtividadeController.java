@@ -1,9 +1,6 @@
 package br.com.vemrankser.ranqueamento.controller;
 
-import br.com.vemrankser.ranqueamento.dto.AtividadeAvaliarDTO;
-import br.com.vemrankser.ranqueamento.dto.AtividadeCreateDTO;
-import br.com.vemrankser.ranqueamento.dto.AtividadeDTO;
-import br.com.vemrankser.ranqueamento.dto.AtividadePaginacaoDTO;
+import br.com.vemrankser.ranqueamento.dto.*;
 import br.com.vemrankser.ranqueamento.entity.AtividadeEntity;
 import br.com.vemrankser.ranqueamento.enums.AtividadeStatus;
 import br.com.vemrankser.ranqueamento.exceptions.RegraDeNegocioException;
@@ -73,7 +70,7 @@ public class AtividadeController {
             }
     )
     @PutMapping("/avaliar/{idAtividade}")
-    public ResponseEntity<AtividadeAvaliarDTO> avaliarAtividade(@PathVariable(name = "idAtividade") Integer idAtividade, @RequestBody AtividadeAvaliarDTO atividadeAvaliarDTO) throws RegraDeNegocioException {
+    public ResponseEntity<AtividadeAvaliarDTO> avaliarAtividade(@PathVariable(name = "idAtividade") Integer idAtividade, @RequestBody @Valid AtividadeAvaliarDTO atividadeAvaliarDTO) throws RegraDeNegocioException {
         return new ResponseEntity<>(atividadeService.avaliarAtividade(atividadeAvaliarDTO, idAtividade), HttpStatus.OK);
 
     }
@@ -87,7 +84,33 @@ public class AtividadeController {
             }
     )
     @GetMapping("/listar-status")
-    public ResponseEntity<List<Optional<AtividadeEntity>>> listarAtibuscarAtividadePorStatusvidadePaginado(Integer atividadeStatus) throws RegraDeNegocioException {
+    public ResponseEntity<List<AtividadeEntity>> listarAtibuscarAtividadePorStatusvidadePaginado(AtividadeStatus atividadeStatus) throws RegraDeNegocioException {
         return ResponseEntity.ok(atividadeService.buscarAtividadePorStatus(atividadeStatus));
+    }
+
+    @Operation(summary = "Listar atividade no mural", description = "Listar atividade no mural")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "201", description = "Listar atividade no mural com sucesso"),
+                    @ApiResponse(responseCode = "403", description = "Você não tem permissão para acessar este recurso"),
+                    @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção")
+            }
+    )
+    @GetMapping("/listar-mural")
+    public ResponseEntity<PageDTO<AtividadeMuralDTO>> listarAtividadeMural(Integer pagina, Integer tamanho) throws RegraDeNegocioException {
+        return new ResponseEntity<>(atividadeService.listarAtividadeMural(pagina, tamanho), HttpStatus.OK);
+    }
+
+    @Operation(summary = "Listar atividade por nota", description = "Listar atividade por nota")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "201", description = "Listar atividade por nota com sucesso"),
+                    @ApiResponse(responseCode = "403", description = "Você não tem permissão para acessar este recurso"),
+                    @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção")
+            }
+    )
+    @GetMapping("/listar-nota")
+    public ResponseEntity<PageDTO<AtividadeNotaDTO>> listarAtividadePorNota(Integer pagina, Integer tamanho) throws RegraDeNegocioException {
+        return new ResponseEntity<>(atividadeService.listarAtividadePorNota(pagina, tamanho), HttpStatus.OK);
     }
 }

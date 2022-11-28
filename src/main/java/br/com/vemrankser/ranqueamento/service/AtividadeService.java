@@ -1,9 +1,6 @@
 package br.com.vemrankser.ranqueamento.service;
 
-import br.com.vemrankser.ranqueamento.dto.AtividadeAvaliarDTO;
-import br.com.vemrankser.ranqueamento.dto.AtividadeCreateDTO;
-import br.com.vemrankser.ranqueamento.dto.AtividadeDTO;
-import br.com.vemrankser.ranqueamento.dto.AtividadePaginacaoDTO;
+import br.com.vemrankser.ranqueamento.dto.*;
 import br.com.vemrankser.ranqueamento.entity.AtividadeEntity;
 import br.com.vemrankser.ranqueamento.entity.ModuloEntity;
 import br.com.vemrankser.ranqueamento.enums.AtividadeStatus;
@@ -63,14 +60,53 @@ public class AtividadeService {
         return objectMapper.convertValue(atividadeAvaliacao, AtividadeAvaliarDTO.class);
     }
 
-    public List<Optional<AtividadeEntity>> buscarAtividadePorStatus(Integer atividadeStatus) {
-        return atividadeRepository.findByStatusAtividade(atividadeStatus);
+    public List<AtividadeEntity> buscarAtividadePorStatus(AtividadeStatus atividadeStatus) {
+        return atividadeRepository.findByStatusAtividade(atividadeStatus.getAtividadeStatus())
+                .stream()
+                .toList();
+    }
+
+    public PageDTO<AtividadeMuralDTO> listarAtividadeMural(Integer pagina, Integer tamanho) {
+        PageRequest pageRequest = PageRequest.of(pagina, tamanho);
+        Page<AtividadeMuralDTO> atividadeEntity = atividadeRepository.listarAtividadeMural(pageRequest);
+
+        List<AtividadeMuralDTO> atividadeMuralDTOList = atividadeEntity.getContent()
+                .stream()
+                .map(atividade -> {
+                    AtividadeMuralDTO atividadeMuralDTO1 = objectMapper.convertValue(atividade, AtividadeMuralDTO.class);
+                    return atividadeMuralDTO1;
+                })
+                .toList();
+
+        return new PageDTO<>(atividadeEntity.getTotalElements(),
+                atividadeEntity.getTotalPages(),
+                pagina,
+                tamanho,
+                atividadeMuralDTOList);
+    }
+
+    public PageDTO<AtividadeNotaDTO> listarAtividadePorNota(Integer pagina, Integer tamanho) {
+        PageRequest pageRequest = PageRequest.of(pagina, tamanho);
+        Page<AtividadeNotaDTO> atividadeEntity = atividadeRepository.listarAtividadePorNota(pageRequest);
+
+        List<AtividadeNotaDTO> atividadeNotaDTOList = atividadeEntity.getContent()
+                .stream()
+                .map(atividade -> {
+                    AtividadeNotaDTO atividadeNotaDTO1 = objectMapper.convertValue(atividade, AtividadeNotaDTO.class);
+                    return atividadeNotaDTO1;
+                })
+                .toList();
+
+        return new PageDTO<>(atividadeEntity.getTotalElements(),
+                atividadeEntity.getTotalPages(),
+                pagina,
+                tamanho,
+                atividadeNotaDTOList);
     }
 
     public AtividadeEntity buscarPorIdAtividade(Integer idAtividade) throws RegraDeNegocioException {
         return atividadeRepository.findById(idAtividade)
                 .orElseThrow(() -> new RegraDeNegocioException("Atividade não encontrada."));
     }
-
 
 }
