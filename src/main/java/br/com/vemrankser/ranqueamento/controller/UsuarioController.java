@@ -63,7 +63,7 @@ public class UsuarioController {
             }
     )
     @PutMapping("/atualizar/{idUsuario}")
-    public ResponseEntity<UsuarioDTO> atualizarUsuario(@PathVariable(name = "idUsuario") Integer idUsuario, @RequestBody UsuarioCreateDTO usuario) throws RegraDeNegocioException {
+    public ResponseEntity<UsuarioDTO> atualizarUsuario(@PathVariable(name = "idUsuario") Integer idUsuario, @RequestBody UsuarioAtualizarDTO usuario) throws RegraDeNegocioException {
         return new ResponseEntity<>(usuarioService.editar(idUsuario, usuario), HttpStatus.OK);
 
     }

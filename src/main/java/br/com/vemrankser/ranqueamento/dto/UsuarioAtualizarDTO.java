@@ -6,7 +6,7 @@ import lombok.Data;
 import javax.validation.constraints.NotNull;
 
 @Data
-public class UsuarioCreateDTO {
+public class UsuarioAtualizarDTO {
     @Schema(description = "Sua foto", example = "foto")
     private Byte[] foto;
 
@@ -26,9 +26,9 @@ public class UsuarioCreateDTO {
     @Schema(description = "Sua senha", example = "123")
     private String senha;
 
-//    @NotNull
-//    @Schema(description = "Seu status", example = "1")
-//    private Integer statusUsuario;
+    @NotNull
+    @Schema(description = "Seu status", example = "1")
+    private Integer statusUsuario;
 
     @NotNull
     @Schema(description = "Sua trilha", example = "back-end")

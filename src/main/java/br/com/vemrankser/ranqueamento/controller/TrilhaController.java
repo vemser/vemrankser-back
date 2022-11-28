@@ -3,6 +3,7 @@ package br.com.vemrankser.ranqueamento.controller;
 import br.com.vemrankser.ranqueamento.dto.PageDTO;
 import br.com.vemrankser.ranqueamento.dto.TrilhaCreateDTO;
 import br.com.vemrankser.ranqueamento.dto.TrilhaDTO;
+import br.com.vemrankser.ranqueamento.dto.TrilhaPaginadoDTO;
 import br.com.vemrankser.ranqueamento.exceptions.RegraDeNegocioException;
 import br.com.vemrankser.ranqueamento.service.TrilhaService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -65,7 +66,7 @@ public class TrilhaController {
             }
     )
     @GetMapping("/lista-usuarios")
-    public ResponseEntity<PageDTO<TrilhaDTO>> listUsuarios(Integer pagina, Integer tamanho, String nome) {
+    public ResponseEntity<PageDTO<TrilhaPaginadoDTO>> listUsuarios(Integer pagina, Integer tamanho, String nome) {
         return new ResponseEntity<>(trilhaService.listarUsuariosNaTrilha(pagina, tamanho, nome), HttpStatus.OK);
     }
 }
