@@ -9,6 +9,6 @@ import java.util.Set;
 public class TrilhaDTO  extends TrilhaCreateDTO{
 
     private Integer idTrilha;
-    private UsuarioDTO usuarios;
+    private List<UsuarioDTO> usuarios;
 
 }

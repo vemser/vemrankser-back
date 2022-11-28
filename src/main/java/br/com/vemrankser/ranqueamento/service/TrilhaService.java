@@ -3,6 +3,7 @@ package br.com.vemrankser.ranqueamento.service;
 import br.com.vemrankser.ranqueamento.dto.PageDTO;
 import br.com.vemrankser.ranqueamento.dto.TrilhaCreateDTO;
 import br.com.vemrankser.ranqueamento.dto.TrilhaDTO;
+import br.com.vemrankser.ranqueamento.dto.UsuarioDTO;
 import br.com.vemrankser.ranqueamento.entity.TrilhaEntity;
 import br.com.vemrankser.ranqueamento.entity.UsuarioEntity;
 import br.com.vemrankser.ranqueamento.exceptions.RegraDeNegocioException;
@@ -15,6 +16,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -46,8 +48,13 @@ public class TrilhaService {
         Page<TrilhaEntity> allAlunos = trilhaRepository.findAllByNomeContaining(nome, pageRequest);
 
         List<TrilhaDTO> trilhaDTOS = allAlunos.getContent().stream()
-                .map(trilha -> objectMapper.convertValue(trilha, TrilhaDTO.class))
-                .toList();
+                .map(trilha -> {
+                    TrilhaDTO trilhaDTO = objectMapper.convertValue(trilha, TrilhaDTO.class);
+                    trilhaDTO.setUsuarios(trilha.getUsuarios().stream()
+                            .map(usuarioDTO -> objectMapper.convertValue(usuarioDTO,UsuarioDTO.class)).toList());
+
+                    return trilhaDTO;
+                }).toList();
 
         return new PageDTO<>(allAlunos.getTotalElements(),
                 allAlunos.getTotalPages(),
@@ -62,6 +69,29 @@ public class TrilhaService {
                 .map(trilha -> objectMapper.convertValue(trilha, TrilhaDTO.class))
                 .toList();
     }
+
+    public List<TrilhaDTO> listarTrilha2() {
+        return trilhaRepository.findAll()
+                .stream()
+                .map(trilha -> {
+                    TrilhaDTO trilhaDTO = objectMapper.convertValue(trilha, TrilhaDTO.class);
+                    trilhaDTO.setUsuarios(trilha.getUsuarios().stream()
+                            .map(usuarioDTO -> objectMapper.convertValue(usuarioDTO,UsuarioDTO.class)).toList());
+
+                    return trilhaDTO;
+                }).toList();
+    }
+//    public List<TrilhaDTO> listarTrilha2() {
+//        return trilhaRepository.findAll()
+//                .stream()
+//                .map(trilha -> {
+//                    TrilhaDTO trilhaDTO = objectMapper.convertValue(trilha, TrilhaDTO.class);
+//                    trilhaDTO.getUsuarios().stream()
+//                            .map(usuarioDTO -> objectMapper.convertValue(usuarioDTO,TrilhaDTO.class))
+//                            .toList();
+//                    return trilhaDTO;
+//                }).toList();
+//    }
 
     public TrilhaEntity buscarPorIdTrilha(Integer idTrilha) throws RegraDeNegocioException {
         return trilhaRepository.findById(idTrilha)
