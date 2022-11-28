@@ -100,4 +100,17 @@ public class AtividadeController {
     public ResponseEntity<PageDTO<AtividadeMuralDTO>> listarAtividadeMural(Integer pagina, Integer tamanho) throws RegraDeNegocioException {
         return new ResponseEntity<>(atividadeService.listarAtividadeMural(pagina, tamanho), HttpStatus.OK);
     }
+
+    @Operation(summary = "Listar atividade por nota", description = "Listar atividade por nota")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "201", description = "Listar atividade por nota com sucesso"),
+                    @ApiResponse(responseCode = "403", description = "Você não tem permissão para acessar este recurso"),
+                    @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção")
+            }
+    )
+    @GetMapping("/listar-nota")
+    public ResponseEntity<PageDTO<AtividadeNotaDTO>> listarAtividadePorNota(Integer pagina, Integer tamanho) throws RegraDeNegocioException {
+        return new ResponseEntity<>(atividadeService.listarAtividadePorNota(pagina, tamanho), HttpStatus.OK);
+    }
 }
