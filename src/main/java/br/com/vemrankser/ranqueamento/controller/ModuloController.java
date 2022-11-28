@@ -2,6 +2,7 @@ package br.com.vemrankser.ranqueamento.controller;
 
 import br.com.vemrankser.ranqueamento.dto.ModuloCreateDTO;
 import br.com.vemrankser.ranqueamento.dto.ModuloDTO;
+import br.com.vemrankser.ranqueamento.exceptions.RegraDeNegocioException;
 import br.com.vemrankser.ranqueamento.service.ModuloService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -39,6 +40,13 @@ public class ModuloController {
     public ResponseEntity<ModuloDTO> adicionar(@RequestBody @Valid ModuloCreateDTO modulo) {
         log.info("Criando modulo....");
         ModuloDTO moduloDTO = moduloService.adicionar(modulo);
+        log.info("Modulo Criado com sucesso....");
+        return new ResponseEntity<>(moduloDTO, HttpStatus.OK);
+    }
+    @PostMapping("/vincular-modulo-trilha")
+    public ResponseEntity<ModuloDTO> vincular(@RequestBody @Valid ModuloCreateDTO modulo, Integer id) throws RegraDeNegocioException {
+        log.info("Criando modulo....");
+        ModuloDTO moduloDTO = moduloService.vincularModuloTrilha(modulo,id);
         log.info("Modulo Criado com sucesso....");
         return new ResponseEntity<>(moduloDTO, HttpStatus.OK);
     }

@@ -6,6 +6,7 @@ import lombok.Data;
 import javax.validation.constraints.FutureOrPresent;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 public class ModuloCreateDTO {
@@ -19,5 +20,7 @@ public class ModuloCreateDTO {
     @FutureOrPresent
     @Schema(description = "Data para o fim do modulo ", example = "30/11/2022")
     private LocalDateTime dataFim;
+
+    private List<TrilhaDTO> trilhas;
 
 }
