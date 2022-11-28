@@ -38,17 +38,22 @@ public class UsuarioService {
         return usuarioRepository.findByEmail(email);
     }
 
-    public UsuarioDTO findByNome(String nome) throws RegraDeNegocioException {
-        UsuarioEntity usuarioEntity = usuarioRepository.findByNomeContainingIgnoreCase(nome)
-                .orElseThrow(() -> new RegraDeNegocioException("Nome não encontrado!"));
-        return objectMapper.convertValue(usuarioEntity, UsuarioDTO.class);
+    public List<UsuarioDTO> findByNome(String nome) {
+        if (nome != null) {
+            return usuarioRepository.findByNomeIgnoreCase(nome.trim().replaceAll("\\s+", " ")).stream()
+                    .map(usuarioEntity -> objectMapper.convertValue(usuarioEntity, UsuarioDTO.class))
+                    .toList();
+        }
+        return usuarioRepository.findAll().stream()
+                .map(usuarioEntity -> objectMapper.convertValue(usuarioEntity, UsuarioDTO.class))
+                .toList();
+
     }
 
-    public PageDTO<UsuarioDTO> listarUsuarios(Integer pagina, Integer tamanho, String sort, String nome) {
+    public PageDTO<UsuarioDTO> listarUsuarios(Integer pagina, Integer tamanho, String sort) {
         Sort ordenacao = Sort.by(sort.toLowerCase());
         PageRequest pageRequest = PageRequest.of(pagina, tamanho, ordenacao);
-        Page<UsuarioEntity> allAlunos = usuarioRepository.findByNomeIgnoreCaseContaining(nome, pageRequest);
-
+        Page<UsuarioEntity> allAlunos = usuarioRepository.findAll(pageRequest);
         List<UsuarioDTO> usuarioDTOS = allAlunos.getContent().stream()
                 .map(usuarioEntity -> objectMapper.convertValue(usuarioEntity, UsuarioDTO.class))
                 .toList();

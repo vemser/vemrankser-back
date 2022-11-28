@@ -18,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.io.IOException;
+import java.util.List;
 
 @RestController
 @Validated
@@ -77,8 +78,8 @@ public class UsuarioController {
             }
     )
     @GetMapping("/lista-usuarios")
-    public ResponseEntity<PageDTO<UsuarioDTO>> listUsuarios(Integer pagina, Integer tamanho, String sort, String nome) {
-        return new ResponseEntity<>(usuarioService.listarUsuarios(pagina, tamanho, sort, nome), HttpStatus.OK);
+    public ResponseEntity<PageDTO<UsuarioDTO>> listUsuarios(Integer pagina, Integer tamanho, @RequestParam(value = "sort", required = false, defaultValue = "nome") String sort) {
+        return new ResponseEntity<>(usuarioService.listarUsuarios(pagina, tamanho, sort), HttpStatus.OK);
     }
 
 
@@ -91,7 +92,7 @@ public class UsuarioController {
             }
     )
     @GetMapping("/find-nome")
-    public ResponseEntity<UsuarioDTO> findByNome(String nome) throws RegraDeNegocioException {
+    public ResponseEntity<List<UsuarioDTO>> findByNome(@RequestParam(value = "nome", required = false) String nome) throws RegraDeNegocioException {
         return new ResponseEntity<>(usuarioService.findByNome(nome), HttpStatus.OK);
     }
 
