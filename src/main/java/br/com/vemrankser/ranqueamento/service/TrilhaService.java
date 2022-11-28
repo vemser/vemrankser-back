@@ -63,7 +63,7 @@ public class TrilhaService {
                 trilhaDTOS);
     }
 
-    private List<TrilhaDTO> listarTrilha() {
+    private List<TrilhaDTO> listarTrilhaq() {
         return trilhaRepository.findAll()
                 .stream()
                 .map(trilha -> objectMapper.convertValue(trilha, TrilhaDTO.class))
