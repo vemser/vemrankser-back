@@ -82,6 +82,32 @@ public class UsuarioController {
         return new ResponseEntity<>(usuarioService.listarUsuarios(pagina, tamanho, sort), HttpStatus.OK);
     }
 
+    @Operation(summary = "Pega a lista de alunos", description = "Resgata a lista de alunos do banco de dados")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "Foi resgatado com sucesso"),
+                    @ApiResponse(responseCode = "404", description = "Não encontrado"),
+                    @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção")
+            }
+    )
+    @GetMapping("/lista-alunos")
+    public ResponseEntity<PageDTO<UsuarioDTO>> listAlunos(Integer pagina, Integer tamanho) {
+        return new ResponseEntity<>(usuarioService.listarAlunos(pagina, tamanho), HttpStatus.OK);
+    }
+
+    @Operation(summary = "Pega aluno pelo login", description = "Resgata o aluno pelo login banco de dados")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "Foi resgatado com sucesso"),
+                    @ApiResponse(responseCode = "404", description = "Não encontrado"),
+                    @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção")
+            }
+    )
+    @GetMapping("/pegar-aluno")
+    public ResponseEntity<UsuarioDTO> pegarAluno(String login) throws RegraDeNegocioException {
+        return new ResponseEntity<>(usuarioService.pegarLogin(login), HttpStatus.OK);
+    }
+
 
     @Operation(summary = "Pega a um usuário pelo nome", description = "Resgata um usuário pelo nome do banco de dados")
     @ApiResponses(
