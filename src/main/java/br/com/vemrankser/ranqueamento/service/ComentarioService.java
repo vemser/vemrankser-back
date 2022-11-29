@@ -5,7 +5,6 @@ import br.com.vemrankser.ranqueamento.dto.ComentarioDTO;
 import br.com.vemrankser.ranqueamento.entity.AtividadeEntity;
 import br.com.vemrankser.ranqueamento.entity.ComentarioEntity;
 import br.com.vemrankser.ranqueamento.exceptions.RegraDeNegocioException;
-import br.com.vemrankser.ranqueamento.repository.AtividadeRepository;
 import br.com.vemrankser.ranqueamento.repository.ComentarioRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +15,6 @@ import org.springframework.stereotype.Service;
 public class ComentarioService {
 
     private final ComentarioRepository comentarioRepository;
-    private final AtividadeRepository atividadeRepository;
     private final AtividadeService atividadeService;
 
     private final ObjectMapper objectMapper;
@@ -37,7 +35,7 @@ public class ComentarioService {
     }
 
     public ComentarioEntity buscarPorIdComentario(Integer idComentario) throws RegraDeNegocioException{
-        return  comentarioRepository.findById(idComentario)
+        return comentarioRepository.findById(idComentario)
                 .orElseThrow(() -> new RegraDeNegocioException("Comentario não encontrado"));
     }
 

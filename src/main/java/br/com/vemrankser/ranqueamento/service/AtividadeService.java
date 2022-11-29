@@ -3,40 +3,46 @@ package br.com.vemrankser.ranqueamento.service;
 import br.com.vemrankser.ranqueamento.dto.*;
 import br.com.vemrankser.ranqueamento.entity.AtividadeEntity;
 import br.com.vemrankser.ranqueamento.entity.ModuloEntity;
+import br.com.vemrankser.ranqueamento.entity.TrilhaEntity;
+import br.com.vemrankser.ranqueamento.entity.UsuarioEntity;
 import br.com.vemrankser.ranqueamento.enums.AtividadeStatus;
 import br.com.vemrankser.ranqueamento.exceptions.RegraDeNegocioException;
 import br.com.vemrankser.ranqueamento.repository.AtividadeRepository;
+import br.com.vemrankser.ranqueamento.repository.ModuloRepository;
+import br.com.vemrankser.ranqueamento.repository.TrilhaRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class AtividadeService {
 
     private final AtividadeRepository atividadeRepository;
+    private final TrilhaRepository trilhaRepository;
+    private final ModuloRepository moduloRepository;
     private final ModuloService moduloService;
+    private final UsuarioService usuarioService;
+    private final TrilhaService trilhaService;
     private final ObjectMapper objectMapper;
 
 
-    public AtividadeDTO adicionar(AtividadeCreateDTO atividadeCreateDTO, Integer idModulo) throws RegraDeNegocioException {
-        ModuloEntity moduloEntity = moduloService.buscarPorIdModulo(idModulo);
-        AtividadeEntity atividadeEntity = objectMapper.convertValue(atividadeCreateDTO, AtividadeEntity.class);
+//    public AtividadeDTO adicionar(AtividadeCreateDTO atividadeCreateDTO, Integer idModulo, Integer idTrilha, String login) throws RegraDeNegocioException {
+//        UsuarioDTO alunoDTO = usuarioService.pegarLogin(login);
+//        UsuarioEntity alunoEncontrado = objectMapper.convertValue(alunoDTO, UsuarioEntity.class);
+//        ModuloEntity moduloEntity = moduloService.buscarPorIdModulo(idModulo);
+//
+//        return null;
+//
+//    }
 
-        atividadeEntity.setStatusAtividade(AtividadeStatus.PENDENTE.getAtividadeStatus());
-        atividadeEntity.setIdModulo(moduloEntity.getIdModulo());
-        atividadeEntity.setModulo(moduloEntity);
-        atividadeRepository.save(atividadeEntity);
-
-        return objectMapper.convertValue(atividadeEntity, AtividadeDTO.class);
-    }
-
-    public AtividadePaginacaoDTO<AtividadeDTO> listarAtividades(Integer pagina, Integer tamanho) {
+    public AtividadePaginacaoDTO<AtividadeDTO> listarAtividades(Integer pagina, Integer tamanho) throws RegraDeNegocioException {
         PageRequest pageRequest = PageRequest.of(pagina, tamanho);
 
         Page<AtividadeEntity> atividadeEntity = atividadeRepository.findAll(pageRequest);
@@ -47,6 +53,10 @@ public class AtividadeService {
                     return atividadeDTO;
                 })
                 .toList();
+        if(atividadeDTOList.isEmpty()) {
+            throw new RegraDeNegocioException("Não foi encontrada nenhuma atividade");
+        }
+
         return new AtividadePaginacaoDTO<>(atividadeEntity.getTotalElements(), atividadeEntity.getTotalPages(), pagina, tamanho, atividadeDTOList);
     }
 
@@ -60,13 +70,19 @@ public class AtividadeService {
         return objectMapper.convertValue(atividadeAvaliacao, AtividadeAvaliarDTO.class);
     }
 
-    public List<AtividadeEntity> buscarAtividadePorStatus(AtividadeStatus atividadeStatus) {
-        return atividadeRepository.findByStatusAtividade(atividadeStatus.getAtividadeStatus())
+    public List<AtividadeEntity> buscarAtividadePorStatus(AtividadeStatus atividadeStatus) throws RegraDeNegocioException {
+
+        List<AtividadeEntity> atividadeEntity = atividadeRepository.findByStatusAtividade(atividadeStatus.getAtividadeStatus())
                 .stream()
                 .toList();
+        if (atividadeEntity.isEmpty()) {
+            throw new RegraDeNegocioException("Atividade não cadastrada");
+        }
+
+        return atividadeEntity;
     }
 
-    public PageDTO<AtividadeMuralDTO> listarAtividadeMural(Integer pagina, Integer tamanho) {
+    public PageDTO<AtividadeMuralDTO> listarAtividadeMural(Integer pagina, Integer tamanho) throws RegraDeNegocioException {
         PageRequest pageRequest = PageRequest.of(pagina, tamanho);
         Page<AtividadeMuralDTO> atividadeEntity = atividadeRepository.listarAtividadeMural(pageRequest);
 
@@ -78,6 +94,10 @@ public class AtividadeService {
                 })
                 .toList();
 
+        if(atividadeMuralDTOList.isEmpty()) {
+            throw new RegraDeNegocioException("Sem atividades no mural.");
+        }
+
         return new PageDTO<>(atividadeEntity.getTotalElements(),
                 atividadeEntity.getTotalPages(),
                 pagina,
@@ -85,7 +105,7 @@ public class AtividadeService {
                 atividadeMuralDTOList);
     }
 
-    public PageDTO<AtividadeNotaDTO> listarAtividadePorNota(Integer pagina, Integer tamanho) {
+    public PageDTO<AtividadeNotaDTO> listarAtividadePorNota(Integer pagina, Integer tamanho) throws RegraDeNegocioException {
         PageRequest pageRequest = PageRequest.of(pagina, tamanho);
         Page<AtividadeNotaDTO> atividadeEntity = atividadeRepository.listarAtividadePorNota(pageRequest);
 
@@ -97,11 +117,36 @@ public class AtividadeService {
                 })
                 .toList();
 
+        if(atividadeNotaDTOList.isEmpty()) {
+            throw new RegraDeNegocioException("Sem cadastro de notas.");
+        }
+
         return new PageDTO<>(atividadeEntity.getTotalElements(),
                 atividadeEntity.getTotalPages(),
                 pagina,
                 tamanho,
                 atividadeNotaDTOList);
+    }
+
+    public AtividadeAlunoEnviarDTO entregarAtividade(AtividadeAlunoEnviarDTO atividadeAlunoEnviarDTO, Integer idAtividade) throws RegraDeNegocioException {
+        AtividadeEntity atividadeEntity = buscarPorIdAtividade(idAtividade);
+        AtividadeEntity atividadeEntityRecuperado = objectMapper.convertValue(atividadeAlunoEnviarDTO, AtividadeEntity.class);
+
+        atividadeEntityRecuperado.setIdAtividade(idAtividade);
+        atividadeEntityRecuperado.setIdModulo(atividadeEntity.getIdModulo());
+        atividadeEntityRecuperado.setTitulo(atividadeEntity.getTitulo());
+        atividadeEntityRecuperado.setInstrucoes(atividadeEntity.getInstrucoes());
+        atividadeEntityRecuperado.setPesoAtividade(atividadeEntity.getPesoAtividade());
+        atividadeEntityRecuperado.setDataCriacao(atividadeEntity.getDataCriacao());
+        atividadeEntityRecuperado.setDataEntrega(atividadeEntity.getDataEntrega());
+        atividadeEntityRecuperado.setPontuacao(atividadeEntity.getPontuacao());
+        atividadeEntityRecuperado.setLink(atividadeAlunoEnviarDTO.getLink());
+        atividadeEntityRecuperado.setStatusAtividade(AtividadeStatus.CONCLUIDA.getAtividadeStatus());
+        atividadeEntityRecuperado.setNomeInstrutor(atividadeEntity.getNomeInstrutor());
+
+        atividadeRepository.save(atividadeEntityRecuperado);
+
+        return objectMapper.convertValue(atividadeEntityRecuperado, AtividadeAlunoEnviarDTO.class);
     }
 
     public AtividadeEntity buscarPorIdAtividade(Integer idAtividade) throws RegraDeNegocioException {
