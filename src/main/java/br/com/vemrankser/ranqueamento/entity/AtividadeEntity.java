@@ -62,5 +62,9 @@ public class AtividadeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_modulo", referencedColumnName = "id_modulo")
     private ModuloEntity modulo;
+    // alteracao nova
+    @JsonIgnore
+    @OneToMany(mappedBy = "atividade", fetch = FetchType.LAZY)
+    private Set<UsuarioEntity> alunos = new HashSet<>();
 
 }
