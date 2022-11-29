@@ -42,7 +42,7 @@ public class TrilhaService {
 //        return objectMapper.convertValue(trilhaEntity, TrilhaDTO.class);
 //    }
 
-    public TrilhaDTO adicionarAlunoTrilha(String nomeTrilha,Integer edicao, String login) throws RegraDeNegocioException {
+    public TrilhaDTO adicionarAlunoTrilha(String nomeTrilha, Integer edicao, String login) throws RegraDeNegocioException {
         UsuarioDTO alunoDTO = usuarioService.pegarLogin(login);
         UsuarioEntity alunoEncontrado = objectMapper.convertValue(alunoDTO, UsuarioEntity.class);
         TrilhaEntity trilhaEntity = buscarPorNomeTrilha(nomeTrilha);
@@ -114,10 +114,35 @@ public class TrilhaService {
                 .orElseThrow(() -> new RegraDeNegocioException("Nome da trilha não encontrada."));
     }
 
+    public List<TrilhaDTO> findTrilhaByNome(String nomeTrilha) {
+        if (nomeTrilha != null) {
+            return trilhaRepository.findAllByNomeContainingIgnoreCase(nomeTrilha.trim().replaceAll("\\s+", " "))
+                    .stream()
+                    .map(trilha -> objectMapper.convertValue(trilha, TrilhaDTO.class))
+                    .toList();
+        }
+        return trilhaRepository.findAll().stream()
+                .map(trilhaEntity -> objectMapper.convertValue(trilhaEntity, TrilhaDTO.class))
+                .toList();
+    }
+
+    public List<TrilhaDTO> findAllEdicao(Integer edicao) {
+        if (edicao != null) {
+            return trilhaRepository.findAllByEdicao(edicao)
+                    .stream()
+                    .map(trilha -> objectMapper.convertValue(trilha, TrilhaDTO.class))
+                    .toList();
+        }
+        return trilhaRepository.findAll().stream()
+                .map(trilhaEntity -> objectMapper.convertValue(trilhaEntity, TrilhaDTO.class))
+                .toList();
+    }
+
     public TrilhaEntity buscarTrilhaPorEdicao(Integer edicao) throws RegraDeNegocioException {
         return trilhaRepository.findByEdicao(edicao)
                 .orElseThrow(() -> new RegraDeNegocioException("Edição da trilha não encontrada."));
     }
+
 
     public List<RankingDTO> rankingtrilha(Integer idTrilha) throws RegraDeNegocioException {
         TrilhaEntity trilha = buscarPorIdTrilha(idTrilha);
@@ -125,9 +150,9 @@ public class TrilhaService {
                 .stream()
                 .sorted(Comparator.comparing(UsuarioEntity::getPontuacaoAluno)
                         .reversed())
-                        .limit(5L)
-                        .map(this::mapRankingDTO)
-                        .collect(Collectors
+                .limit(5L)
+                .map(this::mapRankingDTO)
+                .collect(Collectors
                         .toList());
         return ListUsuarios;
     }

@@ -1,7 +1,6 @@
 package br.com.vemrankser.ranqueamento.controller;
 
 import br.com.vemrankser.ranqueamento.dto.*;
-import br.com.vemrankser.ranqueamento.entity.UsuarioEntity;
 import br.com.vemrankser.ranqueamento.exceptions.RegraDeNegocioException;
 import br.com.vemrankser.ranqueamento.service.TrilhaService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -80,5 +79,32 @@ public class TrilhaController {
     @GetMapping("/lista-ranking")
     public ResponseEntity<List<RankingDTO>> listranking(Integer idTrilha) throws RegraDeNegocioException {
         return new ResponseEntity<>(trilhaService.rankingtrilha(idTrilha), HttpStatus.OK);
+    }
+
+    @Operation(summary = "Pega o nome da trilha ou lista", description = "Resgata o nome da trilha ou lista do banco de dados")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "Foi resgatado com sucesso"),
+                    @ApiResponse(responseCode = "404", description = "Não encontrado"),
+                    @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção")
+            }
+    )
+    @GetMapping("/lista-trilha-nome")
+    public ResponseEntity<List<TrilhaDTO>> findTrilhaByNome(@RequestParam(required = false) String nome) {
+        return new ResponseEntity<>(trilhaService.findTrilhaByNome(nome), HttpStatus.OK);
+    }
+
+
+    @Operation(summary = "Pega a edicao da trilha ou a lista", description = "Resgata a edicao da trilha ou lista do banco de dados")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "Foi resgatado com sucesso"),
+                    @ApiResponse(responseCode = "404", description = "Não encontrado"),
+                    @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção")
+            }
+    )
+    @GetMapping("/find-edicao")
+    public ResponseEntity<List<TrilhaDTO>> findEdicao(@RequestParam(required = false) Integer edicao) {
+        return new ResponseEntity<>(trilhaService.findAllEdicao(edicao), HttpStatus.OK);
     }
 }
