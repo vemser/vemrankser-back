@@ -12,10 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -43,10 +40,11 @@ public class ModuloController {
         log.info("Modulo Criado com sucesso....");
         return new ResponseEntity<>(moduloDTO, HttpStatus.OK);
     }
-    @PostMapping("/vincular-modulo-trilha")
-    public ResponseEntity<ModuloDTO> vincular(@RequestBody @Valid ModuloCreateDTO modulo, Integer id) throws RegraDeNegocioException {
+
+    @PostMapping("/vincular-modulo-trilha/{idModulo}/{idTrilha}")
+    public ResponseEntity<ModuloDTO> vincular(@PathVariable(name = "idModulo") Integer idModulo, @PathVariable(name = "idTrilha") Integer idTrilha) throws RegraDeNegocioException {
         log.info("Criando modulo....");
-        ModuloDTO moduloDTO = moduloService.vincularModuloTrilha(modulo,id);
+        ModuloDTO moduloDTO = moduloService.vincularModuloTrilha(idModulo, idTrilha);
         log.info("Modulo Criado com sucesso....");
         return new ResponseEntity<>(moduloDTO, HttpStatus.OK);
     }

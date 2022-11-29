@@ -29,8 +29,7 @@ public class ModuloService {
         ModuloEntity moduloEntityNovo = objectMapper.convertValue(modulo, ModuloEntity.class);
         moduloEntityNovo.setStatusModulo(StatusModulo.S);
         moduloRepository.save(moduloEntityNovo);
-        ModuloDTO moduloDTO = objectMapper.convertValue(moduloEntityNovo, ModuloDTO.class);
-        return moduloDTO;
+        return objectMapper.convertValue(moduloEntityNovo, ModuloDTO.class);
 
     }
 
@@ -46,19 +45,10 @@ public class ModuloService {
                 .toList();
     }
 
-    public ModuloDTO vincularModuloTrilha(ModuloCreateDTO modulo, Integer id) throws RegraDeNegocioException {
-        ModuloEntity moduloEntity = objectMapper.convertValue(modulo, ModuloEntity.class);
-        moduloEntity.setIdModulo(moduloEntity.getIdModulo());
-        modulo.getTrilhas().forEach(moduloTrilha -> {
-            TrilhaEntity trilha = null;
-            try {
-                trilha = trilhaService.buscarPorIdTrilha(moduloTrilha.getIdTrilha());
-                moduloEntity.getTrilhas().add(trilha);
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-        });
-        moduloEntity.setStatusModulo(StatusModulo.S);
+    public ModuloDTO vincularModuloTrilha(Integer idModulo, Integer idTrilha) throws RegraDeNegocioException {
+        ModuloEntity moduloEntity = buscarPorIdModulo(idModulo);
+        TrilhaEntity trilhaEntity = trilhaService.buscarPorIdTrilha(idTrilha);
+        moduloEntity.getTrilhas().add(trilhaEntity);
         moduloRepository.save(moduloEntity);
         return objectMapper.convertValue(moduloEntity, ModuloDTO.class);
     }

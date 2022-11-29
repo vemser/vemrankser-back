@@ -21,6 +21,5 @@ public class ModuloCreateDTO {
     @Schema(description = "Data para o fim do modulo ", example = "30/11/2022")
     private LocalDateTime dataFim;
 
-    private List<TrilhaDTO> trilhas;
 
 }
