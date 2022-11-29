@@ -141,6 +141,9 @@ public class UsuarioService {
         usuarioEncontrado.setStatusUsuario(usuarioAtualizar.getStatusUsuario());
         usuarioEncontrado.setAtuacao(usuarioEncontrado.getAtuacao());
 
+    // PENDENTE...
+//        usuarioEncontrado.setTrilhas(Set.of(usuarioAtualizar.getTrilhas().));
+
         //  usuarioEncontrado.setTipoPerfil(usuarioEncontrado.getTipoPerfil());
 
         usuarioRepository.save(usuarioEncontrado);

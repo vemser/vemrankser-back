@@ -43,17 +43,17 @@ public class TrilhaController {
         return new ResponseEntity<>(trilhaDTO, HttpStatus.OK);
     }
 
-    @Operation(summary = "Adicionar Trilha", description = "Adicionar uma nova trilha ")
+    @Operation(summary = "Adicionar aluno a trilha", description = "Adicionar aluno a uma nova trilha")
     @ApiResponses(
             value = {
-                    @ApiResponse(responseCode = "200", description = "Trilha adicionada com sucesso"),
+                    @ApiResponse(responseCode = "200", description = "aluno adicionado com sucesso"),
                     @ApiResponse(responseCode = "403", description = "Você não tem permissão para acessar este recurso"),
                     @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção")
             }
     )
-    @PostMapping("/adicionar-aluno/{idTrilha}/{idAluno}")
-    public ResponseEntity<TrilhaDTO> adicionarAluno(@PathVariable(name = "idTrilha") Integer idTrilha, @PathVariable(name = "idAluno") Integer idAluno) throws RegraDeNegocioException {
-        TrilhaDTO trilhaDTO = trilhaService.adicionarAlunoTrilha(idTrilha, idAluno);
+    @PostMapping("/adicionar-aluno-trilha")
+    public ResponseEntity<TrilhaDTO> adicionarAluno(String nomeTrilha, Integer edicao, String login) throws RegraDeNegocioException {
+        TrilhaDTO trilhaDTO = trilhaService.adicionarAlunoTrilha(nomeTrilha, edicao, login);
         return new ResponseEntity<>(trilhaDTO, HttpStatus.OK);
     }
 

@@ -1,9 +1,11 @@
 package br.com.vemrankser.ranqueamento.dto;
 
+import br.com.vemrankser.ranqueamento.entity.TrilhaEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 import javax.validation.constraints.NotNull;
+import java.util.Set;
 
 @Data
 public class UsuarioAtualizarDTO {
@@ -46,4 +48,6 @@ public class UsuarioAtualizarDTO {
 
     @Schema(description = "Especialidade do instrutor", example = "QA")
     private String especialidade;
+
+//    private Set<TrilhaEntity> trilhas;
 }
