@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -33,9 +32,21 @@ public class TrilhaService {
         return objectMapper.convertValue(trilha, TrilhaDTO.class);
     }
 
-    public TrilhaDTO adicionarAlunoTrilha(Integer idTrilha, Integer idAluno) throws RegraDeNegocioException {
-        UsuarioEntity alunoEncontrado = usuarioService.findById(idAluno);
-        TrilhaEntity trilhaEntity = buscarPorIdTrilha(idTrilha);
+//    public TrilhaDTO adicionarAlunoTrilha(Integer idTrilha, Integer idAluno) throws RegraDeNegocioException {
+//        UsuarioEntity alunoEncontrado = usuarioService.findById(idAluno);
+//        TrilhaEntity trilhaEntity = buscarPorIdTrilha(idTrilha);
+//        trilhaEntity.getUsuarios().add(alunoEncontrado);
+//        trilhaRepository.save(trilhaEntity);
+//        return objectMapper.convertValue(trilhaEntity, TrilhaDTO.class);
+//    }
+
+    public TrilhaDTO adicionarAlunoTrilha(String nomeTrilha,Integer edicao, String login) throws RegraDeNegocioException {
+        UsuarioDTO alunoDTO = usuarioService.pegarLogin(login);
+        UsuarioEntity alunoEncontrado = objectMapper.convertValue(alunoDTO, UsuarioEntity.class);
+        TrilhaEntity trilhaEntity = buscarPorNomeTrilha(nomeTrilha);
+        if (!Objects.equals(trilhaEntity.getEdicao(), edicao)) {
+            throw new RegraDeNegocioException("Esta edição de trilha não existe!");
+        }
         trilhaEntity.getUsuarios().add(alunoEncontrado);
         trilhaRepository.save(trilhaEntity);
         return objectMapper.convertValue(trilhaEntity, TrilhaDTO.class);
@@ -94,6 +105,16 @@ public class TrilhaService {
     public TrilhaEntity buscarPorIdTrilha(Integer idTrilha) throws RegraDeNegocioException {
         return trilhaRepository.findById(idTrilha)
                 .orElseThrow(() -> new RegraDeNegocioException("Trilha não encontrada."));
+    }
+
+    public TrilhaEntity buscarPorNomeTrilha(String nomeTrilha) throws RegraDeNegocioException {
+        return trilhaRepository.findByNomeIgnoreCase(nomeTrilha.trim().replaceAll("\\s+", " "))
+                .orElseThrow(() -> new RegraDeNegocioException("Nome da trilha não encontrada."));
+    }
+
+    public TrilhaEntity buscarTrilhaPorEdicao(Integer edicao) throws RegraDeNegocioException {
+        return trilhaRepository.findByEdicao(edicao)
+                .orElseThrow(() -> new RegraDeNegocioException("Edição da trilha não encontrada."));
     }
 
     public List<RankingDTO> rankingtrilha(Integer idTrilha) throws RegraDeNegocioException {

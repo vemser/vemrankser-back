@@ -22,4 +22,7 @@ public interface UsuarioRepository extends JpaRepository<UsuarioEntity, Integer>
 
     List<UsuarioEntity> findTop5ByOrderByPontuacaoAlunoDesc();
 
+    UsuarioEntity findByLoginIgnoreCase(String login);
+
+
 }

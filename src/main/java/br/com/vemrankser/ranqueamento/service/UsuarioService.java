@@ -18,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
@@ -51,6 +52,16 @@ public class UsuarioService {
 
     }
 
+    public UsuarioDTO pegarLogin(String login) throws RegraDeNegocioException {
+        UsuarioEntity usuarioEncontrado = usuarioRepository.findByLoginIgnoreCase(login);
+        if (!Objects.equals(usuarioEncontrado.getTipoPerfil(), TipoPerfil.ALUNO.getCargo())) {
+            throw new RegraDeNegocioException("Este usuário não é um aluno");
+        }
+
+        return objectMapper.convertValue(usuarioEncontrado, UsuarioDTO.class);
+
+    }
+
     public PageDTO<UsuarioDTO> listarUsuarios(Integer pagina, Integer tamanho, String sort) {
         Sort ordenacao = Sort.by(sort.toLowerCase());
         PageRequest pageRequest = PageRequest.of(pagina, tamanho, ordenacao);
@@ -68,7 +79,7 @@ public class UsuarioService {
 
     public PageDTO<UsuarioDTO> listarAlunos(Integer pagina, Integer tamanho) {
         PageRequest pageRequest = PageRequest.of(pagina, tamanho);
-        Page<UsuarioEntity> allAlunos = usuarioRepository.findAllByTipoPerfil(TipoPerfil.ALUNO.getCargo(),pageRequest);
+        Page<UsuarioEntity> allAlunos = usuarioRepository.findAllByTipoPerfil(TipoPerfil.ALUNO.getCargo(), pageRequest);
         List<UsuarioDTO> usuarioDTOS = allAlunos.getContent().stream()
                 .map(usuarioEntity -> objectMapper.convertValue(usuarioEntity, UsuarioDTO.class))
                 .toList();
@@ -95,7 +106,7 @@ public class UsuarioService {
         usuarioEntity.setCargos(Set.of(cargo));
         usuarioEntity.setStatusUsuario(USUARIO_ATIVO);
         usuarioEntity.setSenha(senhaCriptografada);
-         usuarioEntity.setTipoPerfil(tipoPerfil.getCargo());
+        usuarioEntity.setTipoPerfil(tipoPerfil.getCargo());
 
         return objectMapper.convertValue(usuarioRepository.save(usuarioEntity), UsuarioDTO.class);
     }
@@ -129,6 +140,9 @@ public class UsuarioService {
         usuarioEncontrado.setSenha(passwordEncoder.encode(usuarioAtualizar.getSenha()));
         usuarioEncontrado.setStatusUsuario(usuarioAtualizar.getStatusUsuario());
         usuarioEncontrado.setAtuacao(usuarioEncontrado.getAtuacao());
+
+    // PENDENTE...
+//        usuarioEncontrado.setTrilhas(Set.of(usuarioAtualizar.getTrilhas().));
 
         //  usuarioEncontrado.setTipoPerfil(usuarioEncontrado.getTipoPerfil());
 
