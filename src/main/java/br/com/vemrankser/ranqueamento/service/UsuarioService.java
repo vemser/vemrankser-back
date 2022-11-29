@@ -158,4 +158,7 @@ public class UsuarioService {
                 .orElseThrow(() -> new RegraDeNegocioException("Usuario não encontrado!"));
     }
 
+    public List<UsuarioEntity> findTop5ByOrderByPontuacaoDesc() {
+        return usuarioRepository.findTop5ByOrderByPontuacaoAlunoDesc();
+    }
 }
