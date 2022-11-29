@@ -30,14 +30,14 @@ public class UsuarioCreateDTO {
 //    @Schema(description = "Seu status", example = "1")
 //    private Integer statusUsuario;
 
-    @NotNull
-    @Schema(description = "Sua trilha", example = "back-end")
-    private String atuacao;
-
-
 //    @NotNull
-//    @Schema(description = "Tipo do perfil",example = "instrutor")
-//    private Integer tipoPerfil;
+//    @Schema(description = "Sua trilha", example = "back-end")
+//    private String atuacao;
+
+
+    @NotNull
+    @Schema(description = "Tipo do perfil",example = "instrutor")
+    private Integer tipoPerfil;
 
     @NotNull
     @Schema(description = "Sua cidade", example = "Recife")

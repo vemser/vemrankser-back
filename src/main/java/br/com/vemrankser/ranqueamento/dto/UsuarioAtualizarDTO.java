@@ -9,8 +9,8 @@ import java.util.Set;
 
 @Data
 public class UsuarioAtualizarDTO {
-    @Schema(description = "Sua foto", example = "foto")
-    private Byte[] foto;
+//    @Schema(description = "Sua foto", example = "foto")
+//    private Byte[] foto;
 
     @NotNull
     @Schema(description = "Seu nome", example = "diego")
@@ -32,9 +32,9 @@ public class UsuarioAtualizarDTO {
     @Schema(description = "Seu status", example = "1")
     private Integer statusUsuario;
 
-    @NotNull
-    @Schema(description = "Sua trilha", example = "back-end")
-    private String atuacao;
+//    @NotNull
+//    @Schema(description = "Sua trilha", example = "back-end")
+//    private String atuacao;
 
 
 //    @NotNull
@@ -49,5 +49,5 @@ public class UsuarioAtualizarDTO {
     @Schema(description = "Especialidade do instrutor", example = "QA")
     private String especialidade;
 
-//    private Set<TrilhaEntity> trilhas;
+   // private Set<TrilhaNomeDTO> trilhas;
 }

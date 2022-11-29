@@ -56,8 +56,8 @@ public class UsuarioEntity implements UserDetails {
     @Column(name = "cidade")
     private String cidade;
 
-    @Column(name = "atuacao")
-    private String atuacao;
+//    @Column(name = "atuacao")
+//    private String atuacao;
 
     @Column(name = "especialidade")
     private String especialidade;
