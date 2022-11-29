@@ -12,7 +12,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -94,5 +96,20 @@ public class TrilhaService {
                 .orElseThrow(() -> new RegraDeNegocioException("Trilha não encontrada."));
     }
 
+    public List<RankingDTO> rankingtrilha(Integer idTrilha) throws RegraDeNegocioException {
+        TrilhaEntity trilha = buscarPorIdTrilha(idTrilha);
+        List<RankingDTO> ListUsuarios = trilha.getUsuarios()
+                .stream()
+                .sorted(Comparator.comparing(UsuarioEntity::getPontuacaoAluno)
+                        .reversed())
+                        .limit(5L)
+                        .map(this::mapRankingDTO)
+                        .collect(Collectors
+                        .toList());
+        return ListUsuarios;
+    }
 
+    private RankingDTO mapRankingDTO(UsuarioEntity usuarioEntity) {
+        return new RankingDTO(usuarioEntity.getNome(), usuarioEntity.getPontuacaoAluno());
+    }
 }

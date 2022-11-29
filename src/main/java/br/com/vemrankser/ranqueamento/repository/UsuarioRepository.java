@@ -20,5 +20,6 @@ public interface UsuarioRepository extends JpaRepository<UsuarioEntity, Integer>
 
     Page<UsuarioEntity> findAllByTipoPerfil(Integer tipoPerfil,Pageable pageable);
 
+    List<UsuarioEntity> findTop5ByOrderByPontuacaoAlunoDesc();
 
 }

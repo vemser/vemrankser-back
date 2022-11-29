@@ -1,9 +1,7 @@
 package br.com.vemrankser.ranqueamento.controller;
 
-import br.com.vemrankser.ranqueamento.dto.PageDTO;
-import br.com.vemrankser.ranqueamento.dto.TrilhaCreateDTO;
-import br.com.vemrankser.ranqueamento.dto.TrilhaDTO;
-import br.com.vemrankser.ranqueamento.dto.TrilhaPaginadoDTO;
+import br.com.vemrankser.ranqueamento.dto.*;
+import br.com.vemrankser.ranqueamento.entity.UsuarioEntity;
 import br.com.vemrankser.ranqueamento.exceptions.RegraDeNegocioException;
 import br.com.vemrankser.ranqueamento.service.TrilhaService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -17,6 +15,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @Validated
@@ -68,5 +67,18 @@ public class TrilhaController {
     @GetMapping("/lista-usuarios")
     public ResponseEntity<PageDTO<TrilhaPaginadoDTO>> listUsuarios(Integer pagina, Integer tamanho, String nome) {
         return new ResponseEntity<>(trilhaService.listarUsuariosNaTrilha(pagina, tamanho, nome), HttpStatus.OK);
+    }
+
+    @Operation(summary = "Pega a lista de usuários na trilha pela pontuação", description = "Resgata a lista de usuários na trilha pela pontuacao no banco de dados")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "Foi resgatado com sucesso"),
+                    @ApiResponse(responseCode = "404", description = "Não encontrado"),
+                    @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção")
+            }
+    )
+    @GetMapping("/lista-ranking")
+    public ResponseEntity<List<RankingDTO>> listranking(Integer idTrilha) throws RegraDeNegocioException {
+        return new ResponseEntity<>(trilhaService.rankingtrilha(idTrilha), HttpStatus.OK);
     }
 }
