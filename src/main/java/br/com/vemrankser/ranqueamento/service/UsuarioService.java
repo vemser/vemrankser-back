@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -65,6 +66,28 @@ public class UsuarioService {
                 usuarioDTOS);
     }
 
+    public PageDTO<UsuarioDTO> listarAlunos(Integer pagina, Integer tamanho) {
+        PageRequest pageRequest = PageRequest.of(pagina, tamanho);
+        Page<UsuarioEntity> allAlunos = usuarioRepository.findAllByTipoPerfil(TipoPerfil.ALUNO.getCargo(),pageRequest);
+        List<UsuarioDTO> usuarioDTOS = allAlunos.getContent().stream()
+                .map(usuarioEntity -> objectMapper.convertValue(usuarioEntity, UsuarioDTO.class))
+                .toList();
+
+        return new PageDTO<>(allAlunos.getTotalElements(),
+                allAlunos.getTotalPages(),
+                pagina,
+                tamanho,
+                usuarioDTOS);
+    }
+
+    public Integer getIdLoggedUser() {
+        return Integer.parseInt(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
+    }
+
+    public UsuarioDTO getLoggedUser() throws RegraDeNegocioException {
+        return objectMapper.convertValue(findById(getIdLoggedUser()), UsuarioDTO.class);
+    }
+
     public UsuarioDTO cadastrar(UsuarioCreateDTO usuario, TipoPerfil tipoPerfil) throws RegraDeNegocioException {
         String senhaCriptografada = passwordEncoder.encode(usuario.getSenha());
         UsuarioEntity usuarioEntity = objectMapper.convertValue(usuario, UsuarioEntity.class);
@@ -72,7 +95,7 @@ public class UsuarioService {
         usuarioEntity.setCargos(Set.of(cargo));
         usuarioEntity.setStatusUsuario(USUARIO_ATIVO);
         usuarioEntity.setSenha(senhaCriptografada);
-        // usuarioEntity.setTipoPerfil(TipoPerfil.ALUNO.getCargo());
+         usuarioEntity.setTipoPerfil(tipoPerfil.getCargo());
 
         return objectMapper.convertValue(usuarioRepository.save(usuarioEntity), UsuarioDTO.class);
     }

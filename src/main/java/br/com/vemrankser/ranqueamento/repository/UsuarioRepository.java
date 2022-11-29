@@ -17,4 +17,8 @@ public interface UsuarioRepository extends JpaRepository<UsuarioEntity, Integer>
     List<UsuarioEntity> findByNomeIgnoreCase(String nome);
 
     Page<UsuarioEntity> findByNomeIgnoreCaseContaining(String nome, Pageable pageable);
+
+    Page<UsuarioEntity> findAllByTipoPerfil(Integer tipoPerfil,Pageable pageable);
+
+
 }
