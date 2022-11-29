@@ -8,4 +8,5 @@ public class UsuarioDTO {
     private String nome;
     private String email;
     private Integer statusUsuario;
+    private Integer tipoPerfil;
 }
