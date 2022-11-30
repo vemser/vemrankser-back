@@ -24,11 +24,10 @@ public class TrilhaService {
 
     private final TrilhaRepository trilhaRepository;
     private final UsuarioService usuarioService;
-    private final UsuarioRepository usuarioRepository;
 
 
     private final ObjectMapper objectMapper;
-    private final PasswordEncoder passwordEncoder;
+
 
     public TrilhaDTO adicionar(TrilhaCreateDTO trilhaNova) throws RegraDeNegocioException {
         TrilhaEntity trilha = objectMapper.convertValue(trilhaNova, TrilhaEntity.class);
@@ -43,26 +42,7 @@ public class TrilhaService {
 //        trilhaRepository.save(trilhaEntity);
 //        return objectMapper.convertValue(trilhaEntity, TrilhaDTO.class);
 //    }
-    public UsuarioDTO editar(Integer id, UsuarioAtualizarDTO usuarioAtualizar) throws RegraDeNegocioException {
-        UsuarioEntity usuarioEncontrado = usuarioService.findById(id);
-        List<TrilhaEntity> trilhaEntities = new ArrayList<>();
-        usuarioEncontrado.setNome(usuarioAtualizar.getNome());
-        usuarioEncontrado.setLogin(usuarioAtualizar.getLogin());
-        usuarioEncontrado.setEmail(usuarioAtualizar.getEmail());
-        usuarioEncontrado.setCidade(usuarioAtualizar.getCidade());
-        usuarioEncontrado.setEspecialidade(usuarioAtualizar.getEspecialidade());
-        usuarioEncontrado.setSenha(passwordEncoder.encode(usuarioAtualizar.getSenha()));
-        usuarioEncontrado.setStatusUsuario(usuarioAtualizar.getStatusUsuario());
-        for (TrilhaNomeDTO trilha : usuarioAtualizar.getTrilhas()) {
-            TrilhaEntity trilhaEntity = buscarPorNomeTrilha(trilha.getNome());
-            trilhaEntities.add(trilhaEntity);
 
-        }
-        usuarioEncontrado.setTrilhas(new HashSet<>(trilhaEntities));
-
-        usuarioRepository.save(usuarioEncontrado);
-        return objectMapper.convertValue(usuarioEncontrado, UsuarioDTO.class);
-    }
 
     public TrilhaDTO adicionarAlunoTrilha(String nomeTrilha, Integer edicao, String login) throws RegraDeNegocioException {
         UsuarioDTO alunoDTO = usuarioService.pegarLogin(login);
@@ -108,14 +88,14 @@ public class TrilhaService {
                 trilhaDTOS);
     }
 
-    private List<TrilhaDTO> listarTrilhaq() {
-        return trilhaRepository.findAll()
-                .stream()
-                .map(trilha -> objectMapper.convertValue(trilha, TrilhaDTO.class))
-                .toList();
-    }
+//    private List<TrilhaDTO> listarTrilhaq() {
+//        return trilhaRepository.findAll()
+//                .stream()
+//                .map(trilha -> objectMapper.convertValue(trilha, TrilhaDTO.class))
+//                .toList();
+//    }
 
-//    public List<TrilhaDTO> listarTrilha2() {
+    //    public List<TrilhaDTO> listarTrilha2() {
 //        return trilhaRepository.findAll()
 //                .stream()
 //                .map(trilha -> {
@@ -137,8 +117,12 @@ public class TrilhaService {
 //                    return trilhaDTO;
 //                }).toList();
 //    }
+    public TrilhaDTO pegarIdTrilha(Integer id) throws RegraDeNegocioException {
+        TrilhaEntity trilhaEntity = findById(id);
+        return objectMapper.convertValue(trilhaEntity, TrilhaDTO.class);
+    }
 
-    public TrilhaEntity buscarPorIdTrilha(Integer idTrilha) throws RegraDeNegocioException {
+    public TrilhaEntity findById(Integer idTrilha) throws RegraDeNegocioException {
         return trilhaRepository.findById(idTrilha)
                 .orElseThrow(() -> new RegraDeNegocioException("Trilha não encontrada."));
     }
@@ -179,7 +163,7 @@ public class TrilhaService {
 
 
     public List<RankingDTO> rankingtrilha(Integer idTrilha) throws RegraDeNegocioException {
-        TrilhaEntity trilha = buscarPorIdTrilha(idTrilha);
+        TrilhaEntity trilha = findById(idTrilha);
         List<RankingDTO> ListUsuarios = trilha.getUsuarios()
                 .stream()
                 .sorted(Comparator.comparing(UsuarioEntity::getPontuacaoAluno)

@@ -50,4 +50,13 @@ public class TrilhaEntity {
             inverseJoinColumns = @JoinColumn(name = "id_usuario")
     )
     private Set<UsuarioEntity> usuarios = new HashSet<>();
+
+    @JsonIgnore
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "ATIVIDADE_TRILHA",
+            joinColumns = @JoinColumn(name = "id_trilha"),
+            inverseJoinColumns = @JoinColumn(name = "id_atividade")
+    )
+    private Set<AtividadeEntity> atividades = new HashSet<>();
 }

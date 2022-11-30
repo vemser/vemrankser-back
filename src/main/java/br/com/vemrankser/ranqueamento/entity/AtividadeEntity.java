@@ -35,10 +35,8 @@ public class AtividadeEntity {
 
     @Column(name = "peso_Atividade")
     private Integer pesoAtividade;
-
     @Column(name = "data_criacao")
     private LocalDateTime dataCriacao;
-
     @Column(name = "data_entrega")
     private LocalDateTime dataEntrega;
 
@@ -66,5 +64,14 @@ public class AtividadeEntity {
     @JsonIgnore
     @OneToMany(mappedBy = "atividade", fetch = FetchType.LAZY)
     private Set<UsuarioEntity> alunos = new HashSet<>();
+
+    @JsonIgnore
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "ATIVIDADE_TRILHA",
+            joinColumns = @JoinColumn(name = "id_atividade"),
+            inverseJoinColumns = @JoinColumn(name = "id_trilha")
+    )
+    private Set<TrilhaEntity> trilhas = new HashSet<>();
 
 }

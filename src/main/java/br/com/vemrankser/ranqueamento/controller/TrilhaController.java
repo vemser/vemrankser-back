@@ -121,4 +121,17 @@ public class TrilhaController {
         TrilhaDTO trilhaDTO = trilhaService.adicionarIntrustorTrilha(nomeTrilha, edicao, login);
         return new ResponseEntity<>(trilhaDTO, HttpStatus.OK);
     }
+
+    @Operation(summary = "Pega trilha pelo id", description = "Resgata a trilha pelo id do banco de dados")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "Foi resgatado com sucesso"),
+                    @ApiResponse(responseCode = "404", description = "Não encontrado"),
+                    @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção")
+            }
+    )
+    @GetMapping("/find-id-trilha")
+    public ResponseEntity<TrilhaDTO> findById(Integer idTrilha) throws RegraDeNegocioException {
+        return new ResponseEntity<>(trilhaService.pegarIdTrilha(idTrilha), HttpStatus.OK);
+    }
 }

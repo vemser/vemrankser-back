@@ -4,7 +4,6 @@ import br.com.vemrankser.ranqueamento.dto.*;
 import br.com.vemrankser.ranqueamento.enums.TipoPerfil;
 import br.com.vemrankser.ranqueamento.exceptions.RegraDeNegocioException;
 import br.com.vemrankser.ranqueamento.service.AuthService;
-import br.com.vemrankser.ranqueamento.service.TrilhaService;
 import br.com.vemrankser.ranqueamento.service.UsuarioService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -29,7 +28,6 @@ public class UsuarioController {
 
     private final AuthService authService;
     private final UsuarioService usuarioService;
-    private final TrilhaService trilhaService;
 
     @Operation(summary = "Logar na sua conta", description = "Autentificar usuário no aplicativo")
     @ApiResponses(
@@ -67,7 +65,7 @@ public class UsuarioController {
     )
     @PutMapping("/atualizar/{idUsuario}")
     public ResponseEntity<UsuarioDTO> atualizarUsuario(@PathVariable(name = "idUsuario") Integer idUsuario, @RequestBody UsuarioAtualizarDTO usuario) throws RegraDeNegocioException {
-        return new ResponseEntity<>(trilhaService.editar(idUsuario, usuario), HttpStatus.OK);
+        return new ResponseEntity<>(usuarioService.editar(idUsuario, usuario), HttpStatus.OK);
 
     }
 
@@ -124,7 +122,7 @@ public class UsuarioController {
     }
 
 
-    @Operation(summary = "Pega a um usuário pelo nome", description = "Resgata um usuário pelo nome do banco de dados")
+    @Operation(summary = "Pega um usuário pelo nome", description = "Resgata um usuário pelo nome do banco de dados")
     @ApiResponses(
             value = {
                     @ApiResponse(responseCode = "200", description = "Foi resgatado com sucesso"),
@@ -135,6 +133,19 @@ public class UsuarioController {
     @GetMapping("/find-nome")
     public ResponseEntity<List<UsuarioDTO>> findByNome(@RequestParam(value = "nome", required = false) String nome) throws RegraDeNegocioException {
         return new ResponseEntity<>(usuarioService.findByNome(nome), HttpStatus.OK);
+    }
+
+    @Operation(summary = "Pega um usuário pelo id", description = "Resgata um usuário pelo id do banco de dados")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "Foi resgatado com sucesso"),
+                    @ApiResponse(responseCode = "404", description = "Não encontrado"),
+                    @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção")
+            }
+    )
+    @GetMapping("/find-id-usuario")
+    public ResponseEntity<UsuarioDTO> findById(Integer id) throws RegraDeNegocioException {
+        return new ResponseEntity<>(usuarioService.pegarIdUsuario(id), HttpStatus.OK);
     }
 
 

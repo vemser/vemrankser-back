@@ -4,20 +4,17 @@ import br.com.vemrankser.ranqueamento.dto.*;
 import br.com.vemrankser.ranqueamento.entity.AtividadeEntity;
 import br.com.vemrankser.ranqueamento.entity.ModuloEntity;
 import br.com.vemrankser.ranqueamento.entity.TrilhaEntity;
-import br.com.vemrankser.ranqueamento.entity.UsuarioEntity;
 import br.com.vemrankser.ranqueamento.enums.AtividadeStatus;
 import br.com.vemrankser.ranqueamento.exceptions.RegraDeNegocioException;
 import br.com.vemrankser.ranqueamento.repository.AtividadeRepository;
-import br.com.vemrankser.ranqueamento.repository.ModuloRepository;
-import br.com.vemrankser.ranqueamento.repository.TrilhaRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 @Service
@@ -25,22 +22,11 @@ import java.util.List;
 public class AtividadeService {
 
     private final AtividadeRepository atividadeRepository;
-    private final TrilhaRepository trilhaRepository;
-    private final ModuloRepository moduloRepository;
     private final ModuloService moduloService;
     private final UsuarioService usuarioService;
     private final TrilhaService trilhaService;
     private final ObjectMapper objectMapper;
 
-
-//    public AtividadeDTO adicionar(AtividadeCreateDTO atividadeCreateDTO, Integer idModulo, Integer idTrilha, String login) throws RegraDeNegocioException {
-//        UsuarioDTO alunoDTO = usuarioService.pegarLogin(login);
-//        UsuarioEntity alunoEncontrado = objectMapper.convertValue(alunoDTO, UsuarioEntity.class);
-//        ModuloEntity moduloEntity = moduloService.buscarPorIdModulo(idModulo);
-//
-//        return null;
-//
-//    }
 
     public AtividadePaginacaoDTO<AtividadeDTO> listarAtividades(Integer pagina, Integer tamanho) throws RegraDeNegocioException {
         PageRequest pageRequest = PageRequest.of(pagina, tamanho);
@@ -53,11 +39,40 @@ public class AtividadeService {
                     return atividadeDTO;
                 })
                 .toList();
-        if(atividadeDTOList.isEmpty()) {
+        if (atividadeDTOList.isEmpty()) {
             throw new RegraDeNegocioException("Não foi encontrada nenhuma atividade");
         }
 
         return new AtividadePaginacaoDTO<>(atividadeEntity.getTotalElements(), atividadeEntity.getTotalPages(), pagina, tamanho, atividadeDTOList);
+    }
+
+    public AtividadeDTO createAtividade(AtividadeCreateDTO atividadeCreateDTO, Integer idModulo, List<Integer> idTrilha) throws RegraDeNegocioException {
+        UsuarioLogadoDTO loggedUser = usuarioService.getLoggedUser();
+        ModuloEntity moduloEntity = moduloService.buscarPorIdModulo(idModulo);
+        List<TrilhaEntity> trilhaEntities = new ArrayList<>();
+        AtividadeEntity atividadeEntity = objectMapper.convertValue(atividadeCreateDTO, AtividadeEntity.class);
+        atividadeEntity.setNomeInstrutor(loggedUser.getNome());
+
+        for (Integer number : idTrilha) {
+            TrilhaEntity trilhaEntity = trilhaService.findById(number);
+            trilhaEntities.add(trilhaEntity);
+
+        }
+        atividadeEntity.setStatusAtividade(AtividadeStatus.PENDENTE.getAtividadeStatus());
+        atividadeEntity.setTrilhas(new HashSet<>(trilhaEntities));
+        atividadeEntity.setModulo(moduloEntity);
+
+        atividadeRepository.save(atividadeEntity);
+
+        return objectMapper.convertValue(atividadeEntity, AtividadeDTO.class);
+
+
+    }
+
+    public AtividadeDTO findById(Integer idAtividade) throws RegraDeNegocioException {
+        AtividadeEntity atividadeEntity = buscarPorIdAtividade(idAtividade);
+        return objectMapper.convertValue(atividadeEntity, AtividadeDTO.class);
+
     }
 
     public AtividadeAvaliarDTO avaliarAtividade(AtividadeAvaliarDTO atividadeAvaliarDTO, Integer idAtividade) throws RegraDeNegocioException {
@@ -94,7 +109,7 @@ public class AtividadeService {
                 })
                 .toList();
 
-        if(atividadeMuralDTOList.isEmpty()) {
+        if (atividadeMuralDTOList.isEmpty()) {
             throw new RegraDeNegocioException("Sem atividades no mural.");
         }
 
@@ -117,7 +132,7 @@ public class AtividadeService {
                 })
                 .toList();
 
-        if(atividadeNotaDTOList.isEmpty()) {
+        if (atividadeNotaDTOList.isEmpty()) {
             throw new RegraDeNegocioException("Sem cadastro de notas.");
         }
 

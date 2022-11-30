@@ -48,4 +48,18 @@ public class ModuloController {
         log.info("Modulo Criado com sucesso....");
         return new ResponseEntity<>(moduloDTO, HttpStatus.OK);
     }
+
+    @Operation(summary = "Pega modulo pelo id", description = "Resgata o modulo pelo id do banco de dados")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "Foi resgatado com sucesso"),
+                    @ApiResponse(responseCode = "404", description = "Não encontrado"),
+                    @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção")
+            }
+    )
+    @GetMapping("/find-id-modulo")
+    public ResponseEntity<ModuloDTO> findById(Integer idModulo) throws RegraDeNegocioException {
+        return new ResponseEntity<>(moduloService.findById(idModulo), HttpStatus.OK);
+    }
+
 }

@@ -2,6 +2,7 @@ package br.com.vemrankser.ranqueamento.service;
 
 import br.com.vemrankser.ranqueamento.dto.*;
 import br.com.vemrankser.ranqueamento.entity.CargoEntity;
+import br.com.vemrankser.ranqueamento.entity.TrilhaEntity;
 import br.com.vemrankser.ranqueamento.entity.UsuarioEntity;
 import br.com.vemrankser.ranqueamento.enums.TipoPerfil;
 import br.com.vemrankser.ranqueamento.exceptions.RegraDeNegocioException;
@@ -17,10 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -63,6 +61,11 @@ public class UsuarioService {
 
     }
 
+    public UsuarioDTO pegarIdUsuario(Integer id) throws RegraDeNegocioException {
+        UsuarioEntity usuarioEntity = findById(id);
+        return objectMapper.convertValue(usuarioEntity, UsuarioDTO.class);
+    }
+
     public UsuarioDTO pegarLoginInstrutor(String login) throws RegraDeNegocioException {
         UsuarioEntity usuarioEncontrado = usuarioRepository.findByLoginIgnoreCase(login);
         if (!Objects.equals(usuarioEncontrado.getTipoPerfil(), TipoPerfil.INSTRUTOR.getCargo())) {
@@ -71,6 +74,19 @@ public class UsuarioService {
 
         return objectMapper.convertValue(usuarioEncontrado, UsuarioDTO.class);
 
+    }
+    public UsuarioDTO editar(Integer id, UsuarioAtualizarDTO usuarioAtualizar) throws RegraDeNegocioException {
+        UsuarioEntity usuarioEncontrado = findById(id);
+        usuarioEncontrado.setNome(usuarioAtualizar.getNome());
+        usuarioEncontrado.setLogin(usuarioAtualizar.getLogin());
+        usuarioEncontrado.setEmail(usuarioAtualizar.getEmail());
+        usuarioEncontrado.setCidade(usuarioAtualizar.getCidade());
+        usuarioEncontrado.setEspecialidade(usuarioAtualizar.getEspecialidade());
+        usuarioEncontrado.setSenha(passwordEncoder.encode(usuarioAtualizar.getSenha()));
+        usuarioEncontrado.setStatusUsuario(usuarioAtualizar.getStatusUsuario());
+
+        usuarioRepository.save(usuarioEncontrado);
+        return objectMapper.convertValue(usuarioEncontrado, UsuarioDTO.class);
     }
 
     public PageDTO<UsuarioDTO> listarUsuarios(Integer pagina, Integer tamanho, String sort) {

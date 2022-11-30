@@ -5,7 +5,6 @@ import br.com.vemrankser.ranqueamento.entity.AtividadeEntity;
 import br.com.vemrankser.ranqueamento.enums.AtividadeStatus;
 import br.com.vemrankser.ranqueamento.exceptions.RegraDeNegocioException;
 import br.com.vemrankser.ranqueamento.service.AtividadeService;
-import br.com.vemrankser.ranqueamento.service.UsuarioService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -28,24 +27,24 @@ public class AtividadeController {
 
     private final AtividadeService atividadeService;
 
-    //    @Override
-//    @Operation(summary = "Cadastro de atividade", description = "Cadastrar atividade para os módulos")
-//    @ApiResponses(
-//            value = {
-//                    @ApiResponse(responseCode = "200", description = "Cadastro de atividade com sucesso"),
-//                    @ApiResponse(responseCode = "403", description = "Você não tem permissão para acessar este recurso"),
-//                    @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção")
-//            }
-//    )
-//    @PostMapping
-//    public ResponseEntity<AtividadeCreateDTO> create(@RequestBody @Valid AtividadeCreateDTO atividadeCreateDTO, Integer idModulo, Integer idTrilha, String login) throws RegraDeNegocioException {
-//
-//        log.info("Criando nova atidade....");
-//        AtividadeDTO atividadeDTO = atividadeService.adicionar(atividadeCreateDTO, idModulo, idTrilha, login);
-//        log.info("Atividade criada com sucesso!");
-//
-//        return new ResponseEntity<>(atividadeDTO, HttpStatus.CREATED);
-//    }
+
+    @Operation(summary = "Cadastro de atividade", description = "Cadastrar atividade para os módulos")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "Cadastro de atividade com sucesso"),
+                    @ApiResponse(responseCode = "403", description = "Você não tem permissão para acessar este recurso"),
+                    @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção")
+            }
+    )
+    @PostMapping
+    public ResponseEntity<AtividadeDTO> create(@RequestBody @Valid AtividadeCreateDTO atividadeCreateDTO, Integer idModulo, @RequestParam List<Integer> idTrilha) throws RegraDeNegocioException {
+
+        log.info("Criando nova atidade....");
+        AtividadeDTO atividadeDTO = atividadeService.createAtividade(atividadeCreateDTO, idModulo, idTrilha);
+        log.info("Atividade criada com sucesso!");
+
+        return new ResponseEntity<>(atividadeDTO, HttpStatus.CREATED);
+    }
 
 
     @Operation(summary = "Listar atividade com paginação", description = "Listar atividade com paginação")
@@ -123,10 +122,22 @@ public class AtividadeController {
             }
     )
     @PutMapping("/entregar/{idAtividade}")
-    public ResponseEntity<AtividadeAlunoEnviarDTO> entregarAtividade(@PathVariable(name = "idAtividade")Integer idAtividade, AtividadeAlunoEnviarDTO atividadeAlunoEnviarDTO) throws RegraDeNegocioException {
+    public ResponseEntity<AtividadeAlunoEnviarDTO> entregarAtividade(@PathVariable(name = "idAtividade") Integer idAtividade, AtividadeAlunoEnviarDTO atividadeAlunoEnviarDTO) throws RegraDeNegocioException {
         return new ResponseEntity<>(atividadeService.entregarAtividade(atividadeAlunoEnviarDTO, idAtividade), HttpStatus.OK);
 
     }
 
+    @Operation(summary = "Pega a atividade pelo id", description = "Resgata a atividade pelo id do banco de dados")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "Foi resgatado com sucesso"),
+                    @ApiResponse(responseCode = "404", description = "Não encontrado"),
+                    @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção")
+            }
+    )
+    @GetMapping("/find-id-atividade")
+    public ResponseEntity<AtividadeDTO> findById(Integer idAtividade) throws RegraDeNegocioException {
+        return new ResponseEntity<>(atividadeService.findById(idAtividade), HttpStatus.OK);
+    }
 
 }

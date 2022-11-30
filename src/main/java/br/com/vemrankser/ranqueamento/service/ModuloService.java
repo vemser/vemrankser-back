@@ -38,6 +38,12 @@ public class ModuloService {
                 .orElseThrow(() -> new RegraDeNegocioException("Modulo não encontrado."));
     }
 
+    public ModuloDTO findById(Integer idModulo) throws RegraDeNegocioException {
+        ModuloEntity moduloEntity = buscarPorIdModulo(idModulo);
+        return objectMapper.convertValue(moduloEntity, ModuloDTO.class);
+
+    }
+
     private List<ModuloDTO> listarModulo() {
         return moduloRepository.findAll()
                 .stream()
@@ -47,7 +53,7 @@ public class ModuloService {
 
     public ModuloDTO vincularModuloTrilha(Integer idModulo, Integer idTrilha) throws RegraDeNegocioException {
         ModuloEntity moduloEntity = buscarPorIdModulo(idModulo);
-        TrilhaEntity trilhaEntity = trilhaService.buscarPorIdTrilha(idTrilha);
+        TrilhaEntity trilhaEntity = trilhaService.findById(idTrilha);
         moduloEntity.getTrilhas().add(trilhaEntity);
         moduloRepository.save(moduloEntity);
         return objectMapper.convertValue(moduloEntity, ModuloDTO.class);
