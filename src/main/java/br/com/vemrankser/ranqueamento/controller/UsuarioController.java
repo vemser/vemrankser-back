@@ -95,6 +95,19 @@ public class UsuarioController {
         return new ResponseEntity<>(usuarioService.listarAlunos(pagina, tamanho), HttpStatus.OK);
     }
 
+    @Operation(summary = "Pega a lista de alunos e trilha", description = "Resgata a lista de alunos e trilha do banco de dados")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "Foi resgatado com sucesso"),
+                    @ApiResponse(responseCode = "404", description = "Não encontrado"),
+                    @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção")
+            }
+    )
+    @GetMapping("/lista-alunos-trilha")
+    public ResponseEntity<PageDTO<AlunoTrilhaDTO>> listAlunosTrilha(Integer pagina, Integer tamanho) {
+        return new ResponseEntity<>(usuarioService.listarAlunosTrilha(pagina, tamanho), HttpStatus.OK);
+    }
+
     @Operation(summary = "Pega aluno pelo login", description = "Resgata o aluno pelo login banco de dados")
     @ApiResponses(
             value = {

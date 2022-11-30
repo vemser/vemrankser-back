@@ -101,6 +101,24 @@ public class UsuarioService {
                 usuarioDTOS);
     }
 
+    public PageDTO<AlunoTrilhaDTO> listarAlunosTrilha(Integer pagina, Integer tamanho) {
+        PageRequest pageRequest = PageRequest.of(pagina, tamanho);
+        Page<UsuarioEntity> allAlunos = usuarioRepository.findAllByTipoPerfil(TipoPerfil.ALUNO.getCargo(), pageRequest);
+        List<AlunoTrilhaDTO> usuarioDTOS = allAlunos.getContent().stream()
+                .map(usuarioEntity -> {
+                    AlunoTrilhaDTO alunoTrilhaDTO = objectMapper.convertValue(usuarioEntity, AlunoTrilhaDTO.class);
+                    alunoTrilhaDTO.setTrilhas(usuarioEntity.getTrilhas().stream()
+                            .map(trilhaEntity -> objectMapper.convertValue(trilhaEntity, TrilhaDTO.class)).toList());
+
+                    return alunoTrilhaDTO;
+                }).toList();
+        return new PageDTO<>(allAlunos.getTotalElements(),
+                allAlunos.getTotalPages(),
+                pagina,
+                tamanho,
+                usuarioDTOS);
+    }
+
     public Integer getIdLoggedUser() {
         return Integer.parseInt(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
     }
