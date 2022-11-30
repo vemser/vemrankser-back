@@ -9,7 +9,8 @@ import javax.validation.constraints.NotNull;
 public class UsuarioAtualizarDTO {
 //    @Schema(description = "Sua foto", example = "foto")
 //    private Byte[] foto;
-
+    @Schema(description = "Seu id", example = "1")
+    private Integer idUsuario;
     @NotNull
     @Schema(description = "Seu nome", example = "diego")
     private String nome;
@@ -22,7 +23,7 @@ public class UsuarioAtualizarDTO {
     @Schema(description = "Seu email", example = "diego@hotmail.com")
     private String email;
 
-    @NotNull
+
     @Schema(description = "Sua senha", example = "123")
     private String senha;
 

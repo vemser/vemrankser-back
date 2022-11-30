@@ -28,7 +28,7 @@ public class AtividadeCreateDTO {
     @Schema(description = "Peso da atividade", example = "2")
     private Integer pesoAtividade;
 
-    @NotNull
+
     @FutureOrPresent
     @Schema(description = "Data de início da atividade", example = "15/02/2023")
     private LocalDateTime dataCriacao;

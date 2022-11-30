@@ -55,6 +55,25 @@ public class TrilhaService {
         trilhaRepository.save(trilhaEntity);
         return objectMapper.convertValue(trilhaEntity, TrilhaDTO.class);
     }
+//  FAZER POR LISTA DE IDTRILHA
+//    public TrilhaDTO adicionarAlunoTrilha2(List<Integer> idTrilha, Integer edicao, String login) throws RegraDeNegocioException {
+//        UsuarioDTO alunoDTO = usuarioService.pegarLogin(login);
+//        UsuarioEntity alunoEncontrado = objectMapper.convertValue(alunoDTO, UsuarioEntity.class);
+//        List<TrilhaEntity> trilhaEntities = new ArrayList<>();
+//     //   TrilhaEntity trilhaEntity = buscarPorNomeTrilha(nomeTrilha);
+////        if (!Objects.equals(trilhaEntity.getEdicao(), edicao)) {
+////            throw new RegraDeNegocioException("Esta edição de trilha não existe!");
+////        }
+//        for (Integer number : idTrilha) {
+//            TrilhaEntity trilhaEntity = findById(number);
+//            trilhaEntities.add(trilhaEntity);
+//            trilhaEntity.getUsuarios().add(alunoEncontrado);
+//            tr
+//        }
+//
+//        trilhaRepository.save(trilhaEntity);
+//        return objectMapper.convertValue(trilhaEntity, TrilhaDTO.class);
+//    }
 
     public TrilhaDTO adicionarIntrustorTrilha(String nomeTrilha, Integer edicao, String login) throws RegraDeNegocioException {
         UsuarioDTO instrutorDTO = usuarioService.pegarLoginInstrutor(login);
