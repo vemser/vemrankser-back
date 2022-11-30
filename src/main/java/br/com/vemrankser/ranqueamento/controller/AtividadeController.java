@@ -29,23 +29,23 @@ public class AtividadeController {
     private final AtividadeService atividadeService;
 
     //    @Override
-    @Operation(summary = "Cadastro de atividade", description = "Cadastrar atividade para os módulos")
-    @ApiResponses(
-            value = {
-                    @ApiResponse(responseCode = "200", description = "Cadastro de atividade com sucesso"),
-                    @ApiResponse(responseCode = "403", description = "Você não tem permissão para acessar este recurso"),
-                    @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção")
-            }
-    )
-    @PostMapping
-    public ResponseEntity<AtividadeCreateDTO> create(@RequestBody @Valid AtividadeCreateDTO atividadeCreateDTO, Integer idModulo, Integer idTrilha, String login) throws RegraDeNegocioException {
-
-        log.info("Criando nova atidade....");
-        AtividadeDTO atividadeDTO = atividadeService.adicionar(atividadeCreateDTO, idModulo, idTrilha, login);
-        log.info("Atividade criada com sucesso!");
-
-        return new ResponseEntity<>(atividadeDTO, HttpStatus.CREATED);
-    }
+//    @Operation(summary = "Cadastro de atividade", description = "Cadastrar atividade para os módulos")
+//    @ApiResponses(
+//            value = {
+//                    @ApiResponse(responseCode = "200", description = "Cadastro de atividade com sucesso"),
+//                    @ApiResponse(responseCode = "403", description = "Você não tem permissão para acessar este recurso"),
+//                    @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção")
+//            }
+//    )
+//    @PostMapping
+//    public ResponseEntity<AtividadeCreateDTO> create(@RequestBody @Valid AtividadeCreateDTO atividadeCreateDTO, Integer idModulo, Integer idTrilha, String login) throws RegraDeNegocioException {
+//
+//        log.info("Criando nova atidade....");
+//        AtividadeDTO atividadeDTO = atividadeService.adicionar(atividadeCreateDTO, idModulo, idTrilha, login);
+//        log.info("Atividade criada com sucesso!");
+//
+//        return new ResponseEntity<>(atividadeDTO, HttpStatus.CREATED);
+//    }
 
 
     @Operation(summary = "Listar atividade com paginação", description = "Listar atividade com paginação")
