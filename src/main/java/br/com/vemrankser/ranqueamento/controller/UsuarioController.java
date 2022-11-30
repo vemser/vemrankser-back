@@ -104,8 +104,8 @@ public class UsuarioController {
             }
     )
     @GetMapping("/lista-alunos-trilha")
-    public ResponseEntity<PageDTO<AlunoTrilhaDTO>> listAlunosTrilha(Integer pagina, Integer tamanho) {
-        return new ResponseEntity<>(usuarioService.listarAlunosTrilha(pagina, tamanho), HttpStatus.OK);
+    public ResponseEntity<PageDTO<AlunoTrilhaDTO>> listAlunosTrilha(Integer pagina, Integer tamanho, @RequestParam(defaultValue = "") String nome) {
+        return new ResponseEntity<>(usuarioService.listarAlunosTrilha(pagina, tamanho, nome), HttpStatus.OK);
     }
 
     @Operation(summary = "Pega aluno pelo login", description = "Resgata o aluno pelo login banco de dados")

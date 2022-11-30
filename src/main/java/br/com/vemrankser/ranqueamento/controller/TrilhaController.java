@@ -64,7 +64,7 @@ public class TrilhaController {
             }
     )
     @GetMapping("/lista-usuarios")
-    public ResponseEntity<PageDTO<TrilhaPaginadoDTO>> listUsuarios(Integer pagina, Integer tamanho, String nome) {
+    public ResponseEntity<PageDTO<TrilhaPaginadoDTO>> listUsuarios(Integer pagina, Integer tamanho, @RequestParam(defaultValue = "") String nome) {
         return new ResponseEntity<>(trilhaService.listarUsuariosNaTrilha(pagina, tamanho, nome), HttpStatus.OK);
     }
 

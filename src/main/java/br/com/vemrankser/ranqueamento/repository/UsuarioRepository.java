@@ -18,7 +18,9 @@ public interface UsuarioRepository extends JpaRepository<UsuarioEntity, Integer>
 
     Page<UsuarioEntity> findByNomeIgnoreCaseContaining(String nome, Pageable pageable);
 
-    Page<UsuarioEntity> findAllByTipoPerfil(Integer tipoPerfil,Pageable pageable);
+    Page<UsuarioEntity> findAllByTipoPerfil(Integer tipoPerfil, Pageable pageable);
+
+    Page<UsuarioEntity> findAllByTipoPerfilAndNomeContainingIgnoreCase(Integer tipoPerfil, String nome, Pageable pageable);
 
     List<UsuarioEntity> findTop5ByOrderByPontuacaoAlunoDesc();
 
