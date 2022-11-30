@@ -181,24 +181,29 @@ public class UsuarioService {
 //    }
 
     // FALTA TERMINAR
-    public UsuarioDTO editar(Integer id, UsuarioAtualizarDTO usuarioAtualizar) throws RegraDeNegocioException {
-        UsuarioEntity usuarioEncontrado = findById(id);
-        //  usuarioEncontrado.setFoto(usuarioEncontrado.getFoto());
-        usuarioEncontrado.setNome(usuarioAtualizar.getNome());
-        usuarioEncontrado.setEmail(usuarioAtualizar.getEmail());
-        usuarioEncontrado.setSenha(passwordEncoder.encode(usuarioAtualizar.getSenha()));
-        usuarioEncontrado.setStatusUsuario(usuarioAtualizar.getStatusUsuario());
-        //   usuarioEncontrado.setAtuacao(usuarioAtualizar.getAtuacao());
-        // Set<TrilhaEntity> collect = usuarioAtualizar.getTrilhas().stream().collect(Collectors.toSet());
-
-        //  usuarioEncontrado.setTrilhas(new HashSet<>(collect));
-
-        // errado  usuarioEncontrado.setTipoPerfil(usuarioEncontrado.getTipoPerfil());
-
-        usuarioRepository.save(usuarioEncontrado);
-
-        return objectMapper.convertValue(usuarioEncontrado, UsuarioDTO.class);
-    }
+//    public UsuarioDTO editar(Integer id, UsuarioAtualizarDTO usuarioAtualizar) throws RegraDeNegocioException {
+//        UsuarioEntity usuarioEncontrado = findById(id);
+//        List<TrilhaEntity> trilhaEntities = new ArrayList<>();
+//        //  usuarioEncontrado.setFoto(usuarioEncontrado.getFoto());
+//        usuarioEncontrado.setNome(usuarioAtualizar.getNome());
+//        usuarioEncontrado.setEmail(usuarioAtualizar.getEmail());
+//        usuarioEncontrado.setSenha(passwordEncoder.encode(usuarioAtualizar.getSenha()));
+//        usuarioEncontrado.setStatusUsuario(usuarioAtualizar.getStatusUsuario());
+//        //   usuarioEncontrado.setAtuacao(usuarioAtualizar.getAtuacao());
+//       for (TrilhaNomeDTO trilha: usuarioAtualizar.getTrilhas() ) {
+//         //  TrilhaEntity trilhaEntity = trilhaService.buscarPorNomeTrilha(trilha.getNome());
+//       //    trilhaEntities.add(trilhaEntity);
+//
+//       }
+//        usuarioEncontrado.setTrilhas(new HashSet<>(trilhaEntities));
+//
+//
+//        // errado  usuarioEncontrado.setTipoPerfil(usuarioEncontrado.getTipoPerfil());
+//
+//        usuarioRepository.save(usuarioEncontrado);
+//
+//        return objectMapper.convertValue(usuarioEncontrado, UsuarioDTO.class);
+//    }
 
     public UsuarioEntity findById(Integer id) throws RegraDeNegocioException {
         return usuarioRepository.findById(id)

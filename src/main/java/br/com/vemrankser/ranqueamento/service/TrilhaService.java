@@ -5,16 +5,16 @@ import br.com.vemrankser.ranqueamento.entity.TrilhaEntity;
 import br.com.vemrankser.ranqueamento.entity.UsuarioEntity;
 import br.com.vemrankser.ranqueamento.exceptions.RegraDeNegocioException;
 import br.com.vemrankser.ranqueamento.repository.TrilhaRepository;
+import br.com.vemrankser.ranqueamento.repository.UsuarioRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -24,9 +24,11 @@ public class TrilhaService {
 
     private final TrilhaRepository trilhaRepository;
     private final UsuarioService usuarioService;
+    private final UsuarioRepository usuarioRepository;
 
 
     private final ObjectMapper objectMapper;
+    private final PasswordEncoder passwordEncoder;
 
     public TrilhaDTO adicionar(TrilhaCreateDTO trilhaNova) throws RegraDeNegocioException {
         TrilhaEntity trilha = objectMapper.convertValue(trilhaNova, TrilhaEntity.class);
@@ -34,13 +36,33 @@ public class TrilhaService {
         return objectMapper.convertValue(trilha, TrilhaDTO.class);
     }
 
-//    public TrilhaDTO adicionarAlunoTrilha(Integer idTrilha, Integer idAluno) throws RegraDeNegocioException {
+    //    public TrilhaDTO adicionarAlunoTrilha(Integer idTrilha, Integer idAluno) throws RegraDeNegocioException {
 //        UsuarioEntity alunoEncontrado = usuarioService.findById(idAluno);
 //        TrilhaEntity trilhaEntity = buscarPorIdTrilha(idTrilha);
 //        trilhaEntity.getUsuarios().add(alunoEncontrado);
 //        trilhaRepository.save(trilhaEntity);
 //        return objectMapper.convertValue(trilhaEntity, TrilhaDTO.class);
 //    }
+    public UsuarioDTO editar(Integer id, UsuarioAtualizarDTO usuarioAtualizar) throws RegraDeNegocioException {
+        UsuarioEntity usuarioEncontrado = usuarioService.findById(id);
+        List<TrilhaEntity> trilhaEntities = new ArrayList<>();
+        usuarioEncontrado.setNome(usuarioAtualizar.getNome());
+        usuarioEncontrado.setLogin(usuarioAtualizar.getLogin());
+        usuarioEncontrado.setEmail(usuarioAtualizar.getEmail());
+        usuarioEncontrado.setCidade(usuarioAtualizar.getCidade());
+        usuarioEncontrado.setEspecialidade(usuarioAtualizar.getEspecialidade());
+        usuarioEncontrado.setSenha(passwordEncoder.encode(usuarioAtualizar.getSenha()));
+        usuarioEncontrado.setStatusUsuario(usuarioAtualizar.getStatusUsuario());
+        for (TrilhaNomeDTO trilha : usuarioAtualizar.getTrilhas()) {
+            TrilhaEntity trilhaEntity = buscarPorNomeTrilha(trilha.getNome());
+            trilhaEntities.add(trilhaEntity);
+
+        }
+        usuarioEncontrado.setTrilhas(new HashSet<>(trilhaEntities));
+
+        usuarioRepository.save(usuarioEncontrado);
+        return objectMapper.convertValue(usuarioEncontrado, UsuarioDTO.class);
+    }
 
     public TrilhaDTO adicionarAlunoTrilha(String nomeTrilha, Integer edicao, String login) throws RegraDeNegocioException {
         UsuarioDTO alunoDTO = usuarioService.pegarLogin(login);

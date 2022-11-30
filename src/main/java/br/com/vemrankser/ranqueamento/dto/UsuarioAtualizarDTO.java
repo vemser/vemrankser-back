@@ -49,5 +49,5 @@ public class UsuarioAtualizarDTO {
     @Schema(description = "Especialidade do instrutor", example = "QA")
     private String especialidade;
 
-   // private Set<TrilhaNomeDTO> trilhas;
+    private Set<TrilhaNomeDTO> trilhas;
 }
