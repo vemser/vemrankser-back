@@ -28,6 +28,7 @@ public class UsuarioService {
 
     private static final int USUARIO_ATIVO = 1;
     private static final int USUARIO_INATIVO = 0;
+    private static final int PONTUACAO_INICIAL = 0;
 
     private final UsuarioRepository usuarioRepository;
 
@@ -152,6 +153,7 @@ public class UsuarioService {
         usuarioEntity.setStatusUsuario(USUARIO_ATIVO);
         usuarioEntity.setSenha(senhaCriptografada);
         usuarioEntity.setTipoPerfil(tipoPerfil.getCargo());
+        usuarioEntity.setPontuacaoAluno(PONTUACAO_INICIAL);
 
         return objectMapper.convertValue(usuarioRepository.save(usuarioEntity), UsuarioDTO.class);
     }
