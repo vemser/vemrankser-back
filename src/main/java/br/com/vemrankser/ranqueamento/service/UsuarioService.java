@@ -50,6 +50,11 @@ public class UsuarioService {
                 .toList();
 
     }
+    public List<UsuarioDTO> list() {
+        return usuarioRepository.findAll().stream()
+                .map(pessoa -> objectMapper.convertValue(pessoa, UsuarioDTO.class))
+                .toList();
+    }
 
     public UsuarioDTO pegarLogin(String login) throws RegraDeNegocioException {
         UsuarioEntity usuarioEncontrado = usuarioRepository.findByLoginIgnoreCase(login);

@@ -9,4 +9,8 @@ public class UsuarioDTO {
     private String email;
     private Integer statusUsuario;
     private Integer tipoPerfil;
+    private String login;
+    private String cidade;
+    private String especialidade;
+
 }
