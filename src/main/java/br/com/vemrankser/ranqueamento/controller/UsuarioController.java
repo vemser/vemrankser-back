@@ -150,4 +150,17 @@ public class UsuarioController {
         return new ResponseEntity<>(usuarioService.pegarImagemUsuario(idUsuario), HttpStatus.OK);
     }
 
+    @Operation(summary = "Pegar usuário logado", description = "Resgata o usuário logado do banco de dados")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "Foi resgatado com sucesso"),
+                    @ApiResponse(responseCode = "404", description = "Não encontrado"),
+                    @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção")
+            }
+    )
+    @GetMapping("/pegar-usuario-logado")
+    public ResponseEntity<UsuarioLogadoDTO> pegarUsuarioLogado() throws RegraDeNegocioException {
+        return new ResponseEntity<>(usuarioService.getLoggedUser(), HttpStatus.OK);
+    }
+
 }

@@ -54,6 +54,18 @@ public class TrilhaService {
         return objectMapper.convertValue(trilhaEntity, TrilhaDTO.class);
     }
 
+    public TrilhaDTO adicionarIntrustorTrilha(String nomeTrilha, Integer edicao, String login) throws RegraDeNegocioException {
+        UsuarioDTO instrutorDTO = usuarioService.pegarLoginInstrutor(login);
+        UsuarioEntity instrutorEncontrado = objectMapper.convertValue(instrutorDTO, UsuarioEntity.class);
+        TrilhaEntity trilhaEntity = buscarPorNomeTrilha(nomeTrilha);
+        if (!Objects.equals(trilhaEntity.getEdicao(), edicao)) {
+            throw new RegraDeNegocioException("Esta edição de trilha não existe!");
+        }
+        trilhaEntity.getUsuarios().add(instrutorEncontrado);
+        trilhaRepository.save(trilhaEntity);
+        return objectMapper.convertValue(trilhaEntity, TrilhaDTO.class);
+    }
+
     public PageDTO<TrilhaPaginadoDTO> listarUsuariosNaTrilha(Integer pagina, Integer tamanho, String nome) {
         PageRequest pageRequest = PageRequest.of(pagina, tamanho);
         Page<TrilhaEntity> allAlunos = trilhaRepository.findAllByNomeContainingIgnoreCase(nome, pageRequest);

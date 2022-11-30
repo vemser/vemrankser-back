@@ -62,6 +62,16 @@ public class UsuarioService {
 
     }
 
+    public UsuarioDTO pegarLoginInstrutor(String login) throws RegraDeNegocioException {
+        UsuarioEntity usuarioEncontrado = usuarioRepository.findByLoginIgnoreCase(login);
+        if (!Objects.equals(usuarioEncontrado.getTipoPerfil(), TipoPerfil.INSTRUTOR.getCargo())) {
+            throw new RegraDeNegocioException("Este usuário não é um instrutor");
+        }
+
+        return objectMapper.convertValue(usuarioEncontrado, UsuarioDTO.class);
+
+    }
+
     public PageDTO<UsuarioDTO> listarUsuarios(Integer pagina, Integer tamanho, String sort) {
         Sort ordenacao = Sort.by(sort.toLowerCase());
         PageRequest pageRequest = PageRequest.of(pagina, tamanho, ordenacao);
@@ -95,8 +105,8 @@ public class UsuarioService {
         return Integer.parseInt(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
     }
 
-    public UsuarioDTO getLoggedUser() throws RegraDeNegocioException {
-        return objectMapper.convertValue(findById(getIdLoggedUser()), UsuarioDTO.class);
+    public UsuarioLogadoDTO getLoggedUser() throws RegraDeNegocioException {
+        return objectMapper.convertValue(findById(getIdLoggedUser()), UsuarioLogadoDTO.class);
     }
 
     public UsuarioDTO cadastrar(UsuarioCreateDTO usuario, TipoPerfil tipoPerfil) throws RegraDeNegocioException {
@@ -136,15 +146,15 @@ public class UsuarioService {
     // FALTA TERMINAR
     public UsuarioDTO editar(Integer id, UsuarioAtualizarDTO usuarioAtualizar) throws RegraDeNegocioException {
         UsuarioEntity usuarioEncontrado = findById(id);
-      //  usuarioEncontrado.setFoto(usuarioEncontrado.getFoto());
+        //  usuarioEncontrado.setFoto(usuarioEncontrado.getFoto());
         usuarioEncontrado.setNome(usuarioAtualizar.getNome());
         usuarioEncontrado.setEmail(usuarioAtualizar.getEmail());
         usuarioEncontrado.setSenha(passwordEncoder.encode(usuarioAtualizar.getSenha()));
         usuarioEncontrado.setStatusUsuario(usuarioAtualizar.getStatusUsuario());
-     //   usuarioEncontrado.setAtuacao(usuarioAtualizar.getAtuacao());
-       // Set<TrilhaEntity> collect = usuarioAtualizar.getTrilhas().stream().collect(Collectors.toSet());
+        //   usuarioEncontrado.setAtuacao(usuarioAtualizar.getAtuacao());
+        // Set<TrilhaEntity> collect = usuarioAtualizar.getTrilhas().stream().collect(Collectors.toSet());
 
-      //  usuarioEncontrado.setTrilhas(new HashSet<>(collect));
+        //  usuarioEncontrado.setTrilhas(new HashSet<>(collect));
 
         // errado  usuarioEncontrado.setTipoPerfil(usuarioEncontrado.getTipoPerfil());
 
