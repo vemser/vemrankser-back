@@ -5,6 +5,7 @@ import br.com.vemrankser.ranqueamento.entity.AtividadeEntity;
 import br.com.vemrankser.ranqueamento.enums.AtividadeStatus;
 import br.com.vemrankser.ranqueamento.exceptions.RegraDeNegocioException;
 import br.com.vemrankser.ranqueamento.service.AtividadeService;
+import br.com.vemrankser.ranqueamento.service.UsuarioService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -17,7 +18,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @Validated
@@ -38,13 +38,13 @@ public class AtividadeController {
             }
     )
     @PostMapping
-    public ResponseEntity<AtividadeCreateDTO> create(@RequestBody @Valid AtividadeCreateDTO atividadeCreateDTO, Integer idModulo) throws RegraDeNegocioException {
+    public ResponseEntity<AtividadeCreateDTO> create(@RequestBody @Valid AtividadeCreateDTO atividadeCreateDTO, Integer idModulo, Integer idTrilha, String login) throws RegraDeNegocioException {
 
         log.info("Criando nova atidade....");
-        AtividadeDTO atividadeDTO = atividadeService.adicionar(atividadeCreateDTO, idModulo);
+        AtividadeDTO atividadeDTO = atividadeService.adicionar(atividadeCreateDTO, idModulo, idTrilha, login);
         log.info("Atividade criada com sucesso!");
 
-        return new ResponseEntity<>(atividadeDTO, HttpStatus.OK);
+        return new ResponseEntity<>(atividadeDTO, HttpStatus.CREATED);
     }
 
 
@@ -84,7 +84,7 @@ public class AtividadeController {
             }
     )
     @GetMapping("/listar-status")
-    public ResponseEntity<List<AtividadeEntity>> listarAtibuscarAtividadePorStatusvidadePaginado(AtividadeStatus atividadeStatus) throws RegraDeNegocioException {
+    public ResponseEntity<List<AtividadeEntity>> buscarAtividadePorStatusvidadePaginado(AtividadeStatus atividadeStatus) throws RegraDeNegocioException {
         return ResponseEntity.ok(atividadeService.buscarAtividadePorStatus(atividadeStatus));
     }
 
@@ -113,4 +113,20 @@ public class AtividadeController {
     public ResponseEntity<PageDTO<AtividadeNotaDTO>> listarAtividadePorNota(Integer pagina, Integer tamanho) throws RegraDeNegocioException {
         return new ResponseEntity<>(atividadeService.listarAtividadePorNota(pagina, tamanho), HttpStatus.OK);
     }
+
+    @Operation(summary = "Entregar atividade", description = "Entregar atividade")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "201", description = "Entregar atividade com sucesso"),
+                    @ApiResponse(responseCode = "403", description = "Você não tem permissão para acessar este recurso"),
+                    @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção")
+            }
+    )
+    @PutMapping("/entregar/{idAtividade}")
+    public ResponseEntity<AtividadeAlunoEnviarDTO> entregarAtividade(@PathVariable(name = "idAtividade")Integer idAtividade, AtividadeAlunoEnviarDTO atividadeAlunoEnviarDTO) throws RegraDeNegocioException {
+        return new ResponseEntity<>(atividadeService.entregarAtividade(atividadeAlunoEnviarDTO, idAtividade), HttpStatus.OK);
+
+    }
+
+
 }
