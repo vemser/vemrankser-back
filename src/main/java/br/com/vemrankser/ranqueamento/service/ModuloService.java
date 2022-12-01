@@ -63,4 +63,12 @@ public class ModuloService {
         moduloRepository.save(moduloEntity);
         return objectMapper.convertValue(moduloEntity, ModuloDTO.class);
     }
+    public void delete(Integer idModulo) throws RegraDeNegocioException {
+
+        ModuloDTO moduloRecuperado = findById(idModulo);
+        ModuloEntity contatoEntity = objectMapper.convertValue(moduloRecuperado, ModuloEntity.class);
+        moduloRepository.delete(contatoEntity);
+
+
+    }
 }
