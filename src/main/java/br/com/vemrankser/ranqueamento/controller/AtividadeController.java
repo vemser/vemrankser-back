@@ -56,7 +56,7 @@ public class AtividadeController {
             }
     )
     @GetMapping("/listar-paginado")
-    public ResponseEntity<AtividadePaginacaoDTO<AtividadeDTO>> listarAtividadePaginado(Integer pagina, Integer tamanho) throws RegraDeNegocioException {
+    public ResponseEntity<AtividadePaginacaoDTO<AtividadeDTO>> listarAtividadePaginado(@RequestParam(required = false, defaultValue = "0") Integer pagina, @RequestParam(required = false, defaultValue = "5") Integer tamanho) throws RegraDeNegocioException {
         return ResponseEntity.ok(atividadeService.listarAtividades(pagina, tamanho));
     }
 
@@ -96,7 +96,7 @@ public class AtividadeController {
             }
     )
     @GetMapping("/listar-mural-instrutor")
-    public ResponseEntity<PageDTO<AtividadeMuralDTO>> listarAtividadeMural(Integer pagina, Integer tamanho, Integer idTrilha) throws RegraDeNegocioException {
+    public ResponseEntity<PageDTO<AtividadeMuralDTO>> listarAtividadeMural(@RequestParam(required = false, defaultValue = "0") Integer pagina, @RequestParam(required = false, defaultValue = "5") Integer tamanho, Integer idTrilha) throws RegraDeNegocioException {
         return new ResponseEntity<>(atividadeService.listarAtividadeMural(pagina, tamanho, idTrilha), HttpStatus.OK);
     }
 
@@ -122,7 +122,7 @@ public class AtividadeController {
             }
     )
     @GetMapping("/listar-nota")
-    public ResponseEntity<PageDTO<AtividadeNotaDTO>> listarAtividadePorNota(Integer pagina, Integer tamanho) throws RegraDeNegocioException {
+    public ResponseEntity<PageDTO<AtividadeNotaDTO>> listarAtividadePorNota(@RequestParam(required = false, defaultValue = "0") Integer pagina, @RequestParam(required = false, defaultValue = "5") Integer tamanho) throws RegraDeNegocioException {
         return new ResponseEntity<>(atividadeService.listarAtividadePorNota(pagina, tamanho), HttpStatus.OK);
     }
 
