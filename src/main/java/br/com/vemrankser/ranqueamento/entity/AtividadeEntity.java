@@ -61,9 +61,9 @@ public class AtividadeEntity {
     @JoinColumn(name = "id_modulo", referencedColumnName = "id_modulo")
     private ModuloEntity modulo;
     // alteracao nova
-    @JsonIgnore
-    @OneToMany(mappedBy = "atividade", fetch = FetchType.LAZY)
-    private Set<UsuarioEntity> alunos = new HashSet<>();
+//    @JsonIgnore
+//    @OneToMany(mappedBy = "atividade", fetch = FetchType.LAZY)
+//    private Set<UsuarioEntity> alunos = new HashSet<>();
 
     @JsonIgnore
     @ManyToMany(fetch = FetchType.LAZY)
@@ -73,5 +73,14 @@ public class AtividadeEntity {
             inverseJoinColumns = @JoinColumn(name = "id_trilha")
     )
     private Set<TrilhaEntity> trilhas = new HashSet<>();
+
+    @JsonIgnore
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "ATIVIDADE_USUARIO",
+            joinColumns = @JoinColumn(name = "id_atividade"),
+            inverseJoinColumns = @JoinColumn(name = "id_usuario")
+    )
+    private Set<UsuarioEntity> alunos = new HashSet<>();
 
 }

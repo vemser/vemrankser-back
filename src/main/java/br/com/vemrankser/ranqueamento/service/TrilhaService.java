@@ -11,10 +11,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -44,26 +46,48 @@ public class TrilhaService {
 //    }
 
 
-    public TrilhaDTO adicionarAlunoTrilha(String nomeTrilha, Integer edicao, String login) throws RegraDeNegocioException {
-        UsuarioDTO alunoDTO = usuarioService.pegarLogin(login);
-        UsuarioEntity alunoEncontrado = objectMapper.convertValue(alunoDTO, UsuarioEntity.class);
-        TrilhaEntity trilhaEntity = buscarPorNomeTrilha(nomeTrilha);
-        if (!Objects.equals(trilhaEntity.getEdicao(), edicao)) {
-            throw new RegraDeNegocioException("Esta edição de trilha não existe!");
+    public void adicionarAlunoTrilha(String login, List<Integer> listTrilha, LoginTrilhaDTO loginTrilhaDTO) throws RegraDeNegocioException {
+        for (Integer number : listTrilha) {
+            UsuarioDTO alunoDTO = usuarioService.pegarLogin(login);
+            UsuarioEntity alunoEncontrado = objectMapper.convertValue(alunoDTO, UsuarioEntity.class);
+
+            Set<UsuarioEntity> usuarioEntities = new HashSet<>();
+            usuarioEntities.add(alunoEncontrado);
+            TrilhaEntity trilhaEntity = findById(number);
+
+
+            trilhaEntity.setUsuarios(new HashSet<>(usuarioEntities));
+
+            trilhaEntity.getUsuarios().add(alunoEncontrado);
+            trilhaRepository.save(trilhaEntity);
         }
-        trilhaEntity.getUsuarios().add(alunoEncontrado);
-        trilhaRepository.save(trilhaEntity);
-        return objectMapper.convertValue(trilhaEntity, TrilhaDTO.class);
     }
-//  FAZER POR LISTA DE IDTRILHA
+
+    public void adicionarIntrustorTrilha(String login, List<Integer> listTrilha, LoginTrilhaDTO loginTrilhaDTO) throws RegraDeNegocioException {
+        for (Integer number : listTrilha) {
+            UsuarioDTO alunoDTO = usuarioService.pegarLoginInstrutor(login);
+            UsuarioEntity alunoEncontrado = objectMapper.convertValue(alunoDTO, UsuarioEntity.class);
+
+            Set<UsuarioEntity> usuarioEntities = new HashSet<>();
+            usuarioEntities.add(alunoEncontrado);
+            TrilhaEntity trilhaEntity = findById(number);
+
+
+            trilhaEntity.setUsuarios(new HashSet<>(usuarioEntities));
+
+            trilhaEntity.getUsuarios().add(alunoEncontrado);
+            trilhaRepository.save(trilhaEntity);
+        }
+    }
+//  //
 //    public TrilhaDTO adicionarAlunoTrilha2(List<Integer> idTrilha, Integer edicao, String login) throws RegraDeNegocioException {
 //        UsuarioDTO alunoDTO = usuarioService.pegarLogin(login);
 //        UsuarioEntity alunoEncontrado = objectMapper.convertValue(alunoDTO, UsuarioEntity.class);
 //        List<TrilhaEntity> trilhaEntities = new ArrayList<>();
-//     //   TrilhaEntity trilhaEntity = buscarPorNomeTrilha(nomeTrilha);
-////        if (!Objects.equals(trilhaEntity.getEdicao(), edicao)) {
-////            throw new RegraDeNegocioException("Esta edição de trilha não existe!");
-////        }
+//        TrilhaEntity trilhaEntity = buscarPorNomeTrilha(nomeTrilha);
+//        if (!Objects.equals(trilhaEntity.getEdicao(), edicao)) {
+//            throw new RegraDeNegocioException("Esta edição de trilha não existe!");
+//        }
 //        for (Integer number : idTrilha) {
 //            TrilhaEntity trilhaEntity = findById(number);
 //            trilhaEntities.add(trilhaEntity);
@@ -75,17 +99,17 @@ public class TrilhaService {
 //        return objectMapper.convertValue(trilhaEntity, TrilhaDTO.class);
 //    }
 
-    public TrilhaDTO adicionarIntrustorTrilha(String nomeTrilha, Integer edicao, String login) throws RegraDeNegocioException {
-        UsuarioDTO instrutorDTO = usuarioService.pegarLoginInstrutor(login);
-        UsuarioEntity instrutorEncontrado = objectMapper.convertValue(instrutorDTO, UsuarioEntity.class);
-        TrilhaEntity trilhaEntity = buscarPorNomeTrilha(nomeTrilha);
-        if (!Objects.equals(trilhaEntity.getEdicao(), edicao)) {
-            throw new RegraDeNegocioException("Esta edição de trilha não existe!");
-        }
-        trilhaEntity.getUsuarios().add(instrutorEncontrado);
-        trilhaRepository.save(trilhaEntity);
-        return objectMapper.convertValue(trilhaEntity, TrilhaDTO.class);
-    }
+//    public TrilhaDTO adicionarIntrustorTrilha(String nomeTrilha, Integer edicao, String login) throws RegraDeNegocioException {
+//        UsuarioDTO instrutorDTO = usuarioService.pegarLoginInstrutor(login);
+//        UsuarioEntity instrutorEncontrado = objectMapper.convertValue(instrutorDTO, UsuarioEntity.class);
+//        TrilhaEntity trilhaEntity = buscarPorNomeTrilha(nomeTrilha);
+//        if (!Objects.equals(trilhaEntity.getEdicao(), edicao)) {
+//            throw new RegraDeNegocioException("Esta edição de trilha não existe!");
+//        }
+//        trilhaEntity.getUsuarios().add(instrutorEncontrado);
+//        trilhaRepository.save(trilhaEntity);
+//        return objectMapper.convertValue(trilhaEntity, TrilhaDTO.class);
+//    }
 
     public PageDTO<TrilhaPaginadoDTO> listarUsuariosNaTrilha(Integer pagina, Integer tamanho, String nome) {
         PageRequest pageRequest = PageRequest.of(pagina, tamanho);

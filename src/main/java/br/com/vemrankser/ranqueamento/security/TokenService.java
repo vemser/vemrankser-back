@@ -41,6 +41,8 @@ public class TokenService {
                 .setIssuer("vemser-api")
                 .claim(Claims.ID, usuarioEntity.getIdUsuario().toString())
                 .claim(CHAVE_CARGOS, cargosDoUsuario)
+                .claim("nome",usuarioEntity.getNome())
+                .claim("tipoPerfil",usuarioEntity.getTipoPerfil())
                 .setIssuedAt(date)
                 .setExpiration(dateExperition)
                 .signWith(SignatureAlgorithm.HS256, secret)

@@ -2,6 +2,7 @@ package br.com.vemrankser.ranqueamento.service;
 
 import br.com.vemrankser.ranqueamento.dto.ModuloCreateDTO;
 import br.com.vemrankser.ranqueamento.dto.ModuloDTO;
+import br.com.vemrankser.ranqueamento.dto.ModuloTrilhaDTO;
 import br.com.vemrankser.ranqueamento.entity.ModuloEntity;
 import br.com.vemrankser.ranqueamento.entity.TrilhaEntity;
 import br.com.vemrankser.ranqueamento.enums.StatusModulo;
@@ -55,7 +56,7 @@ public class ModuloService {
                 .toList();
     }
 
-    public ModuloDTO vincularModuloTrilha(Integer idModulo, Integer idTrilha) throws RegraDeNegocioException {
+    public ModuloDTO vincularModuloTrilha(Integer idModulo, Integer idTrilha, ModuloTrilhaDTO moduloTrilhaDTO) throws RegraDeNegocioException {
         ModuloEntity moduloEntity = buscarPorIdModulo(idModulo);
         TrilhaEntity trilhaEntity = trilhaService.findById(idTrilha);
         moduloEntity.getTrilhas().add(trilhaEntity);

@@ -50,9 +50,9 @@ public class TrilhaController {
             }
     )
     @PostMapping("/adicionar-aluno-trilha")
-    public ResponseEntity<TrilhaDTO> adicionarAluno(String nomeTrilha, Integer edicao, String login) throws RegraDeNegocioException {
-        TrilhaDTO trilhaDTO = trilhaService.adicionarAlunoTrilha(nomeTrilha, edicao, login);
-        return new ResponseEntity<>(trilhaDTO, HttpStatus.OK);
+    public ResponseEntity<Void> adicionarAluno(String login, @RequestParam List<Integer> idTrilha, @RequestBody LoginTrilhaDTO loginTrilha) throws RegraDeNegocioException {
+        trilhaService.adicionarAlunoTrilha(login, idTrilha, loginTrilha);
+        return ResponseEntity.ok().build();
     }
 
     @Operation(summary = "Pega a lista de usuários na trilha", description = "Resgata a lista de usuários na trilha do banco de dados")
@@ -117,9 +117,9 @@ public class TrilhaController {
             }
     )
     @PostMapping("/adicionar-instrutor-trilha")
-    public ResponseEntity<TrilhaDTO> adicionarInstrutor(String nomeTrilha, Integer edicao, String login) throws RegraDeNegocioException {
-        TrilhaDTO trilhaDTO = trilhaService.adicionarIntrustorTrilha(nomeTrilha, edicao, login);
-        return new ResponseEntity<>(trilhaDTO, HttpStatus.OK);
+    public ResponseEntity<Void> adicionarInstrutor(String login, @RequestParam List<Integer> idTrilha, @RequestBody LoginTrilhaDTO loginTrilha) throws RegraDeNegocioException {
+        trilhaService.adicionarIntrustorTrilha(login, idTrilha, loginTrilha);
+        return ResponseEntity.ok().build();
     }
 
     @Operation(summary = "Pega trilha pelo id", description = "Resgata a trilha pelo id do banco de dados")

@@ -25,8 +25,8 @@ public class UsuarioEntity implements UserDetails {
     @Column(name = "id_usuario")
     private Integer idUsuario;
     // alteracao nova
-    @Column(name = "id_atividade", insertable = false, updatable = false)
-    private Integer idAtividade;
+//    @Column(name = "id_atividade", insertable = false, updatable = false)
+//    private Integer idAtividade;
 
     @Column(name = "foto")
     @Lob
@@ -80,10 +80,19 @@ public class UsuarioEntity implements UserDetails {
     )
     private Set<TrilhaEntity> trilhas;
     // alteracao nova
+//    @JsonIgnore
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "ID_ATIVIDADE", referencedColumnName = "ID_ATIVIDADE")
+//    private AtividadeEntity atividade;
+
     @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "ID_ATIVIDADE", referencedColumnName = "ID_ATIVIDADE")
-    private AtividadeEntity atividade;
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "ATIVIDADE_USUARIO",
+            joinColumns = @JoinColumn(name = "id_usuario"),
+            inverseJoinColumns = @JoinColumn(name = "id_atividade")
+    )
+    private Set<AtividadeEntity> atividades;
 
 
     @Override
