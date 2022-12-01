@@ -229,4 +229,8 @@ public class UsuarioService {
     public List<UsuarioEntity> findTop5ByOrderByPontuacaoDesc() {
         return usuarioRepository.findTop5ByOrderByPontuacaoAlunoDesc();
     }
+
+    public UsuarioEntity save(UsuarioEntity usuarioEntity) {
+        return usuarioRepository.save(usuarioEntity);
+    }
 }

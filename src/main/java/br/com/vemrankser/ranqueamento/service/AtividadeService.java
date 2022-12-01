@@ -4,6 +4,7 @@ import br.com.vemrankser.ranqueamento.dto.*;
 import br.com.vemrankser.ranqueamento.entity.AtividadeEntity;
 import br.com.vemrankser.ranqueamento.entity.ModuloEntity;
 import br.com.vemrankser.ranqueamento.entity.TrilhaEntity;
+import br.com.vemrankser.ranqueamento.entity.UsuarioEntity;
 import br.com.vemrankser.ranqueamento.enums.AtividadeStatus;
 import br.com.vemrankser.ranqueamento.exceptions.RegraDeNegocioException;
 import br.com.vemrankser.ranqueamento.repository.AtividadeRepository;
@@ -13,9 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -55,6 +54,7 @@ public class AtividadeService {
 
         for (Integer number : idTrilha) {
             TrilhaEntity trilhaEntity = trilhaService.findById(number);
+            atividadeEntity.getAlunos().addAll(trilhaEntity.getUsuarios());
             trilhaEntities.add(trilhaEntity);
 
         }
@@ -77,12 +77,16 @@ public class AtividadeService {
 
     public AtividadeAvaliarDTO avaliarAtividade(AtividadeAvaliarDTO atividadeAvaliarDTO, Integer idAtividade) throws RegraDeNegocioException {
         AtividadeEntity atividadeAvaliacao = buscarPorIdAtividade(idAtividade);
-
         atividadeAvaliacao.setStatusAtividade(AtividadeStatus.CONCLUIDA.getAtividadeStatus());
         atividadeAvaliacao.setPontuacao(atividadeAvaliarDTO.getPontuacao());
+        atividadeAvaliacao.getAlunos().forEach(aluno -> aluno.setPontuacaoAluno(calcularPontuacao(aluno, atividadeAvaliacao)));
         atividadeRepository.save(atividadeAvaliacao);
 
         return objectMapper.convertValue(atividadeAvaliacao, AtividadeAvaliarDTO.class);
+    }
+
+    private Integer calcularPontuacao (UsuarioEntity usuarioEntity, AtividadeEntity atividadeEntity) {
+        return usuarioEntity.getPontuacaoAluno() + atividadeEntity.getPontuacao();
     }
 
     public List<AtividadeEntity> buscarAtividadePorStatus(AtividadeStatus atividadeStatus) throws RegraDeNegocioException {
@@ -109,7 +113,7 @@ public class AtividadeService {
                 })
                 .toList();
 
-        if (atividadeMuralDTOList.isEmpty()) {
+        if(atividadeMuralDTOList.isEmpty()) {
             throw new RegraDeNegocioException("Sem atividades no mural.");
         }
 
@@ -118,6 +122,11 @@ public class AtividadeService {
                 pagina,
                 tamanho,
                 atividadeMuralDTOList);
+    }
+
+    public List<AtividadeMuralAlunoDTO> atividadeMuralAlunoDTOS() throws RegraDeNegocioException {
+        UsuarioEntity usuarioLogado = usuarioService.findById(usuarioService.getIdLoggedUser());
+        return atividadeRepository.listarAtividadeMuralAluno(usuarioLogado.getIdUsuario());
     }
 
     public PageDTO<AtividadeNotaDTO> listarAtividadePorNota(Integer pagina, Integer tamanho) throws RegraDeNegocioException {

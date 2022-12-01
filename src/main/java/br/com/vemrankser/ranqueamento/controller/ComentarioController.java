@@ -12,12 +12,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @Validated
 @Slf4j
@@ -44,5 +42,18 @@ public class ComentarioController {
         log.info("Comentario criado com sucesso!");
 
         return new ResponseEntity<>(comentarioDTO, HttpStatus.OK);
+    }
+
+    @Operation(summary = "Listar comentários por id atividade", description = "Listar comentários por atividade")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "Listar comentário, êxito"),
+                    @ApiResponse(responseCode = "403", description = "Você não tem permissão para acessar este recurso"),
+                    @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção")
+            }
+    )
+    @GetMapping("/listar-comentario")
+    public ResponseEntity<List<ComentarioDTO>> listarComentarioPorAtividade(Integer idAtividade) throws RegraDeNegocioException {
+        return ResponseEntity.ok(comentarioService.listarComentarioPorAtividade(idAtividade));
     }
 }

@@ -41,6 +41,5 @@ public class AtividadeCreateDTO {
 
     private List<Integer> trilhas;
 
-
     private Integer idModulo;
 }
