@@ -50,4 +50,15 @@ public class ComentarioService {
                 .orElseThrow(() -> new RegraDeNegocioException("Comentario não encontrado"));
     }
 
+    public void delete(Integer idComentario) throws RegraDeNegocioException {
+
+        ComentarioEntity comentarioRecuperado = findById(idComentario);
+        ComentarioEntity contatoEntity = objectMapper.convertValue(comentarioRecuperado, ComentarioEntity.class);
+        comentarioRepository.delete(contatoEntity);
+
+    }
+    public ComentarioEntity findById(Integer id) throws RegraDeNegocioException {
+        return comentarioRepository.findById(id)
+                .orElseThrow(() -> new RegraDeNegocioException("o comentario nao foi encontrado"));
+    }
 }
