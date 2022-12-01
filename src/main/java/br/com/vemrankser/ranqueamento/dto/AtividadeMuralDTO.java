@@ -1,18 +1,39 @@
 package br.com.vemrankser.ranqueamento.dto;
 
+import br.com.vemrankser.ranqueamento.enums.AtividadeStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.Id;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 public class AtividadeMuralDTO {
 
-    private String nome;
+    @Id
+    private Integer idAtividade;
+
+    private String titulo;
+
+    private String instrucoes;
+
+    private Integer pesoAtividade;
+
+    private LocalDateTime dataCriacao;
+
     private LocalDateTime dataEntrega;
+
+    private Integer idModulo;
+
+    private AtividadeStatus statusAtividade;
+
+    private String nomeModulo;
+
+    private String trilhaNome;
+
+    private Integer edicao;
 
 }

@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 
@@ -108,9 +109,9 @@ public class AtividadeService {
         return atividadeEntity;
     }
 
-    public PageDTO<AtividadeMuralDTO> listarAtividadeMural(Integer pagina, Integer tamanho) throws RegraDeNegocioException {
+    public PageDTO<AtividadeMuralDTO> listarAtividadeMural(Integer pagina, Integer tamanho, Integer idTrilha) throws RegraDeNegocioException {
         PageRequest pageRequest = PageRequest.of(pagina, tamanho);
-        Page<AtividadeMuralDTO> atividadeEntity = atividadeRepository.listarAtividadeMural(pageRequest);
+        Page<AtividadeMuralDTO> atividadeEntity = atividadeRepository.listarAtividadeMural(pageRequest, idTrilha);
 
         List<AtividadeMuralDTO> atividadeMuralDTOList = atividadeEntity.getContent()
                 .stream()

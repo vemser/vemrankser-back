@@ -18,28 +18,38 @@ public interface AtividadeRepository extends JpaRepository<AtividadeEntity,Integ
 
     List<AtividadeEntity> findByStatusAtividade(Integer statusAtividade);
 
-    @Query("  select new br.com.vemrankser.ranqueamento.dto.AtividadeMuralDTO ( " +
-            " u.nome, " +
-            " a.dataEntrega " +
-            " ) " +
-            " from USUARIO u, ATIVIDADE a " +
-            " left join u.trilhas ut " +
-            " left join ut.modulos tm " +
-            " left join tm.atividades" +
-            " where (u.idUsuario = a.idAtividade) " +
-            " order by a.dataEntrega DESC ")
-    Page<AtividadeMuralDTO> listarAtividadeMural(Pageable pageable);
-
-
-    @Query("  select new br.com.vemrankser.ranqueamento.dto.AtividadeMuralAlunoDTO ( " +
+    @Query("  select distinct new br.com.vemrankser.ranqueamento.dto.AtividadeMuralDTO ( " +
             " a.idAtividade, " +
-            "a.titulo, " +
+            " a.titulo, " +
             " a.instrucoes, " +
             " a.pesoAtividade, " +
             " a.dataCriacao, " +
             " a.dataEntrega, " +
             " a.idModulo, " +
-            " a.statusAtividade," +
+            " a.statusAtividade, " +
+            " a.modulo.nome, " +
+            " t.nome, " +
+            " t.edicao " +
+            " ) " +
+            " from USUARIO u, ATIVIDADE a, TRILHA t " +
+            " join u.trilhas  " +
+//            " inner join t.modulos  " +
+//            " inner join t.atividades" +
+            " where ( :idTrilha in t.idTrilha ) " +
+//            " group by t.idTrilha " +
+            " ")
+    Page<AtividadeMuralDTO> listarAtividadeMural(Pageable pageable, Integer idTrilha);
+
+
+    @Query("  select new br.com.vemrankser.ranqueamento.dto.AtividadeMuralAlunoDTO ( " +
+            " a.idAtividade, " +
+            " a.titulo, " +
+            " a.instrucoes, " +
+            " a.pesoAtividade, " +
+            " a.dataCriacao, " +
+            " a.dataEntrega, " +
+            " a.idModulo, " +
+            " a.statusAtividade, " +
             " a.modulo.nome, " +
             " t.nome, " +
             " t.edicao " +

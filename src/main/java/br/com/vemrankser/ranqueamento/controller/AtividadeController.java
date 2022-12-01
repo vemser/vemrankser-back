@@ -87,17 +87,17 @@ public class AtividadeController {
         return ResponseEntity.ok(atividadeService.buscarAtividadePorStatus(atividadeStatus));
     }
 
-    @Operation(summary = "Listar atividade no mural", description = "Listar atividade no mural")
+    @Operation(summary = "Listar atividade no mural instrutor", description = "Listar atividade no mural instrutor")
     @ApiResponses(
             value = {
-                    @ApiResponse(responseCode = "201", description = "Listar atividade no mural com sucesso"),
+                    @ApiResponse(responseCode = "201", description = "Listar atividade no mural do instrutor com sucesso"),
                     @ApiResponse(responseCode = "403", description = "Você não tem permissão para acessar este recurso"),
                     @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção")
             }
     )
-    @GetMapping("/listar-mural")
-    public ResponseEntity<PageDTO<AtividadeMuralDTO>> listarAtividadeMural(Integer pagina, Integer tamanho) throws RegraDeNegocioException {
-        return new ResponseEntity<>(atividadeService.listarAtividadeMural(pagina, tamanho), HttpStatus.OK);
+    @GetMapping("/listar-mural-instrutor")
+    public ResponseEntity<PageDTO<AtividadeMuralDTO>> listarAtividadeMural(Integer pagina, Integer tamanho, Integer idTrilha) throws RegraDeNegocioException {
+        return new ResponseEntity<>(atividadeService.listarAtividadeMural(pagina, tamanho, idTrilha), HttpStatus.OK);
     }
 
     @Operation(summary = "Listar atividade no mural do aluno", description = "Listar atividade no mural do aluno")
