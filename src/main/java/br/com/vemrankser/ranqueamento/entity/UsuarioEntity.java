@@ -40,7 +40,7 @@ public class UsuarioEntity implements UserDetails {
 
     @Column(name = "email")
     private String email;
-
+    @JsonIgnore
     @Column(name = "senha")
     private String senha;
 
@@ -71,7 +71,7 @@ public class UsuarioEntity implements UserDetails {
     )
     private Set<CargoEntity> cargos;
 
-    @JsonIgnore
+
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "TRILHA_USUARIO",
@@ -94,37 +94,37 @@ public class UsuarioEntity implements UserDetails {
     )
     private Set<AtividadeEntity> atividades;
 
-
+    @JsonIgnore
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return cargos;
     }
-
+    @JsonIgnore
     @Override
     public String getPassword() {
         return senha;
     }
-
+    @JsonIgnore
     @Override
     public String getUsername() {
         return email;
     }
-
+    @JsonIgnore
     @Override
     public boolean isAccountNonExpired() {
         return true;
     }
-
+    @JsonIgnore
     @Override
     public boolean isAccountNonLocked() {
         return true;
     }
-
+    @JsonIgnore
     @Override
     public boolean isCredentialsNonExpired() {
         return true;
     }
-
+    @JsonIgnore
     @Override
     public boolean isEnabled() {
         return statusUsuario == 1;

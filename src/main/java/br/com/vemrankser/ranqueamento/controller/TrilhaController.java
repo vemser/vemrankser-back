@@ -55,7 +55,7 @@ public class TrilhaController {
         return ResponseEntity.ok().build();
     }
 
-    @Operation(summary = "Pega a lista de usuários na trilha", description = "Resgata a lista de usuários na trilha do banco de dados")
+    @Operation(summary = "Pega a lista de alunos na trilha", description = "Resgata a lista de alunos na trilha do banco de dados")
     @ApiResponses(
             value = {
                     @ApiResponse(responseCode = "200", description = "Foi resgatado com sucesso"),
@@ -63,8 +63,8 @@ public class TrilhaController {
                     @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção")
             }
     )
-    @GetMapping("/lista-usuarios")
-    public ResponseEntity<PageDTO<TrilhaPaginadoDTO>> listUsuarios(Integer pagina, Integer tamanho,Integer idTrilha) {
+    @GetMapping("/lista-alunos-trilha")
+    public ResponseEntity<PageDTO<TrilhaPaginadoDTO>> listAlunos(@RequestParam(required = false,defaultValue = "0") Integer pagina, @RequestParam(required = false,defaultValue = "5") Integer tamanho, @RequestParam(required = false) Integer idTrilha) {
         return new ResponseEntity<>(trilhaService.listarUsuariosNaTrilha(pagina, tamanho, idTrilha), HttpStatus.OK);
     }
 

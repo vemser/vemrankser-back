@@ -2,7 +2,6 @@ package br.com.vemrankser.ranqueamento.service;
 
 import br.com.vemrankser.ranqueamento.dto.*;
 import br.com.vemrankser.ranqueamento.entity.CargoEntity;
-import br.com.vemrankser.ranqueamento.entity.TrilhaEntity;
 import br.com.vemrankser.ranqueamento.entity.UsuarioEntity;
 import br.com.vemrankser.ranqueamento.enums.TipoPerfil;
 import br.com.vemrankser.ranqueamento.exceptions.RegraDeNegocioException;
@@ -18,8 +17,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -167,6 +168,10 @@ public class UsuarioService {
 
     public UsuarioLogadoDTO getLoggedUser() throws RegraDeNegocioException {
         return objectMapper.convertValue(findById(getIdLoggedUser()), UsuarioLogadoDTO.class);
+    }
+
+    public UsuarioEntity getLoggedUserPersonalizado() throws RegraDeNegocioException {
+        return findById(getIdLoggedUser());
     }
 
     public UsuarioDTO cadastrar(UsuarioCreateDTO usuario, TipoPerfil tipoPerfil) throws RegraDeNegocioException {
