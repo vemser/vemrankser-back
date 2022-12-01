@@ -111,9 +111,9 @@ public class TrilhaService {
 //        return objectMapper.convertValue(trilhaEntity, TrilhaDTO.class);
 //    }
 
-    public PageDTO<TrilhaPaginadoDTO> listarUsuariosNaTrilha(Integer pagina, Integer tamanho, String nome) {
+    public PageDTO<TrilhaPaginadoDTO> listarUsuariosNaTrilha(Integer pagina, Integer tamanho, Integer idTrilha) {
         PageRequest pageRequest = PageRequest.of(pagina, tamanho);
-        Page<TrilhaEntity> allAlunos = trilhaRepository.findAllByNomeContainingIgnoreCase(nome, pageRequest);
+        Page<TrilhaEntity> allAlunos = trilhaRepository.findAllByIdTrilha(idTrilha, pageRequest);
 
         List<TrilhaPaginadoDTO> trilhaDTOS = allAlunos.getContent().stream()
                 .map(trilha -> {
@@ -130,6 +130,8 @@ public class TrilhaService {
                 tamanho,
                 trilhaDTOS);
     }
+
+
 
 //    private List<TrilhaDTO> listarTrilhaq() {
 //        return trilhaRepository.findAll()

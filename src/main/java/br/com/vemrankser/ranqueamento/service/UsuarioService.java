@@ -19,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -50,6 +51,7 @@ public class UsuarioService {
                 .toList();
 
     }
+
     public List<UsuarioDTO> list() {
         return usuarioRepository.findAll().stream()
                 .map(pessoa -> objectMapper.convertValue(pessoa, UsuarioDTO.class))
@@ -80,6 +82,7 @@ public class UsuarioService {
         return objectMapper.convertValue(usuarioEncontrado, UsuarioDTO.class);
 
     }
+
     public UsuarioDTO editar(Integer id, UsuarioAtualizarDTO usuarioAtualizar) throws RegraDeNegocioException {
         UsuarioEntity usuarioEncontrado = findById(id);
         usuarioEncontrado.setNome(usuarioAtualizar.getNome());

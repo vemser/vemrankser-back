@@ -64,8 +64,8 @@ public class TrilhaController {
             }
     )
     @GetMapping("/lista-usuarios")
-    public ResponseEntity<PageDTO<TrilhaPaginadoDTO>> listUsuarios(Integer pagina, Integer tamanho, @RequestParam(defaultValue = "") String nome) {
-        return new ResponseEntity<>(trilhaService.listarUsuariosNaTrilha(pagina, tamanho, nome), HttpStatus.OK);
+    public ResponseEntity<PageDTO<TrilhaPaginadoDTO>> listUsuarios(Integer pagina, Integer tamanho,Integer idTrilha) {
+        return new ResponseEntity<>(trilhaService.listarUsuariosNaTrilha(pagina, tamanho, idTrilha), HttpStatus.OK);
     }
 
     @Operation(summary = "Pega a lista de usuários na trilha pela pontuação", description = "Resgata a lista de usuários na trilha pela pontuacao no banco de dados")

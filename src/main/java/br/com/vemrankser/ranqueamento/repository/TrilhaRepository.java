@@ -14,7 +14,7 @@ public interface TrilhaRepository extends JpaRepository<TrilhaEntity, Integer> {
 
     Optional<TrilhaEntity> findByNomeContainingIgnoreCase(String nome);
 
-    Page<TrilhaEntity> findAllByNomeContainingIgnoreCase(String nome, Pageable pageable);
+    Page<TrilhaEntity> findAllByIdTrilha(Integer idTrilha, Pageable pageable);
 
     Optional<TrilhaEntity> findByEdicao(Integer edicao);
 

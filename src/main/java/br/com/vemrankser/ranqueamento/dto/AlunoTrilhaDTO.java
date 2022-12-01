@@ -9,6 +9,7 @@ public class AlunoTrilhaDTO {
     private Integer idUsuario;
     private String nome;
     private String email;
+    private String login;
     private Integer statusUsuario;
     private Integer tipoPerfil;
     private List<TrilhaDTO> trilhas;
