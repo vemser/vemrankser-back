@@ -14,6 +14,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 import java.util.*;
 
 @Service
@@ -51,6 +56,9 @@ public class AtividadeService {
         List<TrilhaEntity> trilhaEntities = new ArrayList<>();
         AtividadeEntity atividadeEntity = objectMapper.convertValue(atividadeCreateDTO, AtividadeEntity.class);
         atividadeEntity.setNomeInstrutor(loggedUser.getNome());
+
+        LocalDateTime now = LocalDateTime.now(ZoneId.of("America/Sao_Paulo"));
+        atividadeEntity.setDataCriacao(now);
 
         for (Integer number : idTrilha) {
             TrilhaEntity trilhaEntity = trilhaService.findById(number);

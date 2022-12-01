@@ -12,6 +12,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -28,6 +30,8 @@ public class ModuloService {
     public ModuloDTO adicionar(ModuloCreateDTO modulo) {
         ModuloEntity moduloEntityNovo = objectMapper.convertValue(modulo, ModuloEntity.class);
         moduloEntityNovo.setStatusModulo(StatusModulo.S);
+        LocalDateTime now = LocalDateTime.now(ZoneId.of("America/Sao_Paulo"));
+        moduloEntityNovo.setDataInicio(now);
         moduloRepository.save(moduloEntityNovo);
         return objectMapper.convertValue(moduloEntityNovo, ModuloDTO.class);
 
