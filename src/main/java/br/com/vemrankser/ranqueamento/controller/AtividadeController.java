@@ -109,8 +109,8 @@ public class AtividadeController {
             }
     )
     @GetMapping("/listar-mural-aluno")
-    public ResponseEntity<List<AtividadeMuralAlunoDTO>> listarAtividadeMuralAluno() throws RegraDeNegocioException {
-        return new ResponseEntity<>(atividadeService.listarAtividadeMuralAluno(), HttpStatus.OK);
+    public ResponseEntity<List<AtividadeMuralAlunoDTO>> listarAtividadeMuralAluno(AtividadeStatus atividadeStatus) throws RegraDeNegocioException {
+        return new ResponseEntity<>(atividadeService.listarAtividadeMuralAluno(atividadeStatus), HttpStatus.OK);
     }
 
     @Operation(summary = "Listar atividade por nota", description = "Listar atividade por nota")

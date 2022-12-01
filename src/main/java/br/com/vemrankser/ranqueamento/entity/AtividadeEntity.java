@@ -1,5 +1,6 @@
 package br.com.vemrankser.ranqueamento.entity;
 
+import br.com.vemrankser.ranqueamento.enums.AtividadeStatus;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
@@ -48,8 +49,9 @@ public class AtividadeEntity {
     @Column(name = "link")
     private String link;
 
+    @Enumerated(EnumType.ORDINAL)
     @Column(name = "status_Atividade")
-    private Integer statusAtividade;
+    private AtividadeStatus statusAtividade;
 
     @Column(name = "nome_instrutor")
     private String nomeInstrutor;
