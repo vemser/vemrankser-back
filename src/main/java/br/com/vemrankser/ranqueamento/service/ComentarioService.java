@@ -10,6 +10,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class ComentarioService {
@@ -32,6 +34,15 @@ public class ComentarioService {
         ComentarioDTO comentarioDTO = objectMapper.convertValue(comentarioEntity, ComentarioDTO.class);
 
         return comentarioDTO;
+    }
+
+    public List<ComentarioDTO> listarComentarioPorAtividade(Integer idAtividade) throws RegraDeNegocioException {
+        AtividadeEntity atividade = atividadeService.buscarPorIdAtividade(idAtividade);
+
+        return comentarioRepository.findAllByIdAtividade(atividade.getIdAtividade())
+                .stream()
+                .map(atividadeDto -> objectMapper.convertValue(atividadeDto, ComentarioDTO.class))
+                .toList();
     }
 
     public ComentarioEntity buscarPorIdComentario(Integer idComentario) throws RegraDeNegocioException{

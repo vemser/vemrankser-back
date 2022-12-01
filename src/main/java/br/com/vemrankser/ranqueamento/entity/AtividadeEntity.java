@@ -1,6 +1,7 @@
 package br.com.vemrankser.ranqueamento.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,6 +16,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Getter
 @Setter
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Entity(name = "ATIVIDADE")
 public class AtividadeEntity {
 
@@ -68,19 +70,19 @@ public class AtividadeEntity {
     @JsonIgnore
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
-            name = "ATIVIDADE_TRILHA",
-            joinColumns = @JoinColumn(name = "id_atividade"),
-            inverseJoinColumns = @JoinColumn(name = "id_trilha")
-    )
-    private Set<TrilhaEntity> trilhas = new HashSet<>();
-
-    @JsonIgnore
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
             name = "ATIVIDADE_USUARIO",
             joinColumns = @JoinColumn(name = "id_atividade"),
             inverseJoinColumns = @JoinColumn(name = "id_usuario")
     )
     private Set<UsuarioEntity> alunos = new HashSet<>();
+
+    @JsonIgnore
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "ATIVIDADE_TRILHA",
+            joinColumns = @JoinColumn(name = "id_atividade"),
+            inverseJoinColumns = @JoinColumn(name = "id_trilha")
+    )
+    private Set<TrilhaEntity> trilhas = new HashSet<>();
 
 }
