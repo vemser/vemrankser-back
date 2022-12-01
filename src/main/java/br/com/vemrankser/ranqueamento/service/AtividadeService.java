@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 
@@ -65,7 +66,7 @@ public class AtividadeService {
             trilhaEntities.add(trilhaEntity);
 
         }
-        atividadeEntity.setStatusAtividade(AtividadeStatus.PENDENTE.getAtividadeStatus());
+        atividadeEntity.setStatusAtividade(AtividadeStatus.PENDENTE);
         atividadeEntity.setTrilhas(new HashSet<>(trilhaEntities));
         atividadeEntity.setModulo(moduloEntity);
 
@@ -84,7 +85,7 @@ public class AtividadeService {
 
     public AtividadeAvaliarDTO avaliarAtividade(AtividadeAvaliarDTO atividadeAvaliarDTO, Integer idAtividade) throws RegraDeNegocioException {
         AtividadeEntity atividadeAvaliacao = buscarPorIdAtividade(idAtividade);
-        atividadeAvaliacao.setStatusAtividade(AtividadeStatus.CONCLUIDA.getAtividadeStatus());
+        atividadeAvaliacao.setStatusAtividade(AtividadeStatus.CONCLUIDA);
         atividadeAvaliacao.setPontuacao(atividadeAvaliarDTO.getPontuacao());
         atividadeAvaliacao.getAlunos().forEach(aluno -> aluno.setPontuacaoAluno(calcularPontuacao(aluno, atividadeAvaliacao)));
         atividadeRepository.save(atividadeAvaliacao);
@@ -108,9 +109,9 @@ public class AtividadeService {
         return atividadeEntity;
     }
 
-    public PageDTO<AtividadeMuralDTO> listarAtividadeMural(Integer pagina, Integer tamanho) throws RegraDeNegocioException {
+    public PageDTO<AtividadeMuralDTO> listarAtividadeMural(Integer pagina, Integer tamanho, Integer idTrilha) throws RegraDeNegocioException {
         PageRequest pageRequest = PageRequest.of(pagina, tamanho);
-        Page<AtividadeMuralDTO> atividadeEntity = atividadeRepository.listarAtividadeMural(pageRequest);
+        Page<AtividadeMuralDTO> atividadeEntity = atividadeRepository.listarAtividadeMural(pageRequest, idTrilha);
 
         List<AtividadeMuralDTO> atividadeMuralDTOList = atividadeEntity.getContent()
                 .stream()
@@ -131,9 +132,9 @@ public class AtividadeService {
                 atividadeMuralDTOList);
     }
 
-    public List<AtividadeMuralAlunoDTO> listarAtividadeMuralAluno() throws RegraDeNegocioException {
+    public List<AtividadeMuralAlunoDTO> listarAtividadeMuralAluno(AtividadeStatus atividadeStatus) throws RegraDeNegocioException {
         UsuarioEntity usuarioLogado = usuarioService.findById(usuarioService.getIdLoggedUser());
-        return atividadeRepository.listarAtividadeMuralAluno(usuarioLogado.getIdUsuario());
+        return atividadeRepository.listarAtividadeMuralAluno(usuarioLogado.getIdUsuario(), atividadeStatus);
     }
 
     public PageDTO<AtividadeNotaDTO> listarAtividadePorNota(Integer pagina, Integer tamanho) throws RegraDeNegocioException {
@@ -172,7 +173,7 @@ public class AtividadeService {
         atividadeEntityRecuperado.setDataEntrega(atividadeEntity.getDataEntrega());
         atividadeEntityRecuperado.setPontuacao(atividadeEntity.getPontuacao());
         atividadeEntityRecuperado.setLink(atividadeAlunoEnviarDTO.getLink());
-        atividadeEntityRecuperado.setStatusAtividade(AtividadeStatus.CONCLUIDA.getAtividadeStatus());
+        atividadeEntityRecuperado.setStatusAtividade(AtividadeStatus.CONCLUIDA);
         atividadeEntityRecuperado.setNomeInstrutor(atividadeEntity.getNomeInstrutor());
 
         atividadeRepository.save(atividadeEntityRecuperado);
