@@ -19,7 +19,6 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -132,7 +131,7 @@ public class AtividadeService {
                 atividadeMuralDTOList);
     }
 
-    public List<AtividadeMuralAlunoDTO> atividadeMuralAlunoDTOS() throws RegraDeNegocioException {
+    public List<AtividadeMuralAlunoDTO> listarAtividadeMuralAluno() throws RegraDeNegocioException {
         UsuarioEntity usuarioLogado = usuarioService.findById(usuarioService.getIdLoggedUser());
         return atividadeRepository.listarAtividadeMuralAluno(usuarioLogado.getIdUsuario());
     }
