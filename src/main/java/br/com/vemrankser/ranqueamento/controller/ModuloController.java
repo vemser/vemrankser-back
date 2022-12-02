@@ -16,6 +16,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -45,7 +46,7 @@ public class ModuloController {
     @PostMapping("/vincular-modulo-trilha/{idModulo}/{idTrilha}")
     public ResponseEntity<ModuloDTO> vincular(@PathVariable(name = "idModulo") Integer idModulo, @PathVariable(name = "idTrilha") Integer idTrilha, @RequestBody ModuloTrilhaDTO moduloTrilhaDTO) throws RegraDeNegocioException {
         log.info("Criando modulo....");
-        ModuloDTO moduloDTO = moduloService.vincularModuloTrilha(idModulo, idTrilha,moduloTrilhaDTO);
+        ModuloDTO moduloDTO = moduloService.vincularModuloTrilha(idModulo, idTrilha, moduloTrilhaDTO);
         log.info("Modulo Criado com sucesso....");
         return new ResponseEntity<>(moduloDTO, HttpStatus.OK);
     }
@@ -61,6 +62,19 @@ public class ModuloController {
     @GetMapping("/find-id-modulo")
     public ResponseEntity<ModuloDTO> findById(Integer idModulo) throws RegraDeNegocioException {
         return new ResponseEntity<>(moduloService.findById(idModulo), HttpStatus.OK);
+    }
+
+    @Operation(summary = "Pega a lista dos modulos", description = "Resgata a lista de modulos do banco de dados")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "Foi resgatado com sucesso"),
+                    @ApiResponse(responseCode = "404", description = "Não encontrado"),
+                    @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção")
+            }
+    )
+    @GetMapping("/lista-todos-modulos")
+    public ResponseEntity<List<ModuloDTO>> findAllModulos() {
+        return new ResponseEntity<>(moduloService.listAllModulos(), HttpStatus.OK);
     }
 
 }
