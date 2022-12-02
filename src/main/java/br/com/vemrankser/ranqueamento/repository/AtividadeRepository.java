@@ -70,14 +70,15 @@ public interface AtividadeRepository extends JpaRepository<AtividadeEntity, Inte
     List<AtividadeMuralAlunoDTO> listarAtividadeMuralAluno(Integer idUsuarioLogado, AtividadeStatus atividadeStatus);
 
     @Query("  select distinct new br.com.vemrankser.ranqueamento.dto.AtividadeNotaDTO ( " +
-            " u.nome, " +
+            " au.usuarioEntity.nome, " +
             " au.atividade.idAtividade," +
             " au.atividade.pontuacao " +
             " ) " +
-            " from ATIVIDADE_USUARIO au, USUARIO u, MODULO m, TRILHA t" +
-            " where (:idUsuarioLogado in au.atividade and :idUsuarioLogado is null or u.idUsuario = :idUsuarioLogado" +
-            " and m.idModulo = :idModulo and t.idTrilha = :idTrilha and au.atividade.statusAtividade = :atividadeStatus ) " +
-            "order by u.nome ASC ")
-    Page<AtividadeNotaDTO> listarAtividadePorNota(Pageable pageable, Integer idUsuarioLogado, Integer idTrilha, Integer idModulo, AtividadeStatus atividadeStatus);
+            " from ATIVIDADE_USUARIO au" +
+            " left join au.atividade aua" +
+            " left join aua.trilhas atr  " +
+            " where ( au.atividade.idModulo = :idModulo and atr.idTrilha = :idTrilha and au.atividade.statusAtividade = :atividadeStatus ) " +
+            "  ")
+    Page<AtividadeNotaDTO> listarAtividadePorIdTrilhaIdModulo(Pageable pageable, Integer idTrilha, Integer idModulo, AtividadeStatus atividadeStatus);
 
 }
