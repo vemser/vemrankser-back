@@ -23,12 +23,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Optional;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
 
@@ -120,6 +119,39 @@ public class UsuarioServiceTest {
         assertNotNull(usuarioRecuperado);
         assertEquals(1, usuarioRecuperado.getIdUsuario());
     }
+
+    @Test
+    public void deveTestarFindEmailComSucesso() {
+        // Criar variaveis (SETUP)
+        UsuarioEntity usuarioEntity = getUsuarioEntity();
+        when(usuarioRepository.findByEmail(any())).thenReturn(Optional.of(usuarioEntity));
+
+        // Ação (ACT)
+        Optional<UsuarioEntity> usuarioServiceByEmail = usuarioService.findByEmail(usuarioEntity.getEmail());
+
+        // Verificação (ASSERT)
+        assertNotNull(usuarioServiceByEmail);
+        assertEquals("alison@hotmail.com", usuarioServiceByEmail.get().getEmail());
+    }
+
+//    @Test
+//    public void deveTestarFindByNomeComSucesso() {
+//        // Criar variaveis (SETUP)
+//        List<UsuarioEntity> usuarioEntities = new ArrayList<>();
+//        UsuarioEntity usuarioEntity = getUsuarioEntity();
+//        usuarioEntities.add(usuarioEntity);
+//        when(usuarioRepository.findByNomeIgnoreCase(any())).thenReturn(usuarioEntities);
+//        when(usuarioRepository.findAll()).thenReturn(usuarioEntities);
+//
+//        // Ação (ACT)
+//        if (usuarioEntity.getNome())
+//        List<UsuarioDTO> usuarioDTOList = usuarioService.findByNome(usuarioEntity.getNome());
+//
+//        // Verificação (ASSERT)
+//        assertNotNull(usuarioDTOList);
+//        assertEquals(1, usuarioDTOList.size());
+//    }
+
 
 
     public static UsuarioEntity getUsuarioEntity() {

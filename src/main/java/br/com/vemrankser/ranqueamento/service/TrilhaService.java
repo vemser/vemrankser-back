@@ -56,8 +56,6 @@ public class TrilhaService {
             TrilhaEntity trilhaEntity = findById(number);
 
 
-            trilhaEntity.setUsuarios(new HashSet<>(usuarioEntities));
-
             trilhaEntity.getUsuarios().add(alunoEncontrado);
             trilhaRepository.save(trilhaEntity);
         }
@@ -72,8 +70,6 @@ public class TrilhaService {
             usuarioEntities.add(alunoEncontrado);
             TrilhaEntity trilhaEntity = findById(number);
 
-
-            trilhaEntity.setUsuarios(new HashSet<>(usuarioEntities));
 
             trilhaEntity.getUsuarios().add(alunoEncontrado);
             trilhaRepository.save(trilhaEntity);
