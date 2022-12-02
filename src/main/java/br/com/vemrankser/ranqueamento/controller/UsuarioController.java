@@ -5,6 +5,7 @@ import br.com.vemrankser.ranqueamento.entity.UsuarioEntity;
 import br.com.vemrankser.ranqueamento.enums.TipoPerfil;
 import br.com.vemrankser.ranqueamento.exceptions.RegraDeNegocioException;
 import br.com.vemrankser.ranqueamento.service.AuthService;
+import br.com.vemrankser.ranqueamento.service.TrilhaService;
 import br.com.vemrankser.ranqueamento.service.UsuarioService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -29,6 +30,7 @@ public class UsuarioController {
 
     private final AuthService authService;
     private final UsuarioService usuarioService;
+    private final TrilhaService trilhaService;
 
     @Operation(summary = "Logar na sua conta", description = "Autentificar usuário no aplicativo")
     @ApiResponses(
@@ -105,8 +107,8 @@ public class UsuarioController {
             }
     )
     @GetMapping("/lista-alunos-trilha")
-    public ResponseEntity<PageDTO<AlunoTrilhaDTO>> listAlunosTrilha(@RequestParam(required = false,defaultValue = "0") Integer pagina, @RequestParam(required = false,defaultValue = "5") Integer tamanho, @RequestParam(defaultValue = "") String nome) {
-        return new ResponseEntity<>(usuarioService.listarAlunosTrilha(pagina, tamanho, nome), HttpStatus.OK);
+    public ResponseEntity<PageDTO<AlunoTrilhaPersonalizadoDTO>> listAlunosTrilha(@RequestParam(required = false,defaultValue = "0") Integer pagina, @RequestParam(required = false,defaultValue = "5") Integer tamanho, @RequestParam(defaultValue = "") String nome,@RequestParam(required = false)Integer idTrilha) {
+        return new ResponseEntity<>(usuarioService.listAlunoTrilhaQuery(pagina, tamanho, nome,idTrilha), HttpStatus.OK);
     }
 
     @Operation(summary = "Pega aluno pelo login", description = "Resgata o aluno pelo login banco de dados")

@@ -17,10 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -245,5 +242,18 @@ public class UsuarioService {
 
     public UsuarioEntity save(UsuarioEntity usuarioEntity) {
         return usuarioRepository.save(usuarioEntity);
+    }
+
+    public PageDTO<AlunoTrilhaPersonalizadoDTO> listAlunoTrilhaQuery(Integer pagina, Integer tamanho, String nome, Integer idTrilha) {
+
+        PageRequest pageRequest = PageRequest.of(pagina, tamanho);
+        Page<AlunoTrilhaPersonalizadoDTO> page = usuarioRepository.listAlunoTrilhaQuery(pageRequest, nome, idTrilha);
+        List<AlunoTrilhaPersonalizadoDTO> alunoTrilhaPersonalizadoDTOS = page.getContent().stream().toList();
+        return new PageDTO<>(page.getTotalElements(),
+                page.getTotalPages(),
+                pagina,
+                tamanho,
+                alunoTrilhaPersonalizadoDTOS
+        );
     }
 }

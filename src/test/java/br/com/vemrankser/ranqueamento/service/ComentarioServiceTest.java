@@ -57,7 +57,7 @@ public class ComentarioServiceTest {
         ComentarioCreateDTO comentarioCreateDTO = getComentarioCreateDTO();
 
         when(atividadeService.buscarPorIdAtividade(anyInt())).thenReturn(atividade);
-        when(comentarioRepository.save(any())).thenReturn(atividade);
+      //  when(comentarioRepository.save(any())).thenReturn(atividade);
 
         // ACT
         ComentarioCreateDTO comentarioCreateDTO1 = comentarioService.adicionar(comentarioCreateDTO, idAtividade);

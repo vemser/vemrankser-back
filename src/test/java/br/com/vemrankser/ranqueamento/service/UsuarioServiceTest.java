@@ -1,8 +1,7 @@
 package br.com.vemrankser.ranqueamento.service;
 
-import br.com.vemrankser.ranqueamento.dto.UsuarioCreateDTO;
-import br.com.vemrankser.ranqueamento.dto.UsuarioDTO;
-import br.com.vemrankser.ranqueamento.dto.UsuarioLogadoDTO;
+import br.com.vemrankser.ranqueamento.dto.*;
+import br.com.vemrankser.ranqueamento.entity.TrilhaEntity;
 import br.com.vemrankser.ranqueamento.entity.UsuarioEntity;
 import br.com.vemrankser.ranqueamento.enums.TipoPerfil;
 import br.com.vemrankser.ranqueamento.exceptions.RegraDeNegocioException;
@@ -18,6 +17,9 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -25,11 +27,9 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.*;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class UsuarioServiceTest {
@@ -152,6 +152,197 @@ public class UsuarioServiceTest {
 //        assertEquals(1, usuarioDTOList.size());
 //    }
 
+    @Test
+    public void deveTestarFindAllComSucesso() {
+        // Criar variaveis (SETUP)
+        UsuarioEntity usuarioEntity = getUsuarioEntity();
+        List<UsuarioEntity> list = new ArrayList<>();
+        list.add(usuarioEntity);
+        when(usuarioRepository.findAll()).thenReturn(list);
+
+        // Ação (ACT)
+        List<UsuarioDTO> list1 = usuarioService.list();
+
+        // Verificação (ASSERT)
+        assertNotNull(list1);
+
+    }
+
+    @Test
+    public void deveTestarPegarLoginComSucesso() throws RegraDeNegocioException {
+        // Criar variaveis (SETUP)
+        UsuarioEntity usuarioEntity = getUsuarioEntity();
+
+        when(usuarioRepository.findByLoginIgnoreCase(any())).thenReturn(usuarioEntity);
+
+        // Ação (ACT)
+        UsuarioDTO usuarioDTO = usuarioService.pegarLogin(usuarioEntity.getLogin());
+
+        // Verificação (ASSERT)
+        assertNotNull(usuarioDTO);
+        assertEquals("alison.ailson", usuarioDTO.getLogin());
+
+    }
+
+    @Test(expected = RegraDeNegocioException.class)
+    public void deveTestarPegarLoginComErro() throws RegraDeNegocioException {
+        // Criar variaveis (SETUP)
+        UsuarioEntity usuarioEntity = getUsuarioEntity();
+        usuarioEntity.setTipoPerfil(1);
+
+        when(usuarioRepository.findByLoginIgnoreCase(any())).thenReturn(usuarioEntity);
+
+        // Ação (ACT)
+        usuarioService.pegarLogin(usuarioEntity.getLogin());
+    }
+
+    @Test
+    public void deveTestarFindIdComSucesso() throws RegraDeNegocioException {
+        // Criar variaveis (SETUP)
+        UsuarioEntity usuarioEntity = getUsuarioEntity();
+
+        when(usuarioRepository.findById(any())).thenReturn(Optional.of(usuarioEntity));
+
+        // Ação (ACT)
+        UsuarioEntity usuario = usuarioService.findById(usuarioEntity.getIdUsuario());
+
+        // Verificação (ASSERT)
+        assertNotNull(usuario);
+        assertEquals(1, usuario.getIdUsuario());
+
+    }
+
+    @Test
+    public void deveTestarPegarIdUsuarioComSucesso() throws RegraDeNegocioException {
+        // Criar variaveis (SETUP)
+        UsuarioEntity usuarioEntity = getUsuarioEntity();
+
+        when(usuarioRepository.findById(any())).thenReturn(Optional.of(usuarioEntity));
+
+        // Ação (ACT)
+        UsuarioDTO usuario = usuarioService.pegarIdUsuario(usuarioEntity.getIdUsuario());
+
+        // Verificação (ASSERT)
+        assertNotNull(usuario);
+        assertEquals(1, usuario.getIdUsuario());
+
+    }
+
+    @Test
+    public void deveTestarPegarLoginInstrutorComSucesso() throws RegraDeNegocioException {
+        // Criar variaveis (SETUP)
+        UsuarioEntity usuarioEntity = getUsuarioEntity();
+        usuarioEntity.setTipoPerfil(3);
+
+        when(usuarioRepository.findByLoginIgnoreCase(any())).thenReturn(usuarioEntity);
+
+        // Ação (ACT)
+        UsuarioDTO usuarioDTO = usuarioService.pegarLoginInstrutor(usuarioEntity.getLogin());
+
+        // Verificação (ASSERT)
+        assertNotNull(usuarioDTO);
+        assertEquals("alison.ailson", usuarioDTO.getLogin());
+
+    }
+
+    @Test(expected = RegraDeNegocioException.class)
+    public void deveTestarPegarLoginInstrutorComErro() throws RegraDeNegocioException {
+        // Criar variaveis (SETUP)
+        UsuarioEntity usuarioEntity = getUsuarioEntity();
+        usuarioEntity.setTipoPerfil(1);
+
+        when(usuarioRepository.findByLoginIgnoreCase(any())).thenReturn(usuarioEntity);
+
+        // Ação (ACT)
+        usuarioService.pegarLoginInstrutor(usuarioEntity.getLogin());
+    }
+
+    @Test
+    public void deveTestarEditarComSucesso() throws RegraDeNegocioException {
+        // SETUP
+        Integer id = 10;
+        UsuarioCreateDTO usuarioCreateDTO = getUsuarioCreateDTO();
+        UsuarioAtualizarDTO usuarioAtualizarDTO = objectMapper.convertValue(usuarioCreateDTO, UsuarioAtualizarDTO.class);
+
+        UsuarioEntity usuarioEntity = getUsuarioEntity();
+        usuarioEntity.setNome("Eduardo Sedrez");
+        usuarioEntity.setIdUsuario(1);
+        when(usuarioRepository.findById(anyInt())).thenReturn(Optional.of(usuarioEntity));
+
+        String senhaCriptografa = "j183nsur74bd83gr7";
+        when(passwordEncoder.encode(anyString())).thenReturn(senhaCriptografa);
+
+        UsuarioEntity usuario = getUsuarioEntity();
+        when(usuarioRepository.save(any())).thenReturn(usuario);
+
+        // Ação (ACT)
+        UsuarioDTO usuarioDTO = usuarioService.editar(id, usuarioAtualizarDTO);
+
+        // Verificação (ASSERT)
+        assertNotNull(usuarioDTO);
+        assertNotEquals("Eduardo Sedrez", usuarioDTO.getNome());
+
+    }
+
+    @Test
+    public void deveTestarListarUsuariosPaginadoComSucesso() {
+        // SETUP
+        Integer pagina = 5;
+        Integer quantidade = 3;
+
+        UsuarioEntity usuarioEntity = getUsuarioEntity();
+        Page<UsuarioEntity> paginaMock = new PageImpl<>(List.of(usuarioEntity));
+        when(usuarioRepository.findAll(any(Pageable.class))).thenReturn(paginaMock);
+
+        // ACT
+        PageDTO<UsuarioDTO> listarUsuarios = usuarioService.listarUsuarios(pagina, quantidade, "nome");
+
+        // ASSERT
+        assertNotNull(listarUsuarios);
+        assertEquals(1, listarUsuarios.getQuantidadePaginas());
+        assertEquals(1, listarUsuarios.getTotalElementos());
+    }
+
+    @Test
+    public void deveTestarListarAlunosPaginadoComSucesso() {
+        // SETUP
+        Integer pagina = 5;
+        Integer quantidade = 3;
+
+        UsuarioEntity usuarioEntity = getUsuarioEntity();
+        Page<UsuarioEntity> paginaMock = new PageImpl<>(List.of(usuarioEntity));
+        when(usuarioRepository.findAllByTipoPerfil(anyInt(),any(Pageable.class))).thenReturn(paginaMock);
+
+        // ACT
+        PageDTO<UsuarioDTO> listarUsuarios = usuarioService.listarAlunos(pagina, quantidade);
+
+        // ASSERT
+        assertNotNull(listarUsuarios);
+        assertEquals(1, listarUsuarios.getQuantidadePaginas());
+        assertEquals(1, listarUsuarios.getTotalElementos());
+    }
+
+//    @Test
+//    public void deveTestarListarAlunosTrilhaPaginadoComSucesso() {
+//        // SETUP
+//        Integer pagina = 5;
+//        Integer quantidade = 3;
+//
+//        UsuarioEntity usuarioEntity = getUsuarioEntity();
+//        usuarioEntity.setTrilhas(new HashSet<>());
+//        Page<UsuarioEntity> paginaMock = new PageImpl<>(List.of(usuarioEntity));
+//        when(usuarioRepository.findAllByTipoPerfilAndNomeContainingIgnoreCase(anyInt(),anyString(),any(Pageable.class))).thenReturn(paginaMock);
+//
+//        // ACT
+//        PageDTO<AlunoTrilhaDTO> listarUsuarios = usuarioService.listarAlunosTrilha(pagina, quantidade, "alison");
+//
+//
+//        // ASSERT
+//        assertNotNull(listarUsuarios);
+//        assertEquals(1, listarUsuarios.getQuantidadePaginas());
+//        assertEquals(1, listarUsuarios.getTotalElementos());
+//    }
+
 
 
     public static UsuarioEntity getUsuarioEntity() {
@@ -172,7 +363,7 @@ public class UsuarioServiceTest {
         return usuarioEntity;
     }
 
-    public static UsuarioCreateDTO getUsuarioCreteDTO() {
+    public static UsuarioCreateDTO getUsuarioCreateDTO() {
         UsuarioCreateDTO usuarioCreateDTO = new UsuarioCreateDTO();
         usuarioCreateDTO.setCidade("recife");
         usuarioCreateDTO.setEmail("alison@hotmail.com");
