@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.Lob;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -13,6 +14,8 @@ import java.util.List;
 @Data
 public class AlunoTrilhaPersonalizadoDTO {
     private Integer idUsuario;
+    @Lob
+    private byte[] foto;
     private String nome;
     private String email;
     private String login;
