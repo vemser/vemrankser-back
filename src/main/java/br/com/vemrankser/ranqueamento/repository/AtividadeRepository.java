@@ -18,25 +18,21 @@ public interface AtividadeRepository extends JpaRepository<AtividadeEntity,Integ
 
     List<AtividadeEntity> findByStatusAtividade(Integer statusAtividade);
 
-    @Query("  select distinct new br.com.vemrankser.ranqueamento.dto.AtividadeMuralDTO ( " +
-            " a.idAtividade, " +
-            " a.titulo, " +
-            " a.instrucoes, " +
-            " a.pesoAtividade, " +
-            " a.dataCriacao, " +
-            " a.dataEntrega, " +
-            " a.idModulo, " +
-            " a.statusAtividade, " +
-            " a.modulo.nome, " +
-            " t.nome, " +
-            " t.edicao " +
+    @Query("  select new br.com.vemrankser.ranqueamento.dto.AtividadeMuralDTO ( " +
+            " atr.atividade.idAtividade, " +
+            " atr.atividade.titulo, " +
+            " atr.atividade.instrucoes, " +
+            " atr.atividade.pesoAtividade, " +
+            " atr.atividade.dataCriacao, " +
+            " atr.atividade.dataEntrega, " +
+            " atr.atividade.idModulo, " +
+            " atr.atividade.statusAtividade, " +
+            " atr.atividade.modulo.nome, " +
+            " atr.trilha.nome, " +
+            " atr.trilha.edicao " +
             " ) " +
-            " from USUARIO u, ATIVIDADE a, TRILHA t " +
-            " join u.trilhas  " +
-//            " inner join t.modulos  " +
-//            " inner join t.atividades" +
-            " where ( :idTrilha in t.idTrilha ) " +
-//            " group by t.idTrilha " +
+            " from ATIVIDADE_TRILHA atr " +
+            " where (atr.trilha.idTrilha = :idTrilha ) " +
             " ")
     Page<AtividadeMuralDTO> listarAtividadeMural(Pageable pageable, Integer idTrilha);
 
