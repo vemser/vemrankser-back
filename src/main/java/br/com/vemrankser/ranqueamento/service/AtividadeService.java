@@ -12,12 +12,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 
@@ -109,9 +109,9 @@ public class AtividadeService {
         return atividadeEntity;
     }
 
-    public PageDTO<AtividadeMuralDTO> listarAtividadeMural(Integer pagina, Integer tamanho, Integer idTrilha) throws RegraDeNegocioException {
+    public PageDTO<AtividadeMuralDTO> listarAtividadeMuralInstrutor(Integer pagina, Integer tamanho, Integer idTrilha) throws RegraDeNegocioException {
         PageRequest pageRequest = PageRequest.of(pagina, tamanho);
-        Page<AtividadeMuralDTO> atividadeEntity = atividadeRepository.listarAtividadeMural(pageRequest, idTrilha);
+        Page<AtividadeMuralDTO> atividadeEntity = atividadeRepository.listarAtividadeMuralInstrutor(pageRequest, idTrilha);
 
         List<AtividadeMuralDTO> atividadeMuralDTOList = atividadeEntity.getContent()
                 .stream()
@@ -137,10 +137,12 @@ public class AtividadeService {
         return atividadeRepository.listarAtividadeMuralAluno(usuarioLogado.getIdUsuario(), atividadeStatus);
     }
 
-    public PageDTO<AtividadeNotaDTO> listarAtividadePorNota(Integer pagina, Integer tamanho) throws RegraDeNegocioException {
-        PageRequest pageRequest = PageRequest.of(pagina, tamanho);
-        Page<AtividadeNotaDTO> atividadeEntity = atividadeRepository.listarAtividadePorNota(pageRequest);
+    public PageDTO<AtividadeNotaDTO> listarAtividadePorNota(Integer pagina, Integer tamanho, Integer idTrilha, Integer idModulo, AtividadeStatus atividadeStatus) throws RegraDeNegocioException {
+        UsuarioEntity usuarioLogado = usuarioService.findById(usuarioService.getIdLoggedUser());
+        Integer idUsuarioLogado = usuarioLogado.getIdUsuario();
 
+        PageRequest pageRequest = PageRequest.of(pagina, tamanho);
+        Page<AtividadeNotaDTO> atividadeEntity = atividadeRepository.listarAtividadePorNota(pageRequest, idUsuarioLogado, idTrilha, idModulo, atividadeStatus);
         List<AtividadeNotaDTO> atividadeNotaDTOList = atividadeEntity.getContent()
                 .stream()
                 .map(atividade -> {

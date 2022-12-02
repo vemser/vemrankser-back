@@ -97,7 +97,7 @@ public class AtividadeController {
     )
     @GetMapping("/listar-mural-instrutor")
     public ResponseEntity<PageDTO<AtividadeMuralDTO>> listarAtividadeMural(@RequestParam(required = false, defaultValue = "0") Integer pagina, @RequestParam(required = false, defaultValue = "5") Integer tamanho, Integer idTrilha) throws RegraDeNegocioException {
-        return new ResponseEntity<>(atividadeService.listarAtividadeMural(pagina, tamanho, idTrilha), HttpStatus.OK);
+        return new ResponseEntity<>(atividadeService.listarAtividadeMuralInstrutor(pagina, tamanho, idTrilha), HttpStatus.OK);
     }
 
     @Operation(summary = "Listar atividade no mural do aluno", description = "Listar atividade no mural do aluno")
@@ -122,8 +122,8 @@ public class AtividadeController {
             }
     )
     @GetMapping("/listar-nota")
-    public ResponseEntity<PageDTO<AtividadeNotaDTO>> listarAtividadePorNota(@RequestParam(required = false, defaultValue = "0") Integer pagina, @RequestParam(required = false, defaultValue = "5") Integer tamanho) throws RegraDeNegocioException {
-        return new ResponseEntity<>(atividadeService.listarAtividadePorNota(pagina, tamanho), HttpStatus.OK);
+    public ResponseEntity<PageDTO<AtividadeNotaDTO>> listarAtividadePorNota(@RequestParam(required = false, defaultValue = "0") Integer pagina, @RequestParam(required = false, defaultValue = "5") Integer tamanho, @RequestParam(required = false, defaultValue = "2") Integer idTrilha, @RequestParam(required = false, defaultValue = "1") Integer idModulo, @RequestParam(required = false)AtividadeStatus atividadeStatus) throws RegraDeNegocioException {
+        return new ResponseEntity<>(atividadeService.listarAtividadePorNota(pagina, tamanho, idTrilha, idModulo, atividadeStatus), HttpStatus.OK);
     }
 
     @Operation(summary = "Entregar atividade", description = "Entregar atividade")

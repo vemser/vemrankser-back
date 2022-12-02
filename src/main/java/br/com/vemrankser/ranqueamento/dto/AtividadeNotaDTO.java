@@ -10,5 +10,6 @@ import lombok.NoArgsConstructor;
 public class AtividadeNotaDTO {
 
     private String nome;
+    private Integer idAtividade;
     private Integer nota;
 }

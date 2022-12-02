@@ -34,7 +34,7 @@ public interface AtividadeRepository extends JpaRepository<AtividadeEntity,Integ
             " from ATIVIDADE_TRILHA atr " +
             " where (atr.trilha.idTrilha = :idTrilha ) " +
             " ")
-    Page<AtividadeMuralDTO> listarAtividadeMural(Pageable pageable, Integer idTrilha);
+    Page<AtividadeMuralDTO> listarAtividadeMuralInstrutor(Pageable pageable, Integer idTrilha);
 
 
     @Query("  select new br.com.vemrankser.ranqueamento.dto.AtividadeMuralAlunoDTO ( " +
@@ -57,16 +57,20 @@ public interface AtividadeRepository extends JpaRepository<AtividadeEntity,Integ
             " ")
     List<AtividadeMuralAlunoDTO> listarAtividadeMuralAluno(Integer idUsuarioLogado, AtividadeStatus atividadeStatus);
 
-    @Query("  select new br.com.vemrankser.ranqueamento.dto.AtividadeNotaDTO ( " +
+    @Query("  select distinct new br.com.vemrankser.ranqueamento.dto.AtividadeNotaDTO ( " +
             " u.nome, " +
-            " a.pontuacao " +
+            " au.atividade.idAtividade," +
+            " au.atividade.pontuacao " +
             " ) " +
-            " from USUARIO u, ATIVIDADE a " +
-            " left join u.trilhas ut " +
-            " left join ut.modulos tm " +
-            " left join tm.atividades" +
-            " where (u.idUsuario = a.idAtividade) " +
-            " order by u.nome ASC ")
-    Page<AtividadeNotaDTO> listarAtividadePorNota(Pageable pageable);
+            " from ATIVIDADE_USUARIO au, USUARIO u, MODULO m, TRILHA t" +
+//            " left join u.trilhas ut " +
+//            " left join ut.modulos tm " +
+//            " left join tm.atividades" +
+            " where (:idUsuarioLogado in au.atividade and :idUsuarioLogado is null or u.idUsuario = :idUsuarioLogado" +
+//            " and tm.idModulo = :idModulo and ut.idTrilha = :idTrilha and au.atividade.statusAtividade = :atividadeStatus) " +
+            " and m.idModulo = :idModulo and t.idTrilha = :idTrilha and au.atividade.statusAtividade = :atividadeStatus ) " +
+            "order by u.nome ASC ")
+    Page<AtividadeNotaDTO> listarAtividadePorNota(Pageable pageable, Integer idUsuarioLogado, Integer idTrilha, Integer idModulo, AtividadeStatus atividadeStatus);
 
 }
+//u.idUsuario = a.idAtividade
