@@ -35,7 +35,7 @@ public class ComentarioController {
             }
     )
     @PostMapping
-    public ResponseEntity<ComentarioCreateDTO> create(@RequestBody @Valid ComentarioCreateDTO comentarioCreateDTO, Integer idAtividade) throws RegraDeNegocioException {
+    public ResponseEntity<ComentarioCreateDTO> create(@RequestBody @Valid ComentarioCreateDTO comentarioCreateDTO, @RequestParam(required = false) Integer idAtividade) throws RegraDeNegocioException {
 
         log.info("Criando novo comentario....");
         ComentarioDTO comentarioDTO = comentarioService.adicionar(comentarioCreateDTO, idAtividade);

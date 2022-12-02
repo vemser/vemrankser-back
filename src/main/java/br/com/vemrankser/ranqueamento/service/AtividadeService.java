@@ -143,14 +143,11 @@ public class AtividadeService {
 
         List<AtividadeMuralDTO> atividadeMuralDTOList = atividadeEntity.getContent()
                 .stream()
-                .map(atividade -> {
-                    AtividadeMuralDTO atividadeMuralDTO1 = objectMapper.convertValue(atividade, AtividadeMuralDTO.class);
-                    return atividadeMuralDTO1;
-                })
+                .map(atividade -> objectMapper.convertValue(atividade, AtividadeMuralDTO.class))
                 .toList();
 
         if(atividadeMuralDTOList.isEmpty()) {
-            throw new RegraDeNegocioException("Sem atividades no mural.");
+            throw new RegraDeNegocioException("Sem atividades no mural do instrutor");
         }
 
         return new PageDTO<>(atividadeEntity.getTotalElements(),
@@ -160,10 +157,29 @@ public class AtividadeService {
                 atividadeMuralDTOList);
     }
 
-    public List<AtividadeMuralAlunoDTO> listarAtividadeMuralAluno(AtividadeStatus atividadeStatus, Integer idUsuario) throws RegraDeNegocioException {
-//        UsuarioEntity usuarioLogado = usuarioService.findById(usuarioService.getIdLoggedUser());
-        return atividadeRepository.listarAtividadeMuralAluno(idUsuario, atividadeStatus);
+    public PageDTO<AtividadeMuralAlunoDTO> listarAtividadeMuralAluno(Integer pagina, Integer tamanho, Integer idAluno,AtividadeStatus atividadeStatus) throws RegraDeNegocioException {
+        PageRequest pageRequest = PageRequest.of(pagina, tamanho);
+        Page<AtividadeMuralAlunoDTO> atividadeEntity = atividadeRepository.listarAtividadeMuralAluno(idAluno,atividadeStatus,pageRequest);
+
+        List<AtividadeMuralAlunoDTO> atividadeMuralDTOList = atividadeEntity.getContent()
+                .stream()
+                .map(atividade -> objectMapper.convertValue(atividade, AtividadeMuralAlunoDTO.class))
+                .toList();
+
+        if(atividadeMuralDTOList.isEmpty()) {
+            throw new RegraDeNegocioException("Sem atividades no mural do aluno");
+        }
+
+        return new PageDTO<>(atividadeEntity.getTotalElements(),
+                atividadeEntity.getTotalPages(),
+                pagina,
+                tamanho,
+                atividadeMuralDTOList);
     }
+    // ESSE PAGINADO
+//    public List<AtividadeMuralAlunoDTO> listarAtividadeMuralAluno(AtividadeStatus atividadeStatus, Integer idUsuario){
+//        return atividadeRepository.listarAtividadeMuralAluno(idUsuario, atividadeStatus);
+//    }
 
     public PageDTO<AtividadeNotaDTO> listarAtividadePorIdTrilhaIdModulo(Integer pagina, Integer tamanho, Integer idTrilha, Integer idModulo, AtividadeStatus atividadeStatus) throws RegraDeNegocioException {
         PageRequest pageRequest = PageRequest.of(pagina, tamanho);
@@ -191,6 +207,10 @@ public class AtividadeService {
     public AtividadeEntity buscarPorIdAtividade(Integer idAtividade) throws RegraDeNegocioException {
         return atividadeRepository.findById(idAtividade)
                 .orElseThrow(() -> new RegraDeNegocioException("Atividade não encontrada."));
+    }
+
+    public AtividadeDTO save(AtividadeEntity atividadeEntity) {
+        return objectMapper.convertValue(atividadeRepository.save(atividadeEntity),AtividadeDTO.class);
     }
 
 }

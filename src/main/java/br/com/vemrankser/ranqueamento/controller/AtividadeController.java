@@ -95,7 +95,7 @@ public class AtividadeController {
             }
     )
     @GetMapping("/listar-mural-instrutor")
-    public ResponseEntity<PageDTO<AtividadeMuralDTO>> listarAtividadeMural(@RequestParam(required = false, defaultValue = "0") Integer pagina, @RequestParam(required = false, defaultValue = "5") Integer tamanho, Integer idTrilha) throws RegraDeNegocioException {
+    public ResponseEntity<PageDTO<AtividadeMuralDTO>> listarAtividadeMural(@RequestParam(required = false, defaultValue = "0") Integer pagina, @RequestParam(required = false, defaultValue = "5") Integer tamanho,@RequestParam(required = false) Integer idTrilha) throws RegraDeNegocioException {
         return new ResponseEntity<>(atividadeService.listarAtividadeMuralInstrutor(pagina, tamanho, idTrilha), HttpStatus.OK);
     }
 
@@ -108,8 +108,8 @@ public class AtividadeController {
             }
     )
     @GetMapping("/listar-mural-aluno")
-    public ResponseEntity<List<AtividadeMuralAlunoDTO>> listarAtividadeMuralAluno(AtividadeStatus atividadeStatus, Integer idUsuario) throws RegraDeNegocioException {
-        return new ResponseEntity<>(atividadeService.listarAtividadeMuralAluno(atividadeStatus, idUsuario), HttpStatus.OK);
+    public ResponseEntity<PageDTO<AtividadeMuralAlunoDTO>> listarAtividadeMuralAluno(@RequestParam(required = false) Integer pargina, @RequestParam(required = false) Integer tamanho, @RequestParam(required = false) AtividadeStatus atividadeStatus, @RequestParam(required = false) Integer idUsuario) throws RegraDeNegocioException {
+        return new ResponseEntity<>(atividadeService.listarAtividadeMuralAluno(pargina, tamanho, idUsuario, atividadeStatus), HttpStatus.OK);
     }
 
     @Operation(summary = "Listar atividade por trilha e modulo", description = "Listar atividade por trilha e modulo")
@@ -121,7 +121,7 @@ public class AtividadeController {
             }
     )
     @GetMapping("/listar-trilha-modulo")
-    public ResponseEntity<PageDTO<AtividadeNotaDTO>> listarAtividadePorNota(@RequestParam(required = false, defaultValue = "0") Integer pagina, @RequestParam(required = false, defaultValue = "5") Integer tamanho, @RequestParam(required = false, defaultValue = "2") Integer idTrilha, @RequestParam(required = false, defaultValue = "1") Integer idModulo, @RequestParam(required = false)AtividadeStatus atividadeStatus) throws RegraDeNegocioException {
+    public ResponseEntity<PageDTO<AtividadeNotaDTO>> listarAtividadePorNota(@RequestParam(required = false, defaultValue = "0") Integer pagina, @RequestParam(required = false, defaultValue = "5") Integer tamanho, @RequestParam(required = false, defaultValue = "2") Integer idTrilha, @RequestParam(required = false, defaultValue = "1") Integer idModulo, @RequestParam(required = false) AtividadeStatus atividadeStatus) throws RegraDeNegocioException {
         return new ResponseEntity<>(atividadeService.listarAtividadePorIdTrilhaIdModulo(pagina, tamanho, idTrilha, idModulo, atividadeStatus), HttpStatus.OK);
     }
 
