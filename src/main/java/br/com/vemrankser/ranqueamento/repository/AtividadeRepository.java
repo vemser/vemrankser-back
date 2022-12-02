@@ -1,8 +1,6 @@
 package br.com.vemrankser.ranqueamento.repository;
 
-import br.com.vemrankser.ranqueamento.dto.AtividadeMuralAlunoDTO;
-import br.com.vemrankser.ranqueamento.dto.AtividadeMuralDTO;
-import br.com.vemrankser.ranqueamento.dto.AtividadeNotaDTO;
+import br.com.vemrankser.ranqueamento.dto.*;
 import br.com.vemrankser.ranqueamento.entity.AtividadeEntity;
 import br.com.vemrankser.ranqueamento.enums.AtividadeStatus;
 import org.springframework.data.domain.Page;
@@ -14,9 +12,23 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface AtividadeRepository extends JpaRepository<AtividadeEntity,Integer> {
+public interface AtividadeRepository extends JpaRepository<AtividadeEntity, Integer> {
 
-    List<AtividadeEntity> findByStatusAtividade(Integer statusAtividade);
+    @Query("  select new br.com.vemrankser.ranqueamento.dto.AtividadeTrilhaDTO ( " +
+            " atr.atividade.idAtividade, " +
+            " atr.atividade.nomeInstrutor, " +
+            " atr.atividade.titulo, " +
+            " atr.atividade.pesoAtividade, " +
+            " atr.atividade.dataCriacao, " +
+            " atr.atividade.dataEntrega, " +
+            " atr.trilha.nome, " +
+            " atr.trilha.edicao, " +
+            " atr.trilha.anoEdicao " +
+            " ) " +
+            " from ATIVIDADE_TRILHA atr" +
+            " where (atr.trilha.idTrilha = :idTrilha and atr.trilha.idTrilha = :idTrilha and atr.atividade.statusAtividade = :atividadeStatus ) " +
+            " ")
+    Page<AtividadeTrilhaDTO> listarAtividadePorStatus(Pageable pageable, Integer idTrilha, AtividadeStatus atividadeStatus);
 
     @Query("  select new br.com.vemrankser.ranqueamento.dto.AtividadeMuralDTO ( " +
             " atr.atividade.idAtividade, " +
@@ -63,14 +75,9 @@ public interface AtividadeRepository extends JpaRepository<AtividadeEntity,Integ
             " au.atividade.pontuacao " +
             " ) " +
             " from ATIVIDADE_USUARIO au, USUARIO u, MODULO m, TRILHA t" +
-//            " left join u.trilhas ut " +
-//            " left join ut.modulos tm " +
-//            " left join tm.atividades" +
             " where (:idUsuarioLogado in au.atividade and :idUsuarioLogado is null or u.idUsuario = :idUsuarioLogado" +
-//            " and tm.idModulo = :idModulo and ut.idTrilha = :idTrilha and au.atividade.statusAtividade = :atividadeStatus) " +
             " and m.idModulo = :idModulo and t.idTrilha = :idTrilha and au.atividade.statusAtividade = :atividadeStatus ) " +
             "order by u.nome ASC ")
     Page<AtividadeNotaDTO> listarAtividadePorNota(Pageable pageable, Integer idUsuarioLogado, Integer idTrilha, Integer idModulo, AtividadeStatus atividadeStatus);
 
 }
-//u.idUsuario = a.idAtividade

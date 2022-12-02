@@ -82,9 +82,9 @@ public class AtividadeController {
                     @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção")
             }
     )
-    @GetMapping("/listar-status")
-    public ResponseEntity<List<AtividadeEntity>> buscarAtividadePorStatusvidadePaginado(AtividadeStatus atividadeStatus) throws RegraDeNegocioException {
-        return ResponseEntity.ok(atividadeService.buscarAtividadePorStatus(atividadeStatus));
+    @GetMapping("/listar-trilha-status")
+    public ResponseEntity<PageDTO<AtividadeTrilhaDTO>> listarAtividadePorStatus(@RequestParam(required = false, defaultValue = "0") Integer pagina, @RequestParam(required = false, defaultValue = "10") Integer tamanho, @RequestParam(required = false) Integer idTrilha, @RequestParam(required = false) AtividadeStatus atividadeStatus) throws RegraDeNegocioException {
+        return new ResponseEntity<>(atividadeService.listarAtividadePorStatus(pagina, tamanho, idTrilha, atividadeStatus), HttpStatus.OK);
     }
 
     @Operation(summary = "Listar atividade no mural instrutor", description = "Listar atividade no mural instrutor")

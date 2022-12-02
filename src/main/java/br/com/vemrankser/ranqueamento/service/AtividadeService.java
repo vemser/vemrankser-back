@@ -97,16 +97,26 @@ public class AtividadeService {
         return usuarioEntity.getPontuacaoAluno() + atividadeEntity.getPontuacao();
     }
 
-    public List<AtividadeEntity> buscarAtividadePorStatus(AtividadeStatus atividadeStatus) throws RegraDeNegocioException {
+    public PageDTO<AtividadeTrilhaDTO> listarAtividadePorStatus(Integer pagina, Integer tamanho, Integer idTrilha ,AtividadeStatus atividadeStatus) throws RegraDeNegocioException {
+        PageRequest pageRequest = PageRequest.of(pagina, tamanho);
+        Page<AtividadeTrilhaDTO> atividadeTrilha = atividadeRepository.listarAtividadePorStatus(pageRequest, idTrilha, atividadeStatus);
 
-        List<AtividadeEntity> atividadeEntity = atividadeRepository.findByStatusAtividade(atividadeStatus.getAtividadeStatus())
+        List<AtividadeTrilhaDTO> atividadeTrilhaDTOS = atividadeTrilha.getContent()
                 .stream()
+                .map(atividadeTrilhaDTO -> {
+                    objectMapper.convertValue(atividadeTrilhaDTO, AtividadeTrilhaDTO.class);
+                    return atividadeTrilhaDTO;
+                })
                 .toList();
-        if (atividadeEntity.isEmpty()) {
+        if (atividadeTrilhaDTOS.isEmpty()) {
             throw new RegraDeNegocioException("Atividade não cadastrada");
         }
 
-        return atividadeEntity;
+        return new PageDTO<>(atividadeTrilha.getTotalElements(),
+                atividadeTrilha.getTotalPages(),
+                pagina,
+                tamanho,
+                atividadeTrilhaDTOS);
     }
 
     public PageDTO<AtividadeMuralDTO> listarAtividadeMuralInstrutor(Integer pagina, Integer tamanho, Integer idTrilha) throws RegraDeNegocioException {
