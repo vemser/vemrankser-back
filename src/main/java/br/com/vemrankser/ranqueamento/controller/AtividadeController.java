@@ -108,8 +108,8 @@ public class AtividadeController {
             }
     )
     @GetMapping("/listar-mural-aluno")
-    public ResponseEntity<PageDTO<AtividadeMuralAlunoDTO>> listarAtividadeMuralAluno(@RequestParam(required = false) Integer pargina, @RequestParam(required = false) Integer tamanho, @RequestParam(required = false) AtividadeStatus atividadeStatus, @RequestParam(required = false) Integer idUsuario) throws RegraDeNegocioException {
-        return new ResponseEntity<>(atividadeService.listarAtividadeMuralAluno(pargina, tamanho, idUsuario, atividadeStatus), HttpStatus.OK);
+    public ResponseEntity<PageDTO<AtividadeMuralAlunoDTO>> listarAtividadeMuralAluno(@RequestParam(required = false) Integer pagina, @RequestParam(required = false) Integer tamanho, @RequestParam(required = false) AtividadeStatus atividadeStatus, @RequestParam(required = false) Integer idUsuario) throws RegraDeNegocioException {
+        return new ResponseEntity<>(atividadeService.listarAtividadeMuralAluno(pagina, tamanho, idUsuario, atividadeStatus), HttpStatus.OK);
     }
 
     @Operation(summary = "Listar atividade por trilha e modulo", description = "Listar atividade por trilha e modulo")
