@@ -30,21 +30,22 @@ public interface UsuarioRepository extends JpaRepository<UsuarioEntity, Integer>
 
     UsuarioEntity findByLoginIgnoreCase(String login);
 
-    @Query("  select distinct new br.com.vemrankser.ranqueamento.dto.AlunoTrilhaPersonalizadoDTO ( " +
-            " tu.idUsuario," +
-            " tu.nome," +
-            " tu.email," +
-            " tu.login," +
-            " tu.statusUsuario," +
-            " tu.tipoPerfil," +
-            " t.nome," +
-            " t.edicao," +
-            " t.anoEdicao," +
-            " t.idTrilha" +
+    @Query("  select new br.com.vemrankser.ranqueamento.dto.AlunoTrilhaPersonalizadoDTO ( " +
+            " tu.usuarioEntity.idUsuario," +
+            " tu.usuarioEntity.foto, " +
+            " tu.usuarioEntity.nome," +
+            " tu.usuarioEntity.email," +
+            " tu.usuarioEntity.login," +
+            " tu.usuarioEntity.statusUsuario," +
+            " tu.usuarioEntity.tipoPerfil," +
+            " tu.trilha.nome," +
+            " tu.trilha.edicao," +
+            " tu.trilha.anoEdicao," +
+            " tu.trilha.idTrilha" +
             " ) " +
-            " from  TRILHA t" +
-            " left join t.usuarios tu " +
-            " where (:nome is null or tu.nome = :nome and t.idTrilha = :idTrilha) " )
+            " from  TRILHA_USUARIO tu" +
+            " left join tu.usuarioEntity " +
+            " where (tu.trilha.idTrilha = :idTrilha and :nome is null or tu.usuarioEntity.nome = :nome ) " )
     Page<AlunoTrilhaPersonalizadoDTO> listAlunoTrilhaQuery(Pageable pageable, String nome, Integer idTrilha);
 
 
