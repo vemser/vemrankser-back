@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -49,25 +50,27 @@ public interface AtividadeRepository extends JpaRepository<AtividadeEntity, Inte
     Page<AtividadeMuralDTO> listarAtividadeMuralInstrutor(Pageable pageable, Integer idTrilha);
 
 
-    @Query("  select new br.com.vemrankser.ranqueamento.dto.AtividadeMuralAlunoDTO ( " +
-            " a.idAtividade, " +
-            " a.titulo, " +
-            " a.instrucoes, " +
-            " a.pesoAtividade, " +
-            " a.dataCriacao, " +
-            " a.dataEntrega, " +
-            " a.idModulo, " +
-            " a.statusAtividade, " +
-            " a.modulo.nome, " +
-            " t.nome, " +
-            " t.edicao " +
+    @Query("  select distinct new br.com.vemrankser.ranqueamento.dto.AtividadeMuralAlunoDTO ( " +
+            " au.atividade.idAtividade, " +
+            " au.usuarioEntity.idUsuario, " +
+            " au.atividade.titulo, " +
+            " au.atividade.instrucoes, " +
+            " au.atividade.pesoAtividade, " +
+            " au.atividade.dataCriacao, " +
+            " au.atividade.dataEntrega, " +
+            " au.atividade.idModulo, " +
+            " au.atividade.statusAtividade, " +
+            " au.atividade.modulo.nome, " +
+            " atr.nome, " +
+            " atr.edicao " +
             " ) " +
-            " from USUARIO u, ATIVIDADE a, TRILHA t " +
-            " left join a.alunos " +
-            " left join u.atividades " +
-            " where (:idUsuarioLogado is null or u.idUsuario = :idUsuarioLogado and a.statusAtividade = :atividadeStatus) " +
-            " ")
-    List<AtividadeMuralAlunoDTO> listarAtividadeMuralAluno(Integer idUsuarioLogado, AtividadeStatus atividadeStatus);
+            " from ATIVIDADE_USUARIO au " +
+            " left join au.atividade aua " +
+            " left join aua.trilhas atr" +
+            " where (au.usuarioEntity.idUsuario = :idUsuario and au.atividade.statusAtividade = :atividadeStatus) " +
+            "  ")
+    List<AtividadeMuralAlunoDTO> listarAtividadeMuralAluno(Integer idUsuario, AtividadeStatus atividadeStatus);
+
 
     @Query("  select distinct new br.com.vemrankser.ranqueamento.dto.AtividadeNotaDTO ( " +
             " au.usuarioEntity.nome, " +

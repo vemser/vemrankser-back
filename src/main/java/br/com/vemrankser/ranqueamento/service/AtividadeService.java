@@ -1,10 +1,7 @@
 package br.com.vemrankser.ranqueamento.service;
 
 import br.com.vemrankser.ranqueamento.dto.*;
-import br.com.vemrankser.ranqueamento.entity.AtividadeEntity;
-import br.com.vemrankser.ranqueamento.entity.ModuloEntity;
-import br.com.vemrankser.ranqueamento.entity.TrilhaEntity;
-import br.com.vemrankser.ranqueamento.entity.UsuarioEntity;
+import br.com.vemrankser.ranqueamento.entity.*;
 import br.com.vemrankser.ranqueamento.enums.AtividadeStatus;
 import br.com.vemrankser.ranqueamento.exceptions.RegraDeNegocioException;
 import br.com.vemrankser.ranqueamento.repository.AtividadeRepository;
@@ -163,17 +160,15 @@ public class AtividadeService {
                 atividadeMuralDTOList);
     }
 
-    public List<AtividadeMuralAlunoDTO> listarAtividadeMuralAluno(AtividadeStatus atividadeStatus) throws RegraDeNegocioException {
-        UsuarioEntity usuarioLogado = usuarioService.findById(usuarioService.getIdLoggedUser());
-        return atividadeRepository.listarAtividadeMuralAluno(usuarioLogado.getIdUsuario(), atividadeStatus);
+    public List<AtividadeMuralAlunoDTO> listarAtividadeMuralAluno(AtividadeStatus atividadeStatus, Integer idUsuario) throws RegraDeNegocioException {
+//        UsuarioEntity usuarioLogado = usuarioService.findById(usuarioService.getIdLoggedUser());
+        return atividadeRepository.listarAtividadeMuralAluno(idUsuario, atividadeStatus);
     }
 
     public PageDTO<AtividadeNotaDTO> listarAtividadePorIdTrilhaIdModulo(Integer pagina, Integer tamanho, Integer idTrilha, Integer idModulo, AtividadeStatus atividadeStatus) throws RegraDeNegocioException {
-//        UsuarioEntity usuarioLogado = usuarioService.findById(usuarioService.getIdLoggedUser());
-//        Integer idUsuarioLogado = usuarioLogado.getIdUsuario();
-
         PageRequest pageRequest = PageRequest.of(pagina, tamanho);
         Page<AtividadeNotaDTO> atividadeEntity = atividadeRepository.listarAtividadePorIdTrilhaIdModulo(pageRequest, idTrilha, idModulo, atividadeStatus);
+
         List<AtividadeNotaDTO> atividadeNotaDTOList = atividadeEntity.getContent()
                 .stream()
                 .map(atividade -> {

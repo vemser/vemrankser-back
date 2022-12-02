@@ -108,8 +108,8 @@ public class AtividadeController {
             }
     )
     @GetMapping("/listar-mural-aluno")
-    public ResponseEntity<List<AtividadeMuralAlunoDTO>> listarAtividadeMuralAluno(AtividadeStatus atividadeStatus) throws RegraDeNegocioException {
-        return new ResponseEntity<>(atividadeService.listarAtividadeMuralAluno(atividadeStatus), HttpStatus.OK);
+    public ResponseEntity<List<AtividadeMuralAlunoDTO>> listarAtividadeMuralAluno(AtividadeStatus atividadeStatus, Integer idUsuario) throws RegraDeNegocioException {
+        return new ResponseEntity<>(atividadeService.listarAtividadeMuralAluno(atividadeStatus, idUsuario), HttpStatus.OK);
     }
 
     @Operation(summary = "Listar atividade por trilha e modulo", description = "Listar atividade por trilha e modulo")
@@ -133,7 +133,7 @@ public class AtividadeController {
                     @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção")
             }
     )
-    @PutMapping("/entregar/{idAtividade}")
+    @PutMapping("/entregar-aluno/{idAtividade}")
     public ResponseEntity<AtividadeAlunoEnviarDTO> entregarAtividade(@PathVariable(name = "idAtividade") Integer idAtividade, AtividadeAlunoEnviarDTO atividadeAlunoEnviarDTO) throws RegraDeNegocioException {
         return new ResponseEntity<>(atividadeService.entregarAtividade(atividadeAlunoEnviarDTO, idAtividade), HttpStatus.OK);
 
