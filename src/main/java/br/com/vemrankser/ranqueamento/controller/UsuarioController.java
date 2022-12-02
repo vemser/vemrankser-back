@@ -111,6 +111,19 @@ public class UsuarioController {
         return new ResponseEntity<>(usuarioService.listAlunoTrilhaQuery(pagina, tamanho, nome,idTrilha), HttpStatus.OK);
     }
 
+    @Operation(summary = "Pega a lista de alunos e trilha geral", description = "Resgata a lista de alunos e trilha geral do banco de dados")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "Foi resgatado com sucesso"),
+                    @ApiResponse(responseCode = "404", description = "Não encontrado"),
+                    @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção")
+            }
+    )
+    @GetMapping("/lista-alunos-trilha-geral")
+    public ResponseEntity<PageDTO<AlunoTrilhaDTO>> listAlunosTrilhaGeral(@RequestParam(required = false,defaultValue = "0") Integer pagina, @RequestParam(required = false,defaultValue = "5") Integer tamanho, @RequestParam(defaultValue = "") String nome) {
+        return new ResponseEntity<>(usuarioService.listarAlunosTrilhaGeral(pagina, tamanho, nome), HttpStatus.OK);
+    }
+
     @Operation(summary = "Pega aluno pelo login", description = "Resgata o aluno pelo login banco de dados")
     @ApiResponses(
             value = {

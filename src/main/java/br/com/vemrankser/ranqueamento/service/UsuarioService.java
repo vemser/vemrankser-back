@@ -141,7 +141,7 @@ public class UsuarioService {
 //                tamanho,
 //                usuarioDTOS);
 //    }
-    public PageDTO<AlunoTrilhaDTO> listarAlunosTrilha(Integer pagina, Integer tamanho, String nome) {
+    public PageDTO<AlunoTrilhaDTO> listarAlunosTrilhaGeral(Integer pagina, Integer tamanho, String nome) {
         PageRequest pageRequest = PageRequest.of(pagina, tamanho);
         Page<UsuarioEntity> allAlunos = usuarioRepository.findAllByTipoPerfilAndNomeContainingIgnoreCase(TipoPerfil.ALUNO.getCargo(), nome, pageRequest);
         List<AlunoTrilhaDTO> usuarioDTOS = allAlunos.getContent().stream()

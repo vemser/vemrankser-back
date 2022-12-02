@@ -45,7 +45,7 @@ public interface UsuarioRepository extends JpaRepository<UsuarioEntity, Integer>
             " ) " +
             " from  TRILHA_USUARIO tu" +
             " left join tu.usuarioEntity " +
-            " where (tu.trilha.idTrilha = :idTrilha and :nome is null or tu.usuarioEntity.nome = :nome ) " )
+            " where (:idTrilha is null or tu.trilha.idTrilha = :idTrilha and :nome is null or tu.usuarioEntity.nome = :nome ) " )
     Page<AlunoTrilhaPersonalizadoDTO> listAlunoTrilhaQuery(Pageable pageable, String nome, Integer idTrilha);
 
 
