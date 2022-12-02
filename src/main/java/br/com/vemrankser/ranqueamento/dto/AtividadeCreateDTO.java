@@ -29,12 +29,12 @@ public class AtividadeCreateDTO {
     private Integer pesoAtividade;
 
 
-    @FutureOrPresent
+
     @Schema(description = "Data de início da atividade", example = "15/02/2023")
     private LocalDateTime dataCriacao;
 
     @NotNull
-    @FutureOrPresent
+
     @Schema(description = "Data final para entrega da atividade", example = "16/02/2023")
     private LocalDateTime dataEntrega;
 

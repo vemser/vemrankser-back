@@ -17,7 +17,7 @@ public class ModuloCreateDTO {
     @Schema(description = "Data inicial do modulo ", example = "26/11/2022")
     private LocalDateTime dataInicio;
 
-    @FutureOrPresent
+
     @Schema(description = "Data para o fim do modulo ", example = "30/11/2022")
     private LocalDateTime dataFim;
 
