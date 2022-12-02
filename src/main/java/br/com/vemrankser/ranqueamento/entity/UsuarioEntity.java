@@ -22,7 +22,7 @@ public class UsuarioEntity implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "USUARIO_SEQUENCIA")
     @SequenceGenerator(name = "USUARIO_SEQUENCIA", sequenceName = "SEQ_USUARIO", allocationSize = 1)
-    @Column(name = "id_usuario")
+    @Column(name = "ID_USUARIO")
     private Integer idUsuario;
     // alteracao nova
 //    @Column(name = "id_atividade", insertable = false, updatable = false)

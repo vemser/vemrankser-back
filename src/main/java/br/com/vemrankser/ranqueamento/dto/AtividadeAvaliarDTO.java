@@ -13,4 +13,7 @@ public class AtividadeAvaliarDTO {
     @Max(value=100, message="deve ser menor ou igual à 100")
     @Schema(description = "Pontução da atividade", example = "90")
     private Integer pontuacao;
+
+    @Schema(description = "Link do repositório", example = "github.com")
+    private String link;
 }

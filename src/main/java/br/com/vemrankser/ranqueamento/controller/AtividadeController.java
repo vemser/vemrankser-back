@@ -1,7 +1,6 @@
 package br.com.vemrankser.ranqueamento.controller;
 
 import br.com.vemrankser.ranqueamento.dto.*;
-import br.com.vemrankser.ranqueamento.entity.AtividadeEntity;
 import br.com.vemrankser.ranqueamento.enums.AtividadeStatus;
 import br.com.vemrankser.ranqueamento.exceptions.RegraDeNegocioException;
 import br.com.vemrankser.ranqueamento.service.AtividadeService;
@@ -109,21 +108,21 @@ public class AtividadeController {
             }
     )
     @GetMapping("/listar-mural-aluno")
-    public ResponseEntity<List<AtividadeMuralAlunoDTO>> listarAtividadeMuralAluno(AtividadeStatus atividadeStatus) throws RegraDeNegocioException {
-        return new ResponseEntity<>(atividadeService.listarAtividadeMuralAluno(atividadeStatus), HttpStatus.OK);
+    public ResponseEntity<List<AtividadeMuralAlunoDTO>> listarAtividadeMuralAluno(AtividadeStatus atividadeStatus, Integer idUsuario) throws RegraDeNegocioException {
+        return new ResponseEntity<>(atividadeService.listarAtividadeMuralAluno(atividadeStatus, idUsuario), HttpStatus.OK);
     }
 
-    @Operation(summary = "Listar atividade por nota", description = "Listar atividade por nota")
+    @Operation(summary = "Listar atividade por trilha e modulo", description = "Listar atividade por trilha e modulo")
     @ApiResponses(
             value = {
-                    @ApiResponse(responseCode = "201", description = "Listar atividade por nota com sucesso"),
+                    @ApiResponse(responseCode = "201", description = "Listar atividade por trilha e modulo com sucesso"),
                     @ApiResponse(responseCode = "403", description = "Você não tem permissão para acessar este recurso"),
                     @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção")
             }
     )
-    @GetMapping("/listar-nota")
+    @GetMapping("/listar-trilha-modulo")
     public ResponseEntity<PageDTO<AtividadeNotaDTO>> listarAtividadePorNota(@RequestParam(required = false, defaultValue = "0") Integer pagina, @RequestParam(required = false, defaultValue = "5") Integer tamanho, @RequestParam(required = false, defaultValue = "2") Integer idTrilha, @RequestParam(required = false, defaultValue = "1") Integer idModulo, @RequestParam(required = false)AtividadeStatus atividadeStatus) throws RegraDeNegocioException {
-        return new ResponseEntity<>(atividadeService.listarAtividadePorNota(pagina, tamanho, idTrilha, idModulo, atividadeStatus), HttpStatus.OK);
+        return new ResponseEntity<>(atividadeService.listarAtividadePorIdTrilhaIdModulo(pagina, tamanho, idTrilha, idModulo, atividadeStatus), HttpStatus.OK);
     }
 
     @Operation(summary = "Entregar atividade", description = "Entregar atividade")
@@ -134,7 +133,7 @@ public class AtividadeController {
                     @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção")
             }
     )
-    @PutMapping("/entregar/{idAtividade}")
+    @PutMapping("/entregar-aluno/{idAtividade}")
     public ResponseEntity<AtividadeAlunoEnviarDTO> entregarAtividade(@PathVariable(name = "idAtividade") Integer idAtividade, AtividadeAlunoEnviarDTO atividadeAlunoEnviarDTO) throws RegraDeNegocioException {
         return new ResponseEntity<>(atividadeService.entregarAtividade(atividadeAlunoEnviarDTO, idAtividade), HttpStatus.OK);
 
