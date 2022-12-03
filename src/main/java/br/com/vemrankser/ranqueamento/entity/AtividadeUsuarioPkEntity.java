@@ -12,7 +12,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @Data
 @Embeddable
-public class AtividadeUsuarioIdEntity implements Serializable {
+public class AtividadeUsuarioPkEntity implements Serializable {
 
     @Column(name = "ID_ATIVIDADE")
     private Integer idAtividade;
