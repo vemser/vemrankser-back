@@ -59,17 +59,17 @@ public class AtividadeController {
         return ResponseEntity.ok(atividadeService.listarAtividades(pagina, tamanho));
     }
 
-    @Operation(summary = "Avaliar atividade do aluno", description = "Avaliar atividade do aluno")
+    @Operation(summary = "Colocar a atividade como concluida", description = "Concluir atividade da turma")
     @ApiResponses(
             value = {
-                    @ApiResponse(responseCode = "201", description = "Atividade avalida com sucesso"),
+                    @ApiResponse(responseCode = "201", description = "Atividade concluida com sucesso"),
                     @ApiResponse(responseCode = "403", description = "Você não tem permissão para acessar este recurso"),
                     @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção")
             }
     )
-    @PutMapping("/avaliar/{idAtividade}")
-    public ResponseEntity<AtividadeAvaliarDTO> avaliarAtividade(@PathVariable(name = "idAtividade") Integer idAtividade, @RequestBody @Valid AtividadeAvaliarDTO atividadeAvaliarDTO) throws RegraDeNegocioException {
-        return new ResponseEntity<>(atividadeService.avaliarAtividade(atividadeAvaliarDTO, idAtividade), HttpStatus.OK);
+    @PutMapping("/concluir-atividade/{idAtividade}")
+    public ResponseEntity<AtividadeDTO> avaliarAtividade(@PathVariable(name = "idAtividade") Integer idAtividade) throws RegraDeNegocioException {
+        return new ResponseEntity<>(atividadeService.colocarAtividadeComoConcluida(idAtividade), HttpStatus.OK);
 
     }
 
@@ -95,7 +95,7 @@ public class AtividadeController {
             }
     )
     @GetMapping("/listar-mural-instrutor")
-    public ResponseEntity<PageDTO<AtividadeMuralDTO>> listarAtividadeMural(@RequestParam(required = false, defaultValue = "0") Integer pagina, @RequestParam(required = false, defaultValue = "5") Integer tamanho,@RequestParam(required = false) Integer idTrilha) throws RegraDeNegocioException {
+    public ResponseEntity<PageDTO<AtividadeMuralDTO>> listarAtividadeMural(@RequestParam(required = false, defaultValue = "0") Integer pagina, @RequestParam(required = false, defaultValue = "5") Integer tamanho, @RequestParam(required = false) Integer idTrilha) throws RegraDeNegocioException {
         return new ResponseEntity<>(atividadeService.listarAtividadeMuralInstrutor(pagina, tamanho, idTrilha), HttpStatus.OK);
     }
 
@@ -108,7 +108,7 @@ public class AtividadeController {
             }
     )
     @GetMapping("/listar-mural-aluno")
-    public ResponseEntity<PageDTO<AtividadeMuralAlunoDTO>> listarAtividadeMuralAluno(@RequestParam(required = false,defaultValue = "0") Integer pagina, @RequestParam(required = false,defaultValue = "5") Integer tamanho, @RequestParam(required = false) AtividadeStatus atividadeStatus, @RequestParam(required = false) Integer idUsuario) throws RegraDeNegocioException {
+    public ResponseEntity<PageDTO<AtividadeMuralAlunoDTO>> listarAtividadeMuralAluno(@RequestParam(required = false, defaultValue = "0") Integer pagina, @RequestParam(required = false, defaultValue = "5") Integer tamanho, @RequestParam(required = false) AtividadeStatus atividadeStatus, @RequestParam(required = false) Integer idUsuario) throws RegraDeNegocioException {
         return new ResponseEntity<>(atividadeService.listarAtividadeMuralAluno(pagina, tamanho, idUsuario, atividadeStatus), HttpStatus.OK);
     }
 
@@ -125,19 +125,19 @@ public class AtividadeController {
         return new ResponseEntity<>(atividadeService.listarAtividadePorIdTrilhaIdModulo(pagina, tamanho, idTrilha, idModulo, atividadeStatus), HttpStatus.OK);
     }
 
-    @Operation(summary = "Entregar atividade", description = "Entregar atividade")
-    @ApiResponses(
-            value = {
-                    @ApiResponse(responseCode = "201", description = "Entregar atividade com sucesso"),
-                    @ApiResponse(responseCode = "403", description = "Você não tem permissão para acessar este recurso"),
-                    @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção")
-            }
-    )
-    @PutMapping("/entregar-aluno/{idAtividade}")
-    public ResponseEntity<AtividadeAlunoEnviarDTO> entregarAtividade(@PathVariable(name = "idAtividade") Integer idAtividade,@RequestBody @Valid AtividadeAlunoEnviarDTO atividadeAlunoEnviarDTO) throws RegraDeNegocioException {
-        return new ResponseEntity<>(atividadeService.entregarAtividade(atividadeAlunoEnviarDTO, idAtividade), HttpStatus.OK);
-
-    }
+//    @Operation(summary = "Entregar atividade", description = "Entregar atividade")
+//    @ApiResponses(
+//            value = {
+//                    @ApiResponse(responseCode = "201", description = "Entregar atividade com sucesso"),
+//                    @ApiResponse(responseCode = "403", description = "Você não tem permissão para acessar este recurso"),
+//                    @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção")
+//            }
+//    )
+//    @PutMapping("/entregar-aluno/{idAtividade}")
+//    public ResponseEntity<AtividadeAlunoEnviarDTO> entregarAtividade(@PathVariable(name = "idAtividade") Integer idAtividade,@RequestBody @Valid AtividadeAlunoEnviarDTO atividadeAlunoEnviarDTO) throws RegraDeNegocioException {
+//        return new ResponseEntity<>(atividadeService.entregarAtividade(atividadeAlunoEnviarDTO, idAtividade), HttpStatus.OK);
+//
+//    }
 
     @Operation(summary = "Pega a atividade pelo id", description = "Resgata a atividade pelo id do banco de dados")
     @ApiResponses(

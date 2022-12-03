@@ -2,9 +2,7 @@ package br.com.vemrankser.ranqueamento.controller;
 
 import br.com.vemrankser.ranqueamento.dto.AtividadeComentarioAvaliacaoCreateDTO;
 import br.com.vemrankser.ranqueamento.dto.AtividadeComentarioAvaliacaoDTO;
-import br.com.vemrankser.ranqueamento.dto.ComentarioCreateDTO;
 import br.com.vemrankser.ranqueamento.dto.ComentarioDTO;
-import br.com.vemrankser.ranqueamento.enums.AtividadeStatus;
 import br.com.vemrankser.ranqueamento.enums.TipoFeedback;
 import br.com.vemrankser.ranqueamento.exceptions.RegraDeNegocioException;
 import br.com.vemrankser.ranqueamento.service.ComentarioService;
@@ -39,10 +37,10 @@ public class ComentarioController {
             }
     )
     @PutMapping("/avaliar-comentar-atividade")
-    public ResponseEntity<AtividadeComentarioAvaliacaoDTO> adicionarComentarioAvaliar(@RequestBody @Valid AtividadeComentarioAvaliacaoCreateDTO atividadeComentarioAvaliacaoCreateDTO, @RequestParam(required = false) Integer idAtividade, AtividadeStatus atividadeStatus, TipoFeedback tipoFeedback) throws RegraDeNegocioException {
+    public ResponseEntity<AtividadeComentarioAvaliacaoDTO> adicionarComentarioAvaliar(@RequestBody @Valid AtividadeComentarioAvaliacaoCreateDTO atividadeComentarioAvaliacaoCreateDTO, Integer idAluno, Integer idAtividade, TipoFeedback tipoFeedback) throws RegraDeNegocioException {
 
         log.info("Criando novo comentario....");
-        AtividadeComentarioAvaliacaoDTO comentarioAvaliacaoDTO = comentarioService.adicionarComentarioAvaliar(atividadeComentarioAvaliacaoCreateDTO, idAtividade, atividadeStatus, tipoFeedback);
+        AtividadeComentarioAvaliacaoDTO comentarioAvaliacaoDTO = comentarioService.adicionarComentarioAvaliar(atividadeComentarioAvaliacaoCreateDTO, idAluno, idAtividade, tipoFeedback);
         log.info("Comentario criado com sucesso!");
 
         return new ResponseEntity<>(comentarioAvaliacaoDTO, HttpStatus.OK);
@@ -91,5 +89,18 @@ public class ComentarioController {
     @GetMapping("/listar-por-feedback")
     public ResponseEntity<List<ComentarioDTO>> listarComentarioPorFeedback(TipoFeedback tipoFeedback) {
         return ResponseEntity.ok(comentarioService.listarComentarioPorFeedback(tipoFeedback));
+    }
+
+    @Operation(summary = "Listar comentários do aluno", description = "Listar comentários de um aluno")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "Listar comentário, êxito"),
+                    @ApiResponse(responseCode = "403", description = "Você não tem permissão para acessar este recurso"),
+                    @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção")
+            }
+    )
+    @GetMapping("/listar-comentarios-aluno")
+    public ResponseEntity<List<ComentarioDTO>> listarComentariosAluno(Integer idAluno) {
+        return ResponseEntity.ok(comentarioService.comentariosDoAluno(idAluno));
     }
 }

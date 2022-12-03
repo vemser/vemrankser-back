@@ -12,14 +12,16 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Getter
 @Setter
-@Entity(name = "COMENTARIO")
-public class ComentarioEntity {
-
+@Entity(name = "LINK")
+public class LinkEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "COMENTARIO_SEQUENCIA")
-    @SequenceGenerator(name = "COMENTARIO_SEQUENCIA", sequenceName = "SEQ_COMENTARIO", allocationSize = 1)
-    @Column(name = "id_comentario")
-    private Integer idComentario;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "LINK_SEQUENCIA")
+    @SequenceGenerator(name = "LINK_SEQUENCIA", sequenceName = "SEQ_LINK", allocationSize = 1)
+    @Column(name = "id_link")
+    private Integer idLink;
+
+    @Column(name = "link")
+    private String link;
 
     @Column(name = "id_atividade", insertable = false, updatable = false)
     private Integer idAtividade;
@@ -27,19 +29,15 @@ public class ComentarioEntity {
     @Column(name = "id_usuario", insertable = false, updatable = false)
     private Integer idUsuario;
 
-    @Column(name = "comentario")
-    private String comentario;
-
-    @Column(name = "status_comentario")
-    private Integer statusComentario;
-
     @JsonIgnore
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "ID_ATIVIDADE", referencedColumnName = "ID_ATIVIDADE")
+    @JoinColumn(name = "id_atividade",referencedColumnName = "id_atividade")
     private AtividadeEntity atividade;
 
     @JsonIgnore
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "ID_USUARIO", referencedColumnName = "ID_USUARIO")
+    @JoinColumn(name = "id_usuario",referencedColumnName = "id_usuario")
     private UsuarioEntity usuario;
+
+
 }

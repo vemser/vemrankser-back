@@ -2,12 +2,10 @@ package br.com.vemrankser.ranqueamento.service;
 
 import br.com.vemrankser.ranqueamento.dto.AtividadeComentarioAvaliacaoCreateDTO;
 import br.com.vemrankser.ranqueamento.dto.AtividadeComentarioAvaliacaoDTO;
-import br.com.vemrankser.ranqueamento.dto.ComentarioCreateDTO;
 import br.com.vemrankser.ranqueamento.dto.ComentarioDTO;
 import br.com.vemrankser.ranqueamento.entity.AtividadeEntity;
 import br.com.vemrankser.ranqueamento.entity.ComentarioEntity;
 import br.com.vemrankser.ranqueamento.entity.UsuarioEntity;
-import br.com.vemrankser.ranqueamento.enums.AtividadeStatus;
 import br.com.vemrankser.ranqueamento.enums.TipoFeedback;
 import br.com.vemrankser.ranqueamento.exceptions.RegraDeNegocioException;
 import br.com.vemrankser.ranqueamento.repository.ComentarioRepository;
@@ -15,9 +13,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -25,6 +21,7 @@ public class ComentarioService {
 
     private final ComentarioRepository comentarioRepository;
     private final AtividadeService atividadeService;
+    private final UsuarioService usuarioService;
 
     private final ObjectMapper objectMapper;
 
@@ -43,25 +40,34 @@ public class ComentarioService {
 //        return comentarioDTO;
 //    }
 
-    public AtividadeComentarioAvaliacaoDTO adicionarComentarioAvaliar(AtividadeComentarioAvaliacaoCreateDTO atividadeComentarioAvaliacaoCreateDTO, Integer idAtividade, AtividadeStatus atividadeStatus, TipoFeedback tipoFeedback) throws RegraDeNegocioException {
+    public AtividadeComentarioAvaliacaoDTO adicionarComentarioAvaliar(AtividadeComentarioAvaliacaoCreateDTO atividadeComentarioAvaliacaoCreateDTO, Integer idAluno, Integer idAtividade, TipoFeedback tipoFeedback) throws RegraDeNegocioException {
         AtividadeEntity atividadeEntity = atividadeService.buscarPorIdAtividade(idAtividade);
+        UsuarioEntity usuarioEntity = usuarioService.findById(idAluno);
 
         ComentarioEntity comentarioEntity = objectMapper.convertValue(atividadeComentarioAvaliacaoCreateDTO, ComentarioEntity.class);
         comentarioEntity.setStatusComentario(tipoFeedback.getTipoFeedback());
         comentarioEntity.setIdAtividade(atividadeEntity.getIdAtividade());
-        Set<ComentarioEntity> comentarioEntitySet = new HashSet<>();
-        comentarioEntitySet.add(comentarioEntity);
-        atividadeEntity.setComentarios(comentarioEntitySet);
-        atividadeEntity.setPontuacao(atividadeComentarioAvaliacaoCreateDTO.getNotaAvalicao());
-        atividadeEntity.getAlunos().forEach(aluno -> aluno.setPontuacaoAluno(calcularPontuacao(aluno, atividadeEntity)));
-
-        if (atividadeStatus.equals(AtividadeStatus.CONCLUIDA)) {
-            atividadeEntity.setStatusAtividade(AtividadeStatus.CONCLUIDA);
-        } else {
-            atividadeEntity.setStatusAtividade(AtividadeStatus.PENDENTE);
-        }
-
         comentarioEntity.setAtividade(atividadeEntity);
+        comentarioEntity.setIdUsuario(usuarioEntity.getIdUsuario());
+        comentarioEntity.setUsuario(usuarioEntity);
+//        Set<ComentarioEntity> comentarioEntitySet = new HashSet<>();
+//        comentarioEntitySet.add(comentarioEntity);
+//        atividadeEntity.setComentarios(comentarioEntitySet);
+        comentarioEntity.setComentario(comentarioEntity.getComentario());
+        atividadeEntity.setPontuacao(atividadeComentarioAvaliacaoCreateDTO.getNotaAvalicao());
+        //  atividadeEntity.getAlunos().forEach(aluno -> aluno.setPontuacaoAluno(calcularPontuacao(aluno, atividadeEntity)));
+        atividadeEntity.getAlunos().stream()
+                .filter(usuarioEntity1 -> usuarioEntity1.getIdUsuario().equals(usuarioEntity.getIdUsuario()))
+                .forEach(aluno -> aluno.setPontuacaoAluno(calcularPontuacao(aluno, atividadeEntity)));
+
+
+//        if (atividadeStatus.equals(AtividadeStatus.CONCLUIDA)) {
+//            atividadeEntity.setStatusAtividade(AtividadeStatus.CONCLUIDA);
+//        } else {
+//            atividadeEntity.setStatusAtividade(AtividadeStatus.PENDENTE);
+//        }
+
+        // comentarioEntity.setAtividade(atividadeEntity);
         comentarioEntity.setComentario(atividadeComentarioAvaliacaoCreateDTO.getComentario());
         comentarioRepository.save(comentarioEntity);
         atividadeService.save(atividadeEntity);
@@ -69,6 +75,11 @@ public class ComentarioService {
         return objectMapper.convertValue(atividadeComentarioAvaliacaoCreateDTO, AtividadeComentarioAvaliacaoDTO.class);
     }
 
+    public List<ComentarioDTO> comentariosDoAluno(Integer idAluno) {
+        return comentarioRepository.findAllByIdUsuario(idAluno).stream()
+                .map(comentarioEntity -> objectMapper.convertValue(comentarioEntity, ComentarioDTO.class))
+                .toList();
+    }
 
     private Integer calcularPontuacao(UsuarioEntity usuarioEntity, AtividadeEntity atividadeEntity) {
         return usuarioEntity.getPontuacaoAluno() + atividadeEntity.getPontuacao();

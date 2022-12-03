@@ -94,6 +94,15 @@ public class UsuarioEntity implements UserDetails {
     )
     private Set<AtividadeEntity> atividades;
 
+    @JsonIgnore
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "usuario")
+    private LinkEntity link;
+
+
+    @JsonIgnore
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "usuario")
+    private ComentarioEntity comentario;
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

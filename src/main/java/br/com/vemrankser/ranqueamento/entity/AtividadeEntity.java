@@ -46,8 +46,8 @@ public class AtividadeEntity {
     @Column(name = "pontuacao")
     private Integer pontuacao;
 
-    @Column(name = "link")
-    private String link;
+//    @Column(name = "link")
+//    private String link;
 
     @Enumerated(EnumType.ORDINAL)
     @Column(name = "status_Atividade")
@@ -57,8 +57,8 @@ public class AtividadeEntity {
     private String nomeInstrutor;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "atividade", fetch = FetchType.LAZY)
-    private Set<ComentarioEntity> comentarios = new HashSet<>();
+    @OneToOne(mappedBy = "atividade", fetch = FetchType.LAZY)
+    private ComentarioEntity comentario;
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
@@ -86,5 +86,10 @@ public class AtividadeEntity {
             inverseJoinColumns = @JoinColumn(name = "id_trilha")
     )
     private Set<TrilhaEntity> trilhas = new HashSet<>();
+
+
+    @JsonIgnore
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "atividade")
+    private LinkEntity link;
 
 }

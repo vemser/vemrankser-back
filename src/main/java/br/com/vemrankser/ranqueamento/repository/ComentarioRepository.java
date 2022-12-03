@@ -12,4 +12,6 @@ public interface ComentarioRepository extends JpaRepository<ComentarioEntity, In
 
     List<ComentarioEntity> findAllByStatusComentario(Integer statusComentario);
 
+    List<ComentarioEntity> findAllByIdUsuario(Integer idAluno);
+
 }

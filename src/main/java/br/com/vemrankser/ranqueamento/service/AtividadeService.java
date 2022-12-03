@@ -1,7 +1,10 @@
 package br.com.vemrankser.ranqueamento.service;
 
 import br.com.vemrankser.ranqueamento.dto.*;
-import br.com.vemrankser.ranqueamento.entity.*;
+import br.com.vemrankser.ranqueamento.entity.AtividadeEntity;
+import br.com.vemrankser.ranqueamento.entity.ModuloEntity;
+import br.com.vemrankser.ranqueamento.entity.TrilhaEntity;
+import br.com.vemrankser.ranqueamento.entity.UsuarioEntity;
 import br.com.vemrankser.ranqueamento.enums.AtividadeStatus;
 import br.com.vemrankser.ranqueamento.exceptions.RegraDeNegocioException;
 import br.com.vemrankser.ranqueamento.repository.AtividadeRepository;
@@ -69,7 +72,7 @@ public class AtividadeService {
         atividadeEntity.setTrilhas(new HashSet<>(trilhaEntities));
         atividadeEntity.setModulo(moduloEntity);
 
-                atividadeRepository.save(atividadeEntity);
+        atividadeRepository.save(atividadeEntity);
 
         return objectMapper.convertValue(atividadeEntity, AtividadeDTO.class);
 
@@ -93,8 +96,17 @@ public class AtividadeService {
         return objectMapper.convertValue(atividadeAvaliacao, AtividadeAvaliarDTO.class);
     }
 
-    private Integer calcularPontuacao (UsuarioEntity usuarioEntity, AtividadeEntity atividadeEntity) {
+    private Integer calcularPontuacao(UsuarioEntity usuarioEntity, AtividadeEntity atividadeEntity) {
         return usuarioEntity.getPontuacaoAluno() + atividadeEntity.getPontuacao();
+    }
+
+    public AtividadeDTO colocarAtividadeComoConcluida(Integer idAtividade) throws RegraDeNegocioException {
+        AtividadeEntity atividadeEntity = buscarPorIdAtividade(idAtividade);
+        atividadeEntity.setStatusAtividade(AtividadeStatus.CONCLUIDA);
+        atividadeRepository.save(atividadeEntity);
+
+        return objectMapper.convertValue(atividadeEntity, AtividadeDTO.class);
+
     }
 
     public AtividadeAlunoEnviarDTO entregarAtividade(AtividadeAlunoEnviarDTO atividadeAlunoEnviarDTO, Integer idAtividade) throws RegraDeNegocioException {
@@ -109,7 +121,7 @@ public class AtividadeService {
         atividadeEntityRecuperado.setDataCriacao(atividadeEntity.getDataCriacao());
         atividadeEntityRecuperado.setDataEntrega(atividadeEntity.getDataEntrega());
         atividadeEntityRecuperado.setPontuacao(atividadeEntity.getPontuacao());
-        atividadeEntityRecuperado.setLink(atividadeAlunoEnviarDTO.getLink());
+        //  atividadeEntityRecuperado.setLink(atividadeAlunoEnviarDTO.getLink());
         atividadeEntityRecuperado.setStatusAtividade(AtividadeStatus.CONCLUIDA);
         atividadeEntityRecuperado.setNomeInstrutor(atividadeEntity.getNomeInstrutor());
 
@@ -118,7 +130,7 @@ public class AtividadeService {
         return objectMapper.convertValue(atividadeEntityRecuperado, AtividadeAlunoEnviarDTO.class);
     }
 
-    public PageDTO<AtividadeTrilhaDTO> listarAtividadePorStatus(Integer pagina, Integer tamanho, Integer idTrilha ,AtividadeStatus atividadeStatus) throws RegraDeNegocioException {
+    public PageDTO<AtividadeTrilhaDTO> listarAtividadePorStatus(Integer pagina, Integer tamanho, Integer idTrilha, AtividadeStatus atividadeStatus) throws RegraDeNegocioException {
         PageRequest pageRequest = PageRequest.of(pagina, tamanho);
         Page<AtividadeTrilhaDTO> atividadeTrilha = atividadeRepository.listarAtividadePorStatus(pageRequest, idTrilha, atividadeStatus);
 
@@ -149,7 +161,7 @@ public class AtividadeService {
                 .map(atividade -> objectMapper.convertValue(atividade, AtividadeMuralDTO.class))
                 .toList();
 
-        if(atividadeMuralDTOList.isEmpty()) {
+        if (atividadeMuralDTOList.isEmpty()) {
             throw new RegraDeNegocioException("Sem atividades no mural do instrutor");
         }
 
@@ -160,16 +172,16 @@ public class AtividadeService {
                 atividadeMuralDTOList);
     }
 
-    public PageDTO<AtividadeMuralAlunoDTO> listarAtividadeMuralAluno(Integer pagina, Integer tamanho, Integer idAluno,AtividadeStatus atividadeStatus) throws RegraDeNegocioException {
+    public PageDTO<AtividadeMuralAlunoDTO> listarAtividadeMuralAluno(Integer pagina, Integer tamanho, Integer idAluno, AtividadeStatus atividadeStatus) throws RegraDeNegocioException {
         PageRequest pageRequest = PageRequest.of(pagina, tamanho);
-        Page<AtividadeMuralAlunoDTO> atividadeEntity = atividadeRepository.listarAtividadeMuralAluno(idAluno,atividadeStatus,pageRequest);
+        Page<AtividadeMuralAlunoDTO> atividadeEntity = atividadeRepository.listarAtividadeMuralAluno(idAluno, atividadeStatus, pageRequest);
 
         List<AtividadeMuralAlunoDTO> atividadeMuralDTOList = atividadeEntity.getContent()
                 .stream()
                 .map(atividade -> objectMapper.convertValue(atividade, AtividadeMuralAlunoDTO.class))
                 .toList();
 
-        if(atividadeMuralDTOList.isEmpty()) {
+        if (atividadeMuralDTOList.isEmpty()) {
             throw new RegraDeNegocioException("Sem atividades no mural do aluno");
         }
 
@@ -213,7 +225,7 @@ public class AtividadeService {
     }
 
     public AtividadeDTO save(AtividadeEntity atividadeEntity) {
-        return objectMapper.convertValue(atividadeRepository.save(atividadeEntity),AtividadeDTO.class);
+        return objectMapper.convertValue(atividadeRepository.save(atividadeEntity), AtividadeDTO.class);
     }
 
 }
