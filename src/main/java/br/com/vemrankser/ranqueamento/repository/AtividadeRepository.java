@@ -33,6 +33,7 @@ public interface AtividadeRepository extends JpaRepository<AtividadeEntity, Inte
 
     @Query("  select new br.com.vemrankser.ranqueamento.dto.AtividadeMuralDTO ( " +
             " atr.atividade.idAtividade, " +
+            " atr.atividade.nomeInstrutor, " +
             " atr.atividade.titulo, " +
             " atr.atividade.instrucoes, " +
             " atr.atividade.pesoAtividade, " +
@@ -72,7 +73,7 @@ public interface AtividadeRepository extends JpaRepository<AtividadeEntity, Inte
     Page<AtividadeMuralAlunoDTO> listarAtividadeMuralAluno(Integer idUsuario, AtividadeStatus atividadeStatus,Pageable pageable);
 
 
-    @Query("  select distinct new br.com.vemrankser.ranqueamento.dto.AtividadeNotaDTO ( " +
+    @Query("  select  new br.com.vemrankser.ranqueamento.dto.AtividadeNotaDTO ( " +
             " au.usuarioEntity.nome, " +
             " au.atividade.idAtividade," +
             " au.atividade.pontuacao " +

@@ -16,6 +16,8 @@ public class AtividadeMuralDTO {
     @Id
     private Integer idAtividade;
 
+    private String nomeInstrutor;
+
     private String titulo;
 
     private String instrucoes;
