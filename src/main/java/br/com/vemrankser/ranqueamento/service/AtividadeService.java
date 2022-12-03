@@ -181,9 +181,9 @@ public class AtividadeService {
                 .map(atividade -> objectMapper.convertValue(atividade, AtividadeMuralAlunoDTO.class))
                 .toList();
 
-        if (atividadeMuralDTOList.isEmpty()) {
-            throw new RegraDeNegocioException("Sem atividades no mural do aluno");
-        }
+//        if (atividadeMuralDTOList.isEmpty()) {
+//            throw new RegraDeNegocioException("Sem atividades no mural do aluno");
+//        }
 
         return new PageDTO<>(atividadeEntity.getTotalElements(),
                 atividadeEntity.getTotalPages(),
@@ -196,21 +196,21 @@ public class AtividadeService {
 //        return atividadeRepository.listarAtividadeMuralAluno(idUsuario, atividadeStatus);
 //    }
 
-    public PageDTO<AtividadeNotaDTO> listarAtividadePorIdTrilhaIdModulo(Integer pagina, Integer tamanho, Integer idTrilha, Integer idModulo, AtividadeStatus atividadeStatus) throws RegraDeNegocioException {
+    public PageDTO<AtividadeNotaPageDTO> listarAtividadePorIdTrilhaIdModulo(Integer pagina, Integer tamanho, Integer idTrilha, Integer idModulo, AtividadeStatus atividadeStatus) throws RegraDeNegocioException {
         PageRequest pageRequest = PageRequest.of(pagina, tamanho);
-        Page<AtividadeNotaDTO> atividadeEntity = atividadeRepository.listarAtividadePorIdTrilhaIdModulo(pageRequest, idTrilha, idModulo, atividadeStatus);
+        Page<AtividadeNotaPageDTO> atividadeEntity = atividadeRepository.listarAtividadePorIdTrilhaIdModulo(pageRequest, idTrilha, idModulo, atividadeStatus);
 
-        List<AtividadeNotaDTO> atividadeNotaDTOList = atividadeEntity.getContent()
+        List<AtividadeNotaPageDTO> atividadeNotaDTOList = atividadeEntity.getContent()
                 .stream()
                 .map(atividade -> {
-                    AtividadeNotaDTO atividadeNotaDTO1 = objectMapper.convertValue(atividade, AtividadeNotaDTO.class);
+                    AtividadeNotaPageDTO atividadeNotaDTO1 = objectMapper.convertValue(atividade, AtividadeNotaPageDTO.class);
                     return atividadeNotaDTO1;
                 })
                 .toList();
 
-        if (atividadeNotaDTOList.isEmpty()) {
-            throw new RegraDeNegocioException("Sem cadastro de notas.");
-        }
+//        if (atividadeNotaDTOList.isEmpty()) {
+//            throw new RegraDeNegocioException("Sem cadastro de notas.");
+//        }
 
         return new PageDTO<>(atividadeEntity.getTotalElements(),
                 atividadeEntity.getTotalPages(),

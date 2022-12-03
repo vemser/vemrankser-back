@@ -73,16 +73,24 @@ public interface AtividadeRepository extends JpaRepository<AtividadeEntity, Inte
     Page<AtividadeMuralAlunoDTO> listarAtividadeMuralAluno(Integer idUsuario, AtividadeStatus atividadeStatus,Pageable pageable);
 
 
-    @Query("  select  new br.com.vemrankser.ranqueamento.dto.AtividadeNotaDTO ( " +
-            " au.usuarioEntity.nome, " +
-            " au.atividade.idAtividade," +
-            " au.atividade.pontuacao " +
+    @Query("  select distinct new br.com.vemrankser.ranqueamento.dto.AtividadeNotaPageDTO ( " +
+            " u.nome, " +
+            " au.idAtividade, " +
+            " au.pontuacao, " +
+            " aul.link " +
             " ) " +
-            " from ATIVIDADE_USUARIO au" +
-            " left join au.atividade aua" +
-            " left join aua.trilhas atr  " +
-            " where ( au.atividade.idModulo = :idModulo and atr.idTrilha = :idTrilha and au.atividade.statusAtividade = :atividadeStatus ) " +
+//            " from ATIVIDADE_USUARIO au, LINK aua" +
+            " from USUARIO u " +
+            " left join u.trilhas ut " +
+            " left join ut.modulos utm" +
+            " left join u.atividades au" +
+            " left join au.links aul " +
+//            " inner join au.atividade aua" +
+//            " inner join aua.trilhas atr  " +
+//            " join au.usuarioEntity.trilhas atr" +
+//            " inner join aua.link " +
+            " on ( au.idModulo = :idModulo and ut.idTrilha = :idTrilha and au.statusAtividade = :atividadeStatus ) " +
             "  ")
-    Page<AtividadeNotaDTO> listarAtividadePorIdTrilhaIdModulo(Pageable pageable, Integer idTrilha, Integer idModulo, AtividadeStatus atividadeStatus);
+    Page<AtividadeNotaPageDTO> listarAtividadePorIdTrilhaIdModulo(Pageable pageable, Integer idTrilha, Integer idModulo, AtividadeStatus atividadeStatus);
 
 }

@@ -38,7 +38,7 @@ public class AtividadeController {
     @PostMapping
     public ResponseEntity<AtividadeDTO> create(@RequestBody @Valid AtividadeCreateDTO atividadeCreateDTO, Integer idModulo, @RequestParam List<Integer> idTrilha) throws RegraDeNegocioException {
 
-        log.info("Criando nova atidade....");
+        log.info("Criando nova atividade....");
         AtividadeDTO atividadeDTO = atividadeService.createAtividade(atividadeCreateDTO, idModulo, idTrilha);
         log.info("Atividade criada com sucesso!");
 
@@ -121,7 +121,7 @@ public class AtividadeController {
             }
     )
     @GetMapping("/listar-trilha-modulo")
-    public ResponseEntity<PageDTO<AtividadeNotaDTO>> listarAtividadePorNota(@RequestParam(required = false, defaultValue = "0") Integer pagina, @RequestParam(required = false, defaultValue = "5") Integer tamanho, @RequestParam(required = false, defaultValue = "2") Integer idTrilha, @RequestParam(required = false, defaultValue = "1") Integer idModulo, @RequestParam(required = false) AtividadeStatus atividadeStatus) throws RegraDeNegocioException {
+    public ResponseEntity<PageDTO<AtividadeNotaPageDTO>> listarAtividadePorNota(@RequestParam(required = false, defaultValue = "0") Integer pagina, @RequestParam(required = false, defaultValue = "5") Integer tamanho, @RequestParam(required = false, defaultValue = "2") Integer idTrilha, @RequestParam(required = false, defaultValue = "1") Integer idModulo, @RequestParam(required = false) AtividadeStatus atividadeStatus) throws RegraDeNegocioException {
         return new ResponseEntity<>(atividadeService.listarAtividadePorIdTrilhaIdModulo(pagina, tamanho, idTrilha, idModulo, atividadeStatus), HttpStatus.OK);
     }
 
