@@ -33,6 +33,7 @@ public interface AtividadeRepository extends JpaRepository<AtividadeEntity, Inte
 
     @Query("  select new br.com.vemrankser.ranqueamento.dto.AtividadeMuralDTO ( " +
             " atr.atividade.idAtividade, " +
+            " atr.atividade.nomeInstrutor, " +
             " atr.atividade.titulo, " +
             " atr.atividade.instrucoes, " +
             " atr.atividade.pesoAtividade, " +
