@@ -57,8 +57,8 @@ public class AtividadeEntity {
     private String nomeInstrutor;
 
     @JsonIgnore
-    @OneToOne(mappedBy = "atividade", fetch = FetchType.LAZY)
-    private ComentarioEntity comentario;
+    @OneToMany(mappedBy = "atividade", fetch = FetchType.LAZY)
+    private Set<ComentarioEntity> comentarios;
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
@@ -89,7 +89,7 @@ public class AtividadeEntity {
 
 
     @JsonIgnore
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "atividade")
-    private LinkEntity link;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "atividade")
+    private Set<LinkEntity> links;
 
 }

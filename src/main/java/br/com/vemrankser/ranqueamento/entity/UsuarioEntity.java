@@ -95,13 +95,13 @@ public class UsuarioEntity implements UserDetails {
     private Set<AtividadeEntity> atividades;
 
     @JsonIgnore
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "usuario")
-    private LinkEntity link;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "usuario")
+    private Set<LinkEntity> links;
 
 
     @JsonIgnore
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "usuario")
-    private ComentarioEntity comentario;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "usuario")
+    private Set<ComentarioEntity> comentarios;
 
 
     @Override

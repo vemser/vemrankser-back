@@ -30,12 +30,12 @@ public class LinkEntity {
     private Integer idUsuario;
 
     @JsonIgnore
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_atividade",referencedColumnName = "id_atividade")
     private AtividadeEntity atividade;
 
     @JsonIgnore
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_usuario",referencedColumnName = "id_usuario")
     private UsuarioEntity usuario;
 
