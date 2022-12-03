@@ -73,7 +73,7 @@ public interface AtividadeRepository extends JpaRepository<AtividadeEntity, Inte
     Page<AtividadeMuralAlunoDTO> listarAtividadeMuralAluno(Integer idUsuario, AtividadeStatus atividadeStatus,Pageable pageable);
 
 
-    @Query("  select distinct new br.com.vemrankser.ranqueamento.dto.AtividadeNotaDTO ( " +
+    @Query("  select  new br.com.vemrankser.ranqueamento.dto.AtividadeNotaDTO ( " +
             " au.usuarioEntity.nome, " +
             " au.atividade.idAtividade," +
             " au.atividade.pontuacao " +
