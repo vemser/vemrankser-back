@@ -1,10 +1,9 @@
 package br.com.vemrankser.ranqueamento.service;
 
-import br.com.vemrankser.ranqueamento.dto.AtividadeAvaliarDTO;
-import br.com.vemrankser.ranqueamento.dto.ComentarioCreateDTO;
-import br.com.vemrankser.ranqueamento.dto.ComentarioDTO;
+import br.com.vemrankser.ranqueamento.dto.*;
 import br.com.vemrankser.ranqueamento.entity.AtividadeEntity;
 import br.com.vemrankser.ranqueamento.entity.ComentarioEntity;
+import br.com.vemrankser.ranqueamento.entity.UsuarioEntity;
 import br.com.vemrankser.ranqueamento.enums.AtividadeStatus;
 import br.com.vemrankser.ranqueamento.exceptions.RegraDeNegocioException;
 import br.com.vemrankser.ranqueamento.repository.ComentarioRepository;
@@ -23,7 +22,8 @@ import org.springframework.test.util.ReflectionTestUtils;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.*;
@@ -56,17 +56,15 @@ public class ComentarioServiceTest {
         Integer idAtividade = 22;
         AtividadeEntity atividade = getAtividadeEntity();
         ComentarioCreateDTO comentarioCreateDTO = getComentarioCreateDTO();
-        AtividadeAvaliarDTO atividadeAvaliarDTO = getAtividadeAvaliarDTO();
-        atividade.setStatusAtividade(AtividadeStatus.PENDENTE);
 
         when(atividadeService.buscarPorIdAtividade(anyInt())).thenReturn(atividade);
-      //  when(comentarioRepository.save(any())).thenReturn(atividade);
+        //  when(comentarioRepository.save(any())).thenReturn(atividade);
 
         // ACT
-//        ComentarioCreateDTO comentarioCreateDTO1 = comentarioService.adicionar(comentarioCreateDTO, atividadeAvaliarDTO, idAtividade, AtividadeStatus.PENDENTE);
+        ComentarioCreateDTO comentarioCreateDTO1 = comentarioService.adicionar(comentarioCreateDTO, idAtividade);
 
         // ASSERT
-//        assertNotNull(comentarioCreateDTO1);
+        assertNotNull(comentarioCreateDTO1);
 //        assertEquals("Pontos de melhoria...", comentarioCreateDTO1.getComentario());
     }
 
@@ -116,7 +114,7 @@ public class ComentarioServiceTest {
         comentario.setIdComentario(idComentario);
         when(comentarioRepository.findById(anyInt())).thenReturn(Optional.of(comentario));
         // Ação (ACT)
-        ComentarioEntity comentarioEntity =  comentarioService.buscarPorIdComentario(idComentario);
+        ComentarioEntity comentarioEntity = comentarioService.buscarPorIdComentario(idComentario);
 
         // Verificação (ASSERT)
         assertEquals(4, comentarioEntity.getIdComentario());
@@ -165,6 +163,13 @@ public class ComentarioServiceTest {
         return comentarioEntity;
     }
 
+    public static ComentarioAvaliacaoDTO getComentarioAvaliacaoDTO() {
+        ComentarioAvaliacaoDTO comentarioAvaliacaoDTO = new ComentarioAvaliacaoDTO();
+        comentarioAvaliacaoDTO.setComentario("Parabéns . . .");
+
+        return comentarioAvaliacaoDTO;
+    }
+
     public static ComentarioDTO getComentarioDTO() {
         ComentarioDTO comentarioDTO = new ComentarioDTO();
 
@@ -191,12 +196,29 @@ public class ComentarioServiceTest {
         return atividadeEntity;
     }
 
-    public static AtividadeAvaliarDTO getAtividadeAvaliarDTO () {
+    public static AtividadeAvaliarDTO getAtividadeAvaliarDTO() {
         AtividadeAvaliarDTO atividadeAvaliarDTO = new AtividadeAvaliarDTO();
 
         atividadeAvaliarDTO.setPontuacao(90);
         atividadeAvaliarDTO.setLink("www.githu.com");
 
         return atividadeAvaliarDTO;
+    }
+
+    public static AtividadeAvaliacaoDTO getAtividadeAvaliacaoDTO() {
+        AtividadeAvaliacaoDTO atividadeAvaliacaoDTO = new AtividadeAvaliacaoDTO();
+        atividadeAvaliacaoDTO.setPontuacao(100);
+
+        return atividadeAvaliacaoDTO;
+    }
+
+    public static UsuarioEntity getUsuarioEntity() {
+        UsuarioEntity usuarioEntity = new UsuarioEntity();
+
+        usuarioEntity.setIdUsuario(22);
+        usuarioEntity.setNome("Robert Plant");
+        usuarioEntity.setPontuacaoAluno(100);
+
+        return usuarioEntity;
     }
 }
