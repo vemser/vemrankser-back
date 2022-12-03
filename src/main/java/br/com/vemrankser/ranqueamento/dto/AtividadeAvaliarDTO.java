@@ -14,6 +14,4 @@ public class AtividadeAvaliarDTO {
     @Schema(description = "Pontução da atividade", example = "90")
     private Integer pontuacao;
 
-    @Schema(description = "Link do repositório", example = "github.com")
-    private String link;
 }

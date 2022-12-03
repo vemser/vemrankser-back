@@ -27,6 +27,8 @@ public class AtividadeService {
     private final TrilhaService trilhaService;
     private final ObjectMapper objectMapper;
 
+    private static final Integer INICIAL_PONTUACAO = 0;
+
 
     public AtividadePaginacaoDTO<AtividadeDTO> listarAtividades(Integer pagina, Integer tamanho) throws RegraDeNegocioException {
         PageRequest pageRequest = PageRequest.of(pagina, tamanho);
@@ -52,6 +54,7 @@ public class AtividadeService {
         List<TrilhaEntity> trilhaEntities = new ArrayList<>();
         AtividadeEntity atividadeEntity = objectMapper.convertValue(atividadeCreateDTO, AtividadeEntity.class);
         atividadeEntity.setNomeInstrutor(loggedUser.getNome());
+        atividadeEntity.setPontuacao(INICIAL_PONTUACAO);
 
         LocalDateTime now = LocalDateTime.now(ZoneId.of("America/Sao_Paulo"));
         atividadeEntity.setDataCriacao(now);

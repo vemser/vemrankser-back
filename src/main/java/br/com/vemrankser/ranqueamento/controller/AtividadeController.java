@@ -108,7 +108,7 @@ public class AtividadeController {
             }
     )
     @GetMapping("/listar-mural-aluno")
-    public ResponseEntity<PageDTO<AtividadeMuralAlunoDTO>> listarAtividadeMuralAluno(@RequestParam(required = false) Integer pagina, @RequestParam(required = false) Integer tamanho, @RequestParam(required = false) AtividadeStatus atividadeStatus, @RequestParam(required = false) Integer idUsuario) throws RegraDeNegocioException {
+    public ResponseEntity<PageDTO<AtividadeMuralAlunoDTO>> listarAtividadeMuralAluno(@RequestParam(required = false,defaultValue = "0") Integer pagina, @RequestParam(required = false,defaultValue = "5") Integer tamanho, @RequestParam(required = false) AtividadeStatus atividadeStatus, @RequestParam(required = false) Integer idUsuario) throws RegraDeNegocioException {
         return new ResponseEntity<>(atividadeService.listarAtividadeMuralAluno(pagina, tamanho, idUsuario, atividadeStatus), HttpStatus.OK);
     }
 
@@ -134,7 +134,7 @@ public class AtividadeController {
             }
     )
     @PutMapping("/entregar-aluno/{idAtividade}")
-    public ResponseEntity<AtividadeAlunoEnviarDTO> entregarAtividade(@PathVariable(name = "idAtividade") Integer idAtividade, AtividadeAlunoEnviarDTO atividadeAlunoEnviarDTO) throws RegraDeNegocioException {
+    public ResponseEntity<AtividadeAlunoEnviarDTO> entregarAtividade(@PathVariable(name = "idAtividade") Integer idAtividade,@RequestBody @Valid AtividadeAlunoEnviarDTO atividadeAlunoEnviarDTO) throws RegraDeNegocioException {
         return new ResponseEntity<>(atividadeService.entregarAtividade(atividadeAlunoEnviarDTO, idAtividade), HttpStatus.OK);
 
     }

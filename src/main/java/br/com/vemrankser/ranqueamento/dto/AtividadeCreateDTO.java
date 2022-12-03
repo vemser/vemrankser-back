@@ -34,7 +34,6 @@ public class AtividadeCreateDTO {
     private LocalDateTime dataCriacao;
 
     @NotNull
-
     @Schema(description = "Data final para entrega da atividade", example = "16/02/2023")
     private LocalDateTime dataEntrega;
 

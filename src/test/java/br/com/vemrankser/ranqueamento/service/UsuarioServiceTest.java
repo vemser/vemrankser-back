@@ -263,7 +263,7 @@ public class UsuarioServiceTest {
         Integer id = 10;
         UsuarioCreateDTO usuarioCreateDTO = getUsuarioCreateDTO();
         UsuarioAtualizarDTO usuarioAtualizarDTO = objectMapper.convertValue(usuarioCreateDTO, UsuarioAtualizarDTO.class);
-
+        usuarioAtualizarDTO.setStatusUsuario(1);
         UsuarioEntity usuarioEntity = getUsuarioEntity();
         usuarioEntity.setNome("Eduardo Sedrez");
         usuarioEntity.setIdUsuario(1);
