@@ -13,4 +13,12 @@ public class AtividadeAvaliacaoDTO {
     @Max(value=100, message="deve ser menor ou igual à 100")
     @Schema(description = "Pontução da atividade", example = "90")
     private Integer pontuacao;
+
+    @Min(value=0, message="deve ser maior ou igual à ZERO")
+    @Max(value=100, message="deve ser menor ou igual à 100")
+    @Schema(description = "Pontução da atividade", example = "90")
+    private Integer notaAvalicao;
+
+    @Schema(description = "Feedback da atividade", example = "Pontos de melhoria...")
+    private String comentario;
 }

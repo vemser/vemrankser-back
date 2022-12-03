@@ -27,6 +27,9 @@ public class ComentarioEntity {
     @Column(name = "comentario")
     private String comentario;
 
+    @Column(name = "status_comentario")
+    private Integer statusComentario;
+
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ID_ATIVIDADE", referencedColumnName = "ID_ATIVIDADE")

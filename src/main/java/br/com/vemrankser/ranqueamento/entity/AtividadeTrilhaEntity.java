@@ -13,7 +13,7 @@ import javax.persistence.*;
 public class AtividadeTrilhaEntity {
 
     @EmbeddedId
-    private AtividadeTrilhaIdEntity id;
+    private AtividadeTrilhaPkEntity id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("idTrilha")

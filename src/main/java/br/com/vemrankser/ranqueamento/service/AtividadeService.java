@@ -66,7 +66,7 @@ public class AtividadeService {
         atividadeEntity.setTrilhas(new HashSet<>(trilhaEntities));
         atividadeEntity.setModulo(moduloEntity);
 
-        atividadeRepository.save(atividadeEntity);
+                atividadeRepository.save(atividadeEntity);
 
         return objectMapper.convertValue(atividadeEntity, AtividadeDTO.class);
 

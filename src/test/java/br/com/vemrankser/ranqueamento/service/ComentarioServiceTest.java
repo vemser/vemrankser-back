@@ -137,7 +137,7 @@ public class ComentarioServiceTest {
     }
 
     @Test
-    public void deveTestarFindById() throws RegraDeNegocioException {
+    public void deveTestarFindByIdComSucesso() throws RegraDeNegocioException {
         // Criar variaveis (SETUP)
         Integer idComentario = 11;
         ComentarioEntity comentarioEntity = getComentarioEntity();

@@ -35,13 +35,13 @@ public class ComentarioController {
             }
     )
     @PutMapping("/avaliar-comentar-atividade")
-    public ResponseEntity<ComentarioCreateDTO> adicionarComentarioAvaliar(@RequestBody @Valid ComentarioAvaliacaoDTO comentarioAvaliacaoDTO, AtividadeAvaliacaoDTO atividadeAvaliacaoDTO, @RequestParam(required = false) Integer idAtividade, AtividadeStatus atividadeStatus) throws RegraDeNegocioException {
+    public ResponseEntity<AtividadeComentarioAvaliacaoDTO> adicionarComentarioAvaliar(@RequestBody @Valid AtividadeComentarioAvaliacaoDTO atividadeComentarioAvaliacaoDTO, @RequestParam(required = false) Integer idAtividade, AtividadeStatus atividadeStatus) throws RegraDeNegocioException {
 
         log.info("Criando novo comentario....");
-        ComentarioDTO comentarioDTO = comentarioService.adicionarComentarioAvaliar(comentarioAvaliacaoDTO, atividadeAvaliacaoDTO, idAtividade, atividadeStatus);
+        AtividadeComentarioAvaliacaoDTO comentarioAvaliacaoDTO = comentarioService.adicionarComentarioAvaliar(atividadeComentarioAvaliacaoDTO, idAtividade, atividadeStatus);
         log.info("Comentario criado com sucesso!");
 
-        return new ResponseEntity<>(comentarioDTO, HttpStatus.OK);
+        return new ResponseEntity<>(comentarioAvaliacaoDTO, HttpStatus.OK);
     }
 
     @Operation(summary = "Comentario de atividade", description = "Cadastrar comentario para atividade")

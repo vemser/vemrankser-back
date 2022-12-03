@@ -39,15 +39,15 @@ public class ComentarioService {
         return comentarioDTO;
     }
 
-    public ComentarioDTO adicionarComentarioAvaliar(ComentarioAvaliacaoDTO comentarioAvaliacaoDTO, AtividadeAvaliacaoDTO atividadeAvaliacaoDTO, Integer idAtividade, AtividadeStatus atividadeStatus) throws RegraDeNegocioException {
+    public AtividadeComentarioAvaliacaoDTO adicionarComentarioAvaliar(AtividadeComentarioAvaliacaoDTO atividadeComentarioAvaliacaoDTO, Integer idAtividade, AtividadeStatus atividadeStatus) throws RegraDeNegocioException {
         AtividadeEntity atividadeEntity = atividadeService.buscarPorIdAtividade(idAtividade);
 
-        ComentarioEntity comentarioEntity = objectMapper.convertValue(comentarioAvaliacaoDTO, ComentarioEntity.class);
+        ComentarioEntity comentarioEntity = objectMapper.convertValue(atividadeComentarioAvaliacaoDTO, ComentarioEntity.class);
         comentarioEntity.setIdAtividade(atividadeEntity.getIdAtividade());
         Set<ComentarioEntity> comentarioEntitySet = new HashSet<>();
         comentarioEntitySet.add(comentarioEntity);
         atividadeEntity.setComentarios(comentarioEntitySet);
-        atividadeEntity.setPontuacao(atividadeAvaliacaoDTO.getPontuacao());
+        atividadeEntity.setPontuacao(atividadeComentarioAvaliacaoDTO.getNotaAvalicao());
         atividadeEntity.getAlunos().forEach(aluno -> aluno.setPontuacaoAluno(calcularPontuacao(aluno, atividadeEntity)));
 
         if(atividadeStatus.equals(AtividadeStatus.CONCLUIDA)) {
@@ -57,11 +57,11 @@ public class ComentarioService {
         }
 
         comentarioEntity.setAtividade(atividadeEntity);
-        comentarioEntity.setComentario(comentarioAvaliacaoDTO.getComentario());
+        comentarioEntity.setComentario(atividadeComentarioAvaliacaoDTO.getComentario());
         comentarioRepository.save(comentarioEntity);
         atividadeService.save(atividadeEntity);
 
-        return objectMapper.convertValue(comentarioEntity, ComentarioDTO.class);
+        return atividadeComentarioAvaliacaoDTO;
     }
 
     private Integer calcularPontuacao(UsuarioEntity usuarioEntity, AtividadeEntity atividadeEntity) {
