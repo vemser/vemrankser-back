@@ -2,6 +2,7 @@ package br.com.vemrankser.ranqueamento.service;
 
 import br.com.vemrankser.ranqueamento.dto.*;
 import br.com.vemrankser.ranqueamento.entity.CargoEntity;
+import br.com.vemrankser.ranqueamento.entity.TrilhaEntity;
 import br.com.vemrankser.ranqueamento.entity.UsuarioEntity;
 import br.com.vemrankser.ranqueamento.enums.TipoPerfil;
 import br.com.vemrankser.ranqueamento.exceptions.RegraDeNegocioException;
@@ -18,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -54,6 +56,12 @@ public class UsuarioService {
         return usuarioRepository.findAll().stream()
                 .map(pessoa -> objectMapper.convertValue(pessoa, UsuarioDTO.class))
                 .toList();
+    }
+
+    public Set<TrilhaDTO> getTrilhaDTO(Set<TrilhaEntity> trilhaEntities) {
+        return trilhaEntities.stream()
+                .map(trilhaEntity -> objectMapper.convertValue(trilhaEntity, TrilhaDTO.class))
+                .collect(Collectors.toSet());
     }
 
     public UsuarioDTO pegarLogin(String login) throws RegraDeNegocioException {
@@ -167,8 +175,8 @@ public class UsuarioService {
         return objectMapper.convertValue(findById(getIdLoggedUser()), UsuarioLogadoDTO.class);
     }
 
-    public UsuarioEntity getLoggedUserPersonalizado() throws RegraDeNegocioException {
-        return findById(getIdLoggedUser());
+    public UsuarioLogadoDTO getLoggedUserPersonalizado() throws RegraDeNegocioException {
+        return objectMapper.convertValue(findById(getIdLoggedUser()), UsuarioLogadoDTO.class);
     }
 
     public UsuarioDTO cadastrar(UsuarioCreateDTO usuario, TipoPerfil tipoPerfil) throws RegraDeNegocioException {

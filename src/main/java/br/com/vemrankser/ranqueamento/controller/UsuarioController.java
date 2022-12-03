@@ -201,7 +201,7 @@ public class UsuarioController {
             }
     )
     @GetMapping("/pegar-usuario-logado")
-    public ResponseEntity<UsuarioEntity> pegarUsuarioLogado() throws RegraDeNegocioException {
+    public ResponseEntity<UsuarioLogadoDTO> pegarUsuarioLogado() throws RegraDeNegocioException {
         return new ResponseEntity<>(usuarioService.getLoggedUserPersonalizado(), HttpStatus.OK);
     }
 
