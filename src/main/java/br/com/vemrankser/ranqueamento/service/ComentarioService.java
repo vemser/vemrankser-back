@@ -40,12 +40,12 @@ public class ComentarioService {
 //        return comentarioDTO;
 //    }
 
-    public AtividadeComentarioAvaliacaoDTO adicionarComentarioAvaliar(AtividadeComentarioAvaliacaoCreateDTO atividadeComentarioAvaliacaoCreateDTO, Integer idAluno, Integer idAtividade, TipoFeedback tipoFeedback) throws RegraDeNegocioException {
+    public AtividadeComentarioAvaliacaoDTO adicionarComentarioAvaliar(AtividadeComentarioAvaliacaoCreateDTO atividadeComentarioAvaliacaoCreateDTO, Integer idAluno, Integer idAtividade) throws RegraDeNegocioException {
         AtividadeEntity atividadeEntity = atividadeService.buscarPorIdAtividade(idAtividade);
         UsuarioEntity usuarioEntity = usuarioService.findById(idAluno);
 
         ComentarioEntity comentarioEntity = objectMapper.convertValue(atividadeComentarioAvaliacaoCreateDTO, ComentarioEntity.class);
-        comentarioEntity.setStatusComentario(tipoFeedback.getTipoFeedback());
+        //  comentarioEntity.setStatusComentario(tipoFeedback.getTipoFeedback());
         comentarioEntity.setIdAtividade(atividadeEntity.getIdAtividade());
         comentarioEntity.setAtividade(atividadeEntity);
         comentarioEntity.setIdUsuario(usuarioEntity.getIdUsuario());
@@ -73,6 +73,16 @@ public class ComentarioService {
         atividadeService.save(atividadeEntity);
 
         return objectMapper.convertValue(atividadeComentarioAvaliacaoCreateDTO, AtividadeComentarioAvaliacaoDTO.class);
+    }
+
+    public ComentarioDTO adicionarFeedback(ComentarioDTO comentarioDTO, Integer idAluno, TipoFeedback tipoFeedback) throws RegraDeNegocioException {
+        UsuarioEntity usuarioEntity = usuarioService.findById(idAluno);
+        ComentarioEntity comentarioEntity = objectMapper.convertValue(comentarioDTO, ComentarioEntity.class);
+        comentarioEntity.setStatusComentario(tipoFeedback.getTipoFeedback());
+        comentarioEntity.setIdUsuario(usuarioEntity.getIdUsuario());
+        comentarioEntity.setUsuario(usuarioEntity);
+        comentarioRepository.save(comentarioEntity);
+        return comentarioDTO;
     }
 
     public List<ComentarioDTO> comentariosDoAluno(Integer idAluno) {

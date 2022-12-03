@@ -17,5 +17,5 @@ public class AtividadeComentarioAvaliacaoCreateDTO {
     @Schema(description = "Feedback da atividade", example = "Pontos de melhoria...")
     private String comentario;
 
-    private Integer statusComentario;
+   // private Integer statusComentario;
 }

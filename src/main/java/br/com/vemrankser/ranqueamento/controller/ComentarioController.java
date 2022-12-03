@@ -37,10 +37,10 @@ public class ComentarioController {
             }
     )
     @PutMapping("/avaliar-comentar-atividade")
-    public ResponseEntity<AtividadeComentarioAvaliacaoDTO> adicionarComentarioAvaliar(@RequestBody @Valid AtividadeComentarioAvaliacaoCreateDTO atividadeComentarioAvaliacaoCreateDTO, Integer idAluno, Integer idAtividade, TipoFeedback tipoFeedback) throws RegraDeNegocioException {
+    public ResponseEntity<AtividadeComentarioAvaliacaoDTO> adicionarComentarioAvaliar(@RequestBody @Valid AtividadeComentarioAvaliacaoCreateDTO atividadeComentarioAvaliacaoCreateDTO, Integer idAluno, Integer idAtividade) throws RegraDeNegocioException {
 
         log.info("Criando novo comentario....");
-        AtividadeComentarioAvaliacaoDTO comentarioAvaliacaoDTO = comentarioService.adicionarComentarioAvaliar(atividadeComentarioAvaliacaoCreateDTO, idAluno, idAtividade, tipoFeedback);
+        AtividadeComentarioAvaliacaoDTO comentarioAvaliacaoDTO = comentarioService.adicionarComentarioAvaliar(atividadeComentarioAvaliacaoCreateDTO, idAluno, idAtividade);
         log.info("Comentario criado com sucesso!");
 
         return new ResponseEntity<>(comentarioAvaliacaoDTO, HttpStatus.OK);
@@ -102,5 +102,18 @@ public class ComentarioController {
     @GetMapping("/listar-comentarios-aluno")
     public ResponseEntity<List<ComentarioDTO>> listarComentariosAluno(Integer idAluno) {
         return ResponseEntity.ok(comentarioService.comentariosDoAluno(idAluno));
+    }
+
+    @Operation(summary = "Adicionar feedback ao aluno", description = "Listar comentários de um aluno")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "Listar comentário, êxito"),
+                    @ApiResponse(responseCode = "403", description = "Você não tem permissão para acessar este recurso"),
+                    @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção")
+            }
+    )
+    @PostMapping("/adicionar-feedback")
+    public ResponseEntity<ComentarioDTO> adicionarFeedback(@RequestBody ComentarioDTO comentario, Integer idAluno, TipoFeedback tipoFeedback) throws RegraDeNegocioException {
+        return ResponseEntity.ok(comentarioService.adicionarFeedback(comentario, idAluno, tipoFeedback));
     }
 }

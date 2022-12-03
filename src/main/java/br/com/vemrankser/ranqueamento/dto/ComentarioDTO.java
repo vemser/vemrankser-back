@@ -8,6 +8,6 @@ public class ComentarioDTO extends ComentarioCreateDTO {
 
 //    @NotNull
     @Schema(example = "1")
-    private Integer idComentario;
+   // private Integer idComentario;
     private Integer statusComentario;
 }
