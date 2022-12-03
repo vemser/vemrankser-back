@@ -28,20 +28,20 @@ public class ComentarioService {
 
     private final ObjectMapper objectMapper;
 
-    public ComentarioDTO adicionar(ComentarioCreateDTO comentarioCreateDTO, Integer idAtividade) throws RegraDeNegocioException {
-        AtividadeEntity atividadeEntity = atividadeService.buscarPorIdAtividade(idAtividade);
-
-        ComentarioEntity comentarioEntity = objectMapper.convertValue(comentarioCreateDTO, ComentarioEntity.class);
-
-        comentarioEntity.setIdAtividade(atividadeEntity.getIdAtividade());
-
-        comentarioEntity.setAtividade(atividadeEntity);
-        comentarioRepository.save(comentarioEntity);
-
-        ComentarioDTO comentarioDTO = objectMapper.convertValue(comentarioEntity, ComentarioDTO.class);
-
-        return comentarioDTO;
-    }
+//    public ComentarioDTO adicionar(ComentarioCreateDTO comentarioCreateDTO, Integer idAtividade,TipoFeedback tipoFeedback) throws RegraDeNegocioException {
+//        AtividadeEntity atividadeEntity = atividadeService.buscarPorIdAtividade(idAtividade);
+//
+//        ComentarioEntity comentarioEntity = objectMapper.convertValue(comentarioCreateDTO, ComentarioEntity.class);
+//        comentarioEntity.setStatusComentario(tipoFeedback.getTipoFeedback());
+//        comentarioEntity.setIdAtividade(atividadeEntity.getIdAtividade());
+//
+//        comentarioEntity.setAtividade(atividadeEntity);
+//        comentarioRepository.save(comentarioEntity);
+//
+//        ComentarioDTO comentarioDTO = objectMapper.convertValue(comentarioEntity, ComentarioDTO.class);
+//
+//        return comentarioDTO;
+//    }
 
     public AtividadeComentarioAvaliacaoDTO adicionarComentarioAvaliar(AtividadeComentarioAvaliacaoCreateDTO atividadeComentarioAvaliacaoCreateDTO, Integer idAtividade, AtividadeStatus atividadeStatus, TipoFeedback tipoFeedback) throws RegraDeNegocioException {
         AtividadeEntity atividadeEntity = atividadeService.buscarPorIdAtividade(idAtividade);
