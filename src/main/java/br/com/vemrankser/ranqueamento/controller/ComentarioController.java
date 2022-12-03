@@ -1,7 +1,7 @@
 package br.com.vemrankser.ranqueamento.controller;
 
-import br.com.vemrankser.ranqueamento.dto.ComentarioCreateDTO;
-import br.com.vemrankser.ranqueamento.dto.ComentarioDTO;
+import br.com.vemrankser.ranqueamento.dto.*;
+import br.com.vemrankser.ranqueamento.enums.AtividadeStatus;
 import br.com.vemrankser.ranqueamento.exceptions.RegraDeNegocioException;
 import br.com.vemrankser.ranqueamento.service.ComentarioService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -34,8 +34,26 @@ public class ComentarioController {
                     @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção")
             }
     )
+    @PutMapping("/avaliar-comentar-atividade")
+    public ResponseEntity<ComentarioCreateDTO> adicionarComentarioAvaliar(@RequestBody @Valid ComentarioAvaliacaoDTO comentarioAvaliacaoDTO, AtividadeAvaliacaoDTO atividadeAvaliacaoDTO, @RequestParam(required = false) Integer idAtividade, AtividadeStatus atividadeStatus) throws RegraDeNegocioException {
+
+        log.info("Criando novo comentario....");
+        ComentarioDTO comentarioDTO = comentarioService.adicionarComentarioAvaliar(comentarioAvaliacaoDTO, atividadeAvaliacaoDTO, idAtividade, atividadeStatus);
+        log.info("Comentario criado com sucesso!");
+
+        return new ResponseEntity<>(comentarioDTO, HttpStatus.OK);
+    }
+
+    @Operation(summary = "Comentario de atividade", description = "Cadastrar comentario para atividade")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "Cadastro de comentario com sucesso"),
+                    @ApiResponse(responseCode = "403", description = "Você não tem permissão para acessar este recurso"),
+                    @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção")
+            }
+    )
     @PostMapping
-    public ResponseEntity<ComentarioCreateDTO> create(@RequestBody @Valid ComentarioCreateDTO comentarioCreateDTO, @RequestParam(required = false) Integer idAtividade) throws RegraDeNegocioException {
+    public ResponseEntity<ComentarioCreateDTO> criarComentario(@RequestBody @Valid ComentarioCreateDTO comentarioCreateDTO, Integer idAtividade) throws RegraDeNegocioException {
 
         log.info("Criando novo comentario....");
         ComentarioDTO comentarioDTO = comentarioService.adicionar(comentarioCreateDTO, idAtividade);
