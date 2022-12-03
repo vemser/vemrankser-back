@@ -10,4 +10,6 @@ import java.util.List;
 public interface ComentarioRepository extends JpaRepository<ComentarioEntity, Integer> {
     List<ComentarioEntity> findAllByIdAtividade(Integer idAtividade);
 
+    List<ComentarioEntity> findAllByStatusComentario(Integer statusComentario);
+
 }
