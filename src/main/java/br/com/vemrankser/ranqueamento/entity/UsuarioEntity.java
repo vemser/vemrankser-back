@@ -24,9 +24,6 @@ public class UsuarioEntity implements UserDetails {
     @SequenceGenerator(name = "USUARIO_SEQUENCIA", sequenceName = "SEQ_USUARIO", allocationSize = 1)
     @Column(name = "ID_USUARIO")
     private Integer idUsuario;
-    // alteracao nova
-//    @Column(name = "id_atividade", insertable = false, updatable = false)
-//    private Integer idAtividade;
 
     @Column(name = "foto")
     @Lob
@@ -56,9 +53,6 @@ public class UsuarioEntity implements UserDetails {
     @Column(name = "cidade")
     private String cidade;
 
-//    @Column(name = "atuacao")
-//    private String atuacao;
-
     @Column(name = "especialidade")
     private String especialidade;
 
@@ -79,11 +73,7 @@ public class UsuarioEntity implements UserDetails {
             inverseJoinColumns = @JoinColumn(name = "ID_TRILHA")
     )
     private Set<TrilhaEntity> trilhas;
-    // alteracao nova
-//    @JsonIgnore
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "ID_ATIVIDADE", referencedColumnName = "ID_ATIVIDADE")
-//    private AtividadeEntity atividade;
+
 
     @JsonIgnore
     @ManyToMany(fetch = FetchType.LAZY)

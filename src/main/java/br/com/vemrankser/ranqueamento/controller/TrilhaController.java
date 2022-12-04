@@ -64,7 +64,7 @@ public class TrilhaController {
             }
     )
     @GetMapping("/lista-alunos-trilha")
-    public ResponseEntity<PageDTO<TrilhaPaginadoDTO>> listAlunos(@RequestParam(required = false,defaultValue = "0") Integer pagina, @RequestParam(required = false,defaultValue = "5") Integer tamanho, @RequestParam(required = false) Integer idTrilha) {
+    public ResponseEntity<PageDTO<TrilhaPaginadoDTO>> listAlunos(@RequestParam(required = false, defaultValue = "0") Integer pagina, @RequestParam(required = false, defaultValue = "5") Integer tamanho, @RequestParam(required = false) Integer idTrilha) {
         return new ResponseEntity<>(trilhaService.listarUsuariosNaTrilha(pagina, tamanho, idTrilha), HttpStatus.OK);
     }
 
@@ -144,7 +144,7 @@ public class TrilhaController {
             }
     )
     @GetMapping("/lista-trilha-page")
-    public ResponseEntity<PageDTO<TrilhaDTO>> listAllTrilhaPaginado(@RequestParam(required = false,defaultValue = "0") Integer pagina, @RequestParam(required = false,defaultValue = "5") Integer tamanho) {
+    public ResponseEntity<PageDTO<TrilhaDTO>> listAllTrilhaPaginado(@RequestParam(required = false, defaultValue = "0") Integer pagina, @RequestParam(required = false, defaultValue = "5") Integer tamanho) {
         return new ResponseEntity<>(trilhaService.listarAllTrilhaPaginado(pagina, tamanho), HttpStatus.OK);
     }
 }

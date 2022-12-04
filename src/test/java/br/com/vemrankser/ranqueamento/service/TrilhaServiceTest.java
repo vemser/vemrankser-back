@@ -1,7 +1,6 @@
 package br.com.vemrankser.ranqueamento.service;
 
 import br.com.vemrankser.ranqueamento.dto.*;
-import br.com.vemrankser.ranqueamento.entity.ComentarioEntity;
 import br.com.vemrankser.ranqueamento.entity.TrilhaEntity;
 import br.com.vemrankser.ranqueamento.entity.UsuarioEntity;
 import br.com.vemrankser.ranqueamento.enums.TipoPerfil;
@@ -12,7 +11,6 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import org.apache.catalina.mapper.Mapper;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,7 +24,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -50,7 +51,6 @@ public class TrilhaServiceTest {
     private ObjectMapper objectMapper = new ObjectMapper();
 
 
-
     @Before
     public void init() {
         objectMapper.registerModule(new JavaTimeModule());
@@ -69,8 +69,6 @@ public class TrilhaServiceTest {
         when(trilhaRepository.save(any())).thenReturn(trilhaEntity);
 
         TrilhaDTO trilhaDTO1 = trilhaService.adicionar(trilhaCreateDTO);
-
-
 
 
         assertNotNull(trilhaDTO1);
@@ -189,7 +187,7 @@ public class TrilhaServiceTest {
         when(trilhaRepository.save(any())).thenReturn(trilhaEntity);
         when(trilhaRepository.findById(anyInt())).thenReturn(Optional.of(trilhaEntity));
 
-        trilhaService.adicionarIntrustorTrilha(login, List.of(1),null);
+        trilhaService.adicionarIntrustorTrilha(login, List.of(1), null);
 
         verify(trilhaRepository, times(1)).save(any());
 
@@ -213,7 +211,7 @@ public class TrilhaServiceTest {
         when(trilhaRepository.save(any())).thenReturn(trilhaEntity);
         when(trilhaRepository.findById(anyInt())).thenReturn(Optional.of(trilhaEntity));
 
-        trilhaService.adicionarAlunoTrilha(login, List.of(1),null);
+        trilhaService.adicionarAlunoTrilha(login, List.of(1), null);
 
         verify(trilhaRepository, times(1)).save(any());
 

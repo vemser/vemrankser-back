@@ -1,16 +1,16 @@
 package br.com.vemrankser.ranqueamento.repository;
 
-import br.com.vemrankser.ranqueamento.dto.*;
+import br.com.vemrankser.ranqueamento.dto.AtividadeMuralAlunoDTO;
+import br.com.vemrankser.ranqueamento.dto.AtividadeMuralDTO;
+import br.com.vemrankser.ranqueamento.dto.AtividadeNotaPageDTO;
+import br.com.vemrankser.ranqueamento.dto.AtividadeTrilhaDTO;
 import br.com.vemrankser.ranqueamento.entity.AtividadeEntity;
 import br.com.vemrankser.ranqueamento.enums.AtividadeStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-
-import java.util.List;
 
 @Repository
 public interface AtividadeRepository extends JpaRepository<AtividadeEntity, Integer> {

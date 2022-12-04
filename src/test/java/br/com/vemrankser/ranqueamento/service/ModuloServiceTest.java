@@ -1,9 +1,11 @@
 package br.com.vemrankser.ranqueamento.service;
 
-import br.com.vemrankser.ranqueamento.dto.*;
+import br.com.vemrankser.ranqueamento.dto.ModuloCreateDTO;
+import br.com.vemrankser.ranqueamento.dto.ModuloDTO;
+import br.com.vemrankser.ranqueamento.dto.ModuloTrilhaDTO;
+import br.com.vemrankser.ranqueamento.dto.TrilhaCreateDTO;
 import br.com.vemrankser.ranqueamento.entity.ModuloEntity;
 import br.com.vemrankser.ranqueamento.entity.TrilhaEntity;
-import br.com.vemrankser.ranqueamento.entity.UsuarioEntity;
 import br.com.vemrankser.ranqueamento.enums.StatusModulo;
 import br.com.vemrankser.ranqueamento.exceptions.RegraDeNegocioException;
 import br.com.vemrankser.ranqueamento.repository.ModuloRepository;
@@ -25,9 +27,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.anyInt;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ModuloServiceTest {
@@ -85,6 +89,7 @@ public class ModuloServiceTest {
 
         assertNotNull(list1);
     }
+
     @Test
     public void deveTestarListarAllModulo() {
         ModuloEntity moduloEntity = getModuloEntity(1);
@@ -116,14 +121,14 @@ public class ModuloServiceTest {
         ModuloDTO moduloDTO = moduloService.vincularModuloTrilha(moduloEntity.getIdModulo(), trilhaEntity.getIdTrilha(), moduloTrilhaDTO);
 
 
-       assertNotNull(moduloDTO);
+        assertNotNull(moduloDTO);
 
     }
 
     @Test
     public void deveTestarFindAllComSucesso() {
         // Criar variaveis (SETUP)
-       List<ModuloEntity> moduloEntityList = new ArrayList<>();
+        List<ModuloEntity> moduloEntityList = new ArrayList<>();
         ModuloEntity moduloEntity = getModuloEntity(1);
         moduloEntityList.add(moduloEntity);
         when(moduloRepository.findAll()).thenReturn(moduloEntityList);
@@ -171,6 +176,7 @@ public class ModuloServiceTest {
         trilhaEntity.setEdicao(13);
         return trilhaEntity;
     }
+
     private static TrilhaCreateDTO getTrilhaCreateDTO() {
         TrilhaCreateDTO trilhaCreateDTO = new TrilhaCreateDTO();
         trilhaCreateDTO.setNome("QA");
@@ -179,7 +185,7 @@ public class ModuloServiceTest {
         return trilhaCreateDTO;
     }
 
-    private static ModuloTrilhaDTO getModuloTrilhaDTO(){
+    private static ModuloTrilhaDTO getModuloTrilhaDTO() {
         ModuloTrilhaDTO moduloTrilhaDTO = new ModuloTrilhaDTO();
         moduloTrilhaDTO.setIdModulo(1);
         moduloTrilhaDTO.setIdTrilha(1);

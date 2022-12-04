@@ -66,7 +66,7 @@ public class ModuloService {
 
     public List<ModuloDTO> listAllModulos() {
         return moduloRepository.findAll().stream()
-                .map(moduloEntity -> objectMapper.convertValue(moduloEntity,ModuloDTO.class))
+                .map(moduloEntity -> objectMapper.convertValue(moduloEntity, ModuloDTO.class))
                 .toList();
     }
 }

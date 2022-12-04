@@ -125,19 +125,6 @@ public class AtividadeController {
         return new ResponseEntity<>(atividadeService.listarAtividadePorIdTrilhaIdModulo(pagina, tamanho, idTrilha, idModulo, atividadeStatus), HttpStatus.OK);
     }
 
-//    @Operation(summary = "Entregar atividade", description = "Entregar atividade")
-//    @ApiResponses(
-//            value = {
-//                    @ApiResponse(responseCode = "201", description = "Entregar atividade com sucesso"),
-//                    @ApiResponse(responseCode = "403", description = "Você não tem permissão para acessar este recurso"),
-//                    @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção")
-//            }
-//    )
-//    @PutMapping("/entregar-aluno/{idAtividade}")
-//    public ResponseEntity<AtividadeAlunoEnviarDTO> entregarAtividade(@PathVariable(name = "idAtividade") Integer idAtividade,@RequestBody @Valid AtividadeAlunoEnviarDTO atividadeAlunoEnviarDTO) throws RegraDeNegocioException {
-//        return new ResponseEntity<>(atividadeService.entregarAtividade(atividadeAlunoEnviarDTO, idAtividade), HttpStatus.OK);
-//
-//    }
 
     @Operation(summary = "Pega a atividade pelo id", description = "Resgata a atividade pelo id do banco de dados")
     @ApiResponses(

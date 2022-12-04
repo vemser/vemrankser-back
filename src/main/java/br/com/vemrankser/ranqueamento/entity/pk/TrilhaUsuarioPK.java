@@ -1,4 +1,4 @@
-package br.com.vemrankser.ranqueamento.entity;
+package br.com.vemrankser.ranqueamento.entity.pk;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,7 +12,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @Data
 @Embeddable
-public class TrilhaUsuarioPkEntity implements Serializable {
+public class TrilhaUsuarioPK implements Serializable {
 
     @Column(name = "ID_TRILHA")
     private Integer idTrilha;

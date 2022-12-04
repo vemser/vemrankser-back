@@ -2,7 +2,6 @@ package br.com.vemrankser.ranqueamento.service;
 
 import br.com.vemrankser.ranqueamento.dto.*;
 import br.com.vemrankser.ranqueamento.entity.CargoEntity;
-import br.com.vemrankser.ranqueamento.entity.TrilhaEntity;
 import br.com.vemrankser.ranqueamento.entity.UsuarioEntity;
 import br.com.vemrankser.ranqueamento.enums.TipoPerfil;
 import br.com.vemrankser.ranqueamento.exceptions.RegraDeNegocioException;
@@ -33,7 +32,7 @@ import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class UsuarioServiceTest {
@@ -64,7 +63,7 @@ public class UsuarioServiceTest {
     }
 
     @Test
-    public void deveTestargetIdLoggedUser(){
+    public void deveTestargetIdLoggedUser() {
 
         // Criar variaveis (SETUP)
         UsernamePasswordAuthenticationToken dto
@@ -76,7 +75,7 @@ public class UsuarioServiceTest {
 
 
         // Verificação (ASSERT)
-        assertEquals(1,idLoggedUser);
+        assertEquals(1, idLoggedUser);
     }
 
     @Test
@@ -94,7 +93,7 @@ public class UsuarioServiceTest {
         loggedUser.setLogin("alison.ailson");
 
         // Verificação (ASSERT)
-        assertEquals("alison.ailson",loggedUser.getLogin());
+        assertEquals("alison.ailson", loggedUser.getLogin());
     }
 
     @Test(expected = RegraDeNegocioException.class)
@@ -145,7 +144,7 @@ public class UsuarioServiceTest {
         UsuarioEntity usuarioEntity = getUsuarioEntity();
         usuarioEntities.add(usuarioEntity);
         when(usuarioRepository.findByNomeIgnoreCase(any())).thenReturn(usuarioEntities);
-      //  when(usuarioRepository.findAll()).thenReturn(usuarioEntities);
+        //  when(usuarioRepository.findAll()).thenReturn(usuarioEntities);
 
         // Ação (ACT)
         List<UsuarioDTO> usuarioDTOList = usuarioService.findByNome(usuarioEntity.getNome());
@@ -161,8 +160,8 @@ public class UsuarioServiceTest {
         List<UsuarioEntity> usuarioEntities = new ArrayList<>();
         UsuarioEntity usuarioEntity = getUsuarioEntity();
         usuarioEntities.add(usuarioEntity);
-       // when(usuarioRepository.findByNomeIgnoreCase(any())).thenReturn(usuarioEntities);
-          when(usuarioRepository.findAll()).thenReturn(usuarioEntities);
+        // when(usuarioRepository.findByNomeIgnoreCase(any())).thenReturn(usuarioEntities);
+        when(usuarioRepository.findAll()).thenReturn(usuarioEntities);
         usuarioEntity.setNome(null);
         // Ação (ACT)
         List<UsuarioDTO> usuarioDTOList = usuarioService.findByNome(usuarioEntity.getNome());
@@ -331,7 +330,7 @@ public class UsuarioServiceTest {
 
         UsuarioEntity usuarioEntity = getUsuarioEntity();
         Page<UsuarioEntity> paginaMock = new PageImpl<>(List.of(usuarioEntity));
-        when(usuarioRepository.findAllByTipoPerfil(anyInt(),any(Pageable.class))).thenReturn(paginaMock);
+        when(usuarioRepository.findAllByTipoPerfil(anyInt(), any(Pageable.class))).thenReturn(paginaMock);
 
         // ACT
         PageDTO<UsuarioDTO> listarUsuarios = usuarioService.listarAlunos(pagina, quantidade);
@@ -351,7 +350,7 @@ public class UsuarioServiceTest {
         UsuarioEntity usuarioEntity = getUsuarioEntity();
         usuarioEntity.setTrilhas(new HashSet<>());
         Page<UsuarioEntity> paginaMock = new PageImpl<>(List.of(usuarioEntity));
-        when(usuarioRepository.findAllByTipoPerfilAndNomeContainingIgnoreCase(anyInt(),anyString(),any(Pageable.class))).thenReturn(paginaMock);
+        when(usuarioRepository.findAllByTipoPerfilAndNomeContainingIgnoreCase(anyInt(), anyString(), any(Pageable.class))).thenReturn(paginaMock);
 
         // ACT
         PageDTO<AlunoTrilhaDTO> listarUsuarios = usuarioService.listarAlunosTrilhaGeral(pagina, quantidade, "alison");
@@ -378,7 +377,7 @@ public class UsuarioServiceTest {
         loggedUser.setLogin("alison.ailson");
 
         // Verificação (ASSERT)
-        assertEquals("alison.ailson",loggedUser.getLogin());
+        assertEquals("alison.ailson", loggedUser.getLogin());
     }
 
     @Test
@@ -408,7 +407,7 @@ public class UsuarioServiceTest {
     @Test
     public void deveTestarUploadImagemComSucesso() throws RegraDeNegocioException, IOException {
         UsuarioEntity usuario = getUsuarioEntity();
-        byte[] imagemBytes = new byte[10*1024];
+        byte[] imagemBytes = new byte[10 * 1024];
         MultipartFile imagem = new MockMultipartFile("imagem", imagemBytes);
         Integer idUsuario = 1;
 
@@ -449,7 +448,7 @@ public class UsuarioServiceTest {
         UsuarioEntity usuarioEntity = getUsuarioEntity();
         AlunoTrilhaPersonalizadoDTO alunoTrilhaPersonalizadoDTO = objectMapper.convertValue(usuarioEntity, AlunoTrilhaPersonalizadoDTO.class);
         Page<AlunoTrilhaPersonalizadoDTO> paginaMock = new PageImpl<>(List.of(alunoTrilhaPersonalizadoDTO));
-        when(usuarioRepository.listAlunoTrilhaQuery(any(),anyString(),anyInt())).thenReturn(paginaMock);
+        when(usuarioRepository.listAlunoTrilhaQuery(any(), anyString(), anyInt())).thenReturn(paginaMock);
 
         // ACT
         PageDTO<AlunoTrilhaPersonalizadoDTO> listarUsuarios = usuarioService.listAlunoTrilhaQuery(pagina, quantidade, "nome", idTrilha);
@@ -491,6 +490,7 @@ public class UsuarioServiceTest {
 
         return usuarioCreateDTO;
     }
+
     private static CargoEntity getCargoEntity() {
         CargoEntity cargoEntity = new CargoEntity();
         cargoEntity.setNome("ROLE_ADMIN");

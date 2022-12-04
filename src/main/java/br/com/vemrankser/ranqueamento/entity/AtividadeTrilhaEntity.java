@@ -1,5 +1,6 @@
 package br.com.vemrankser.ranqueamento.entity;
 
+import br.com.vemrankser.ranqueamento.entity.pk.AtividadeTrilhaPK;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,7 +14,7 @@ import javax.persistence.*;
 public class AtividadeTrilhaEntity {
 
     @EmbeddedId
-    private AtividadeTrilhaPkEntity id;
+    private AtividadeTrilhaPK id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("idTrilha")

@@ -19,7 +19,7 @@ public class LinkService {
     private final UsuarioService usuarioService;
     private final AtividadeService atividadeService;
 
-    public LinkDTO create(Integer idAtividade,Integer idAluno,LinkDTO linkDTO) throws RegraDeNegocioException {
+    public LinkDTO create(Integer idAtividade, Integer idAluno, LinkDTO linkDTO) throws RegraDeNegocioException {
         AtividadeEntity atividadeEntity = atividadeService.buscarPorIdAtividade(idAtividade);
         UsuarioEntity usuarioEntity = usuarioService.findById(idAluno);
         LinkEntity linkEntity = objectMapper.convertValue(linkDTO, LinkEntity.class);
@@ -28,7 +28,7 @@ public class LinkService {
         linkEntity.setIdAtividade(atividadeEntity.getIdAtividade());
         linkEntity.setIdUsuario(usuarioEntity.getIdUsuario());
 
-        return objectMapper.convertValue(linkRepository.save(linkEntity),LinkDTO.class);
+        return objectMapper.convertValue(linkRepository.save(linkEntity), LinkDTO.class);
 
 
     }

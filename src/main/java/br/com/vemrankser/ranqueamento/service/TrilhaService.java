@@ -36,14 +36,6 @@ public class TrilhaService {
         return objectMapper.convertValue(trilha, TrilhaDTO.class);
     }
 
-    //    public TrilhaDTO adicionarAlunoTrilha(Integer idTrilha, Integer idAluno) throws RegraDeNegocioException {
-//        UsuarioEntity alunoEncontrado = usuarioService.findById(idAluno);
-//        TrilhaEntity trilhaEntity = buscarPorIdTrilha(idTrilha);
-//        trilhaEntity.getUsuarios().add(alunoEncontrado);
-//        trilhaRepository.save(trilhaEntity);
-//        return objectMapper.convertValue(trilhaEntity, TrilhaDTO.class);
-//    }
-
 
     public void adicionarAlunoTrilha(String login, List<Integer> listTrilha, LoginTrilhaDTO loginTrilhaDTO) throws RegraDeNegocioException {
         for (Integer number : listTrilha) {
@@ -74,37 +66,7 @@ public class TrilhaService {
             trilhaRepository.save(trilhaEntity);
         }
     }
-//
-//    public TrilhaDTO adicionarAlunoTrilha2(List<Integer> idTrilha, Integer edicao, String login) throws RegraDeNegocioException {
-//        UsuarioDTO alunoDTO = usuarioService.pegarLogin(login);
-//        UsuarioEntity alunoEncontrado = objectMapper.convertValue(alunoDTO, UsuarioEntity.class);
-//        List<TrilhaEntity> trilhaEntities = new ArrayList<>();
-//        TrilhaEntity trilhaEntity = buscarPorNomeTrilha(nomeTrilha);
-//        if (!Objects.equals(trilhaEntity.getEdicao(), edicao)) {
-//            throw new RegraDeNegocioException("Esta edição de trilha não existe!");
-//        }
-//        for (Integer number : idTrilha) {
-//            TrilhaEntity trilhaEntity = findById(number);
-//            trilhaEntities.add(trilhaEntity);
-//            trilhaEntity.getUsuarios().add(alunoEncontrado);
-//            tr
-//        }
-//
-//        trilhaRepository.save(trilhaEntity);
-//        return objectMapper.convertValue(trilhaEntity, TrilhaDTO.class);
-//    }
 
-//    public TrilhaDTO adicionarIntrustorTrilha(String nomeTrilha, Integer edicao, String login) throws RegraDeNegocioException {
-//        UsuarioDTO instrutorDTO = usuarioService.pegarLoginInstrutor(login);
-//        UsuarioEntity instrutorEncontrado = objectMapper.convertValue(instrutorDTO, UsuarioEntity.class);
-//        TrilhaEntity trilhaEntity = buscarPorNomeTrilha(nomeTrilha);
-//        if (!Objects.equals(trilhaEntity.getEdicao(), edicao)) {
-//            throw new RegraDeNegocioException("Esta edição de trilha não existe!");
-//        }
-//        trilhaEntity.getUsuarios().add(instrutorEncontrado);
-//        trilhaRepository.save(trilhaEntity);
-//        return objectMapper.convertValue(trilhaEntity, TrilhaDTO.class);
-//    }
 
     public PageDTO<TrilhaPaginadoDTO> listarUsuariosNaTrilha(Integer pagina, Integer tamanho, Integer idTrilha) {
         PageRequest pageRequest = PageRequest.of(pagina, tamanho);
@@ -127,36 +89,6 @@ public class TrilhaService {
     }
 
 
-
-//    private List<TrilhaDTO> listarTrilhaq() {
-//        return trilhaRepository.findAll()
-//                .stream()
-//                .map(trilha -> objectMapper.convertValue(trilha, TrilhaDTO.class))
-//                .toList();
-//    }
-
-    //    public List<TrilhaDTO> listarTrilha2() {
-//        return trilhaRepository.findAll()
-//                .stream()
-//                .map(trilha -> {
-//                    TrilhaDTO trilhaDTO = objectMapper.convertValue(trilha, TrilhaDTO.class);
-//                    trilhaDTO.setUsuarios(trilha.getUsuarios().stream()
-//                            .map(usuarioDTO -> objectMapper.convertValue(usuarioDTO,UsuarioDTO.class)).toList());
-//
-//                    return trilhaDTO;
-//                }).toList();
-//    }
-//    public List<TrilhaDTO> listarTrilha2() {
-//        return trilhaRepository.findAll()
-//                .stream()
-//                .map(trilha -> {
-//                    TrilhaDTO trilhaDTO = objectMapper.convertValue(trilha, TrilhaDTO.class);
-//                    trilhaDTO.getUsuarios().stream()
-//                            .map(usuarioDTO -> objectMapper.convertValue(usuarioDTO,TrilhaDTO.class))
-//                            .toList();
-//                    return trilhaDTO;
-//                }).toList();
-//    }
     public TrilhaDTO pegarIdTrilha(Integer id) throws RegraDeNegocioException {
         TrilhaEntity trilhaEntity = findById(id);
         return objectMapper.convertValue(trilhaEntity, TrilhaDTO.class);
@@ -213,12 +145,13 @@ public class TrilhaService {
 
     public TrilhaEntity buscarTrilhaPorEdicao(TrilhaDTO edicao) throws RegraDeNegocioException {
         return trilhaRepository.findByEdicao(edicao)
-                .orElseThrow(() -> new RegraDeNegocioException("Edição da trilha não encontrada."));}
+                .orElseThrow(() -> new RegraDeNegocioException("Edição da trilha não encontrada."));
+    }
 
 
     public List<RankingDTO> rankingtrilha(Integer idTrilha) throws RegraDeNegocioException {
         TrilhaEntity trilha = findById(idTrilha);
-        List<RankingDTO> ListUsuarios = trilha.getUsuarios()
+        List<RankingDTO> listUsuarios = trilha.getUsuarios()
                 .stream()
                 .sorted(Comparator.comparing(UsuarioEntity::getPontuacaoAluno)
                         .reversed())
@@ -226,7 +159,7 @@ public class TrilhaService {
                 .map(this::mapRankingDTO)
                 .collect(Collectors
                         .toList());
-        return ListUsuarios;
+        return listUsuarios;
     }
 
     private RankingDTO mapRankingDTO(UsuarioEntity usuarioEntity) {

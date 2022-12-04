@@ -46,9 +46,6 @@ public class AtividadeEntity {
     @Column(name = "pontuacao")
     private Integer pontuacao;
 
-//    @Column(name = "link")
-//    private String link;
-
     @Enumerated(EnumType.ORDINAL)
     @Column(name = "status_Atividade")
     private AtividadeStatus statusAtividade;
@@ -64,10 +61,7 @@ public class AtividadeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_modulo", referencedColumnName = "id_modulo")
     private ModuloEntity modulo;
-    // alteracao nova
-//    @JsonIgnore
-//    @OneToMany(mappedBy = "atividade", fetch = FetchType.LAZY)
-//    private Set<UsuarioEntity> alunos = new HashSet<>();
+
 
     @JsonIgnore
     @ManyToMany(fetch = FetchType.LAZY)

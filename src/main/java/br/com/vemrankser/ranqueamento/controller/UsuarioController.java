@@ -1,7 +1,6 @@
 package br.com.vemrankser.ranqueamento.controller;
 
 import br.com.vemrankser.ranqueamento.dto.*;
-import br.com.vemrankser.ranqueamento.entity.UsuarioEntity;
 import br.com.vemrankser.ranqueamento.enums.TipoPerfil;
 import br.com.vemrankser.ranqueamento.exceptions.RegraDeNegocioException;
 import br.com.vemrankser.ranqueamento.service.AuthService;
@@ -81,7 +80,7 @@ public class UsuarioController {
             }
     )
     @GetMapping("/lista-usuarios")
-    public ResponseEntity<PageDTO<UsuarioDTO>> listUsuarios(@RequestParam(required = false,defaultValue = "0") Integer pagina, @RequestParam(required = false,defaultValue = "5") Integer tamanho, @RequestParam(value = "sort", required = false, defaultValue = "nome") String sort) {
+    public ResponseEntity<PageDTO<UsuarioDTO>> listUsuarios(@RequestParam(required = false, defaultValue = "0") Integer pagina, @RequestParam(required = false, defaultValue = "5") Integer tamanho, @RequestParam(value = "sort", required = false, defaultValue = "nome") String sort) {
         return new ResponseEntity<>(usuarioService.listarUsuarios(pagina, tamanho, sort), HttpStatus.OK);
     }
 
@@ -94,7 +93,7 @@ public class UsuarioController {
             }
     )
     @GetMapping("/lista-alunos")
-    public ResponseEntity<PageDTO<UsuarioDTO>> listAlunos(@RequestParam(required = false,defaultValue = "0") Integer pagina,@RequestParam(required = false,defaultValue = "5") Integer tamanho) {
+    public ResponseEntity<PageDTO<UsuarioDTO>> listAlunos(@RequestParam(required = false, defaultValue = "0") Integer pagina, @RequestParam(required = false, defaultValue = "5") Integer tamanho) {
         return new ResponseEntity<>(usuarioService.listarAlunos(pagina, tamanho), HttpStatus.OK);
     }
 
@@ -107,8 +106,8 @@ public class UsuarioController {
             }
     )
     @GetMapping("/lista-alunos-trilha")
-    public ResponseEntity<PageDTO<AlunoTrilhaPersonalizadoDTO>> listAlunosTrilha(@RequestParam(required = false,defaultValue = "0") Integer pagina, @RequestParam(required = false,defaultValue = "5") Integer tamanho, @RequestParam(defaultValue = "") String nome,@RequestParam(required = false)Integer idTrilha) {
-        return new ResponseEntity<>(usuarioService.listAlunoTrilhaQuery(pagina, tamanho, nome,idTrilha), HttpStatus.OK);
+    public ResponseEntity<PageDTO<AlunoTrilhaPersonalizadoDTO>> listAlunosTrilha(@RequestParam(required = false, defaultValue = "0") Integer pagina, @RequestParam(required = false, defaultValue = "5") Integer tamanho, @RequestParam(defaultValue = "") String nome, @RequestParam(required = false) Integer idTrilha) {
+        return new ResponseEntity<>(usuarioService.listAlunoTrilhaQuery(pagina, tamanho, nome, idTrilha), HttpStatus.OK);
     }
 
     @Operation(summary = "Pega a lista de alunos e trilha geral", description = "Resgata a lista de alunos e trilha geral do banco de dados")
@@ -120,7 +119,7 @@ public class UsuarioController {
             }
     )
     @GetMapping("/lista-alunos-trilha-geral")
-    public ResponseEntity<PageDTO<AlunoTrilhaDTO>> listAlunosTrilhaGeral(@RequestParam(required = false,defaultValue = "0") Integer pagina, @RequestParam(required = false,defaultValue = "5") Integer tamanho, @RequestParam(defaultValue = "") String nome) {
+    public ResponseEntity<PageDTO<AlunoTrilhaDTO>> listAlunosTrilhaGeral(@RequestParam(required = false, defaultValue = "0") Integer pagina, @RequestParam(required = false, defaultValue = "5") Integer tamanho, @RequestParam(defaultValue = "") String nome) {
         return new ResponseEntity<>(usuarioService.listarAlunosTrilhaGeral(pagina, tamanho, nome), HttpStatus.OK);
     }
 

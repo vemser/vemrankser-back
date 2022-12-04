@@ -2,7 +2,6 @@ package br.com.vemrankser.ranqueamento.service;
 
 import br.com.vemrankser.ranqueamento.dto.*;
 import br.com.vemrankser.ranqueamento.entity.CargoEntity;
-import br.com.vemrankser.ranqueamento.entity.TrilhaEntity;
 import br.com.vemrankser.ranqueamento.entity.UsuarioEntity;
 import br.com.vemrankser.ranqueamento.enums.TipoPerfil;
 import br.com.vemrankser.ranqueamento.exceptions.RegraDeNegocioException;
@@ -18,15 +17,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
 public class UsuarioService {
 
     private static final int USUARIO_ATIVO = 1;
-    private static final int USUARIO_INATIVO = 0;
     private static final int PONTUACAO_INICIAL = 0;
 
     private final UsuarioRepository usuarioRepository;
@@ -58,11 +58,6 @@ public class UsuarioService {
                 .toList();
     }
 
-//    public Set<TrilhaDTO> getTrilhaDTO(Set<TrilhaEntity> trilhaEntities) {
-//        return trilhaEntities.stream()
-//                .map(trilhaEntity -> objectMapper.convertValue(trilhaEntity, TrilhaDTO.class))
-//                .collect(Collectors.toSet());
-//    }
 
     public UsuarioDTO pegarLogin(String login) throws RegraDeNegocioException {
         UsuarioEntity usuarioEncontrado = usuarioRepository.findByLoginIgnoreCase(login);
@@ -132,23 +127,6 @@ public class UsuarioService {
                 usuarioDTOS);
     }
 
-    //    public PageDTO<AlunoTrilhaDTO> listarAlunosTrilha(Integer pagina, Integer tamanho) {
-//        PageRequest pageRequest = PageRequest.of(pagina, tamanho);
-//        Page<UsuarioEntity> allAlunos = usuarioRepository.findAllByTipoPerfil(TipoPerfil.ALUNO.getCargo(), pageRequest);
-//        List<AlunoTrilhaDTO> usuarioDTOS = allAlunos.getContent().stream()
-//                .map(usuarioEntity -> {
-//                    AlunoTrilhaDTO alunoTrilhaDTO = objectMapper.convertValue(usuarioEntity, AlunoTrilhaDTO.class);
-//                    alunoTrilhaDTO.setTrilhas(usuarioEntity.getTrilhas().stream()
-//                            .map(trilhaEntity -> objectMapper.convertValue(trilhaEntity, TrilhaDTO.class)).toList());
-//
-//                    return alunoTrilhaDTO;
-//                }).toList();
-//        return new PageDTO<>(allAlunos.getTotalElements(),
-//                allAlunos.getTotalPages(),
-//                pagina,
-//                tamanho,
-//                usuarioDTOS);
-//    }
     public PageDTO<AlunoTrilhaDTO> listarAlunosTrilhaGeral(Integer pagina, Integer tamanho, String nome) {
         PageRequest pageRequest = PageRequest.of(pagina, tamanho);
         Page<UsuarioEntity> allAlunos = usuarioRepository.findAllByTipoPerfilAndNomeContainingIgnoreCase(TipoPerfil.ALUNO.getCargo(), nome, pageRequest);
@@ -205,52 +183,11 @@ public class UsuarioService {
     }
 
 
-    //
-//    public UsuarioDTO desativarConta(Integer idUsuario) throws RegraDeNegocioException {
-//        UsuarioEntity usuarioEncontrado = findById(idUsuario);
-//        usuarioEncontrado.setStatusUsuario(USUARIO_INATIVO);
-//        usuarioRepository.save(usuarioEncontrado);
-//
-//        return objectMapper.convertValue(usuarioEncontrado, UsuarioDTO.class);
-//    }
-
-    // FALTA TERMINAR
-//    public UsuarioDTO editar(Integer id, UsuarioAtualizarDTO usuarioAtualizar) throws RegraDeNegocioException {
-//        UsuarioEntity usuarioEncontrado = findById(id);
-//        List<TrilhaEntity> trilhaEntities = new ArrayList<>();
-//        //  usuarioEncontrado.setFoto(usuarioEncontrado.getFoto());
-//        usuarioEncontrado.setNome(usuarioAtualizar.getNome());
-//        usuarioEncontrado.setEmail(usuarioAtualizar.getEmail());
-//        usuarioEncontrado.setSenha(passwordEncoder.encode(usuarioAtualizar.getSenha()));
-//        usuarioEncontrado.setStatusUsuario(usuarioAtualizar.getStatusUsuario());
-//        //   usuarioEncontrado.setAtuacao(usuarioAtualizar.getAtuacao());
-//       for (TrilhaNomeDTO trilha: usuarioAtualizar.getTrilhas() ) {
-//         //  TrilhaEntity trilhaEntity = trilhaService.buscarPorNomeTrilha(trilha.getNome());
-//       //    trilhaEntities.add(trilhaEntity);
-//
-//       }
-//        usuarioEncontrado.setTrilhas(new HashSet<>(trilhaEntities));
-//
-//
-//        // errado  usuarioEncontrado.setTipoPerfil(usuarioEncontrado.getTipoPerfil());
-//
-//        usuarioRepository.save(usuarioEncontrado);
-//
-//        return objectMapper.convertValue(usuarioEncontrado, UsuarioDTO.class);
-//    }
-
     public UsuarioEntity findById(Integer id) throws RegraDeNegocioException {
         return usuarioRepository.findById(id)
                 .orElseThrow(() -> new RegraDeNegocioException("Usuario não encontrado!"));
     }
 
-//    public List<UsuarioEntity> findTop5ByOrderByPontuacaoDesc() {
-//        return usuarioRepository.findTop5ByOrderByPontuacaoAlunoDesc();
-//    }
-//
-//    public UsuarioEntity save(UsuarioEntity usuarioEntity) {
-//        return usuarioRepository.save(usuarioEntity);
-//    }
 
     public PageDTO<AlunoTrilhaPersonalizadoDTO> listAlunoTrilhaQuery(Integer pagina, Integer tamanho, String nome, Integer idTrilha) {
 

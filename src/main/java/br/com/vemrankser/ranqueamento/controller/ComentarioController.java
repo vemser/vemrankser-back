@@ -47,23 +47,6 @@ public class ComentarioController {
         return new ResponseEntity<>(comentarioAvaliacaoDTO, HttpStatus.OK);
     }
 
-//    @Operation(summary = "Comentario de atividade", description = "Cadastrar comentario para atividade")
-//    @ApiResponses(
-//            value = {
-//                    @ApiResponse(responseCode = "200", description = "Cadastro de comentario com sucesso"),
-//                    @ApiResponse(responseCode = "403", description = "Você não tem permissão para acessar este recurso"),
-//                    @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção")
-//            }
-//    )
-//    @PostMapping
-//    public ResponseEntity<ComentarioDTO> criarComentario(@RequestBody @Valid ComentarioCreateDTO comentarioCreateDTO, Integer idAtividade,TipoFeedback tipoFeedback) throws RegraDeNegocioException {
-//
-//        log.info("Criando novo comentario....");
-//        ComentarioDTO comentarioDTO = comentarioService.adicionar(comentarioCreateDTO, idAtividade,tipoFeedback);
-//        log.info("Comentario criado com sucesso!");
-//
-//        return new ResponseEntity<>(comentarioDTO, HttpStatus.OK);
-//    }
 
     @Operation(summary = "Listar comentários por id atividade", description = "Listar comentários por atividade")
     @ApiResponses(

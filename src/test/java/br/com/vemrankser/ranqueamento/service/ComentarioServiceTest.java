@@ -24,7 +24,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -221,7 +220,7 @@ public class ComentarioServiceTest {
     }
 
     @Test
-    public void deveTestarCalcularPontuacaoComSucesso(){
+    public void deveTestarCalcularPontuacaoComSucesso() {
         // Criar variaveis (SETUP)
         UsuarioEntity usuarioEntity = new UsuarioEntity();
         usuarioEntity.setPontuacaoAluno(10);
@@ -285,7 +284,7 @@ public class ComentarioServiceTest {
         AtividadeAvaliarDTO atividadeAvaliarDTO = new AtividadeAvaliarDTO();
 
         atividadeAvaliarDTO.setPontuacao(90);
-      //  atividadeAvaliarDTO.setLink("www.githu.com");
+        //  atividadeAvaliarDTO.setLink("www.githu.com");
 
         return atividadeAvaliarDTO;
     }

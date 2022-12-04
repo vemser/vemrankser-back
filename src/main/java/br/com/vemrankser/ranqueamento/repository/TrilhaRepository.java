@@ -13,7 +13,6 @@ import java.util.Optional;
 @Repository
 public interface TrilhaRepository extends JpaRepository<TrilhaEntity, Integer> {
 
-    Optional<TrilhaEntity> findByNomeContainingIgnoreCase(String nome);
 
     Page<TrilhaEntity> findAllByIdTrilha(Integer idTrilha, Pageable pageable);
 

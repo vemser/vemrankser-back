@@ -2,7 +2,6 @@ package br.com.vemrankser.ranqueamento.service;
 
 import br.com.vemrankser.ranqueamento.dto.*;
 import br.com.vemrankser.ranqueamento.entity.AtividadeEntity;
-import br.com.vemrankser.ranqueamento.entity.ComentarioEntity;
 import br.com.vemrankser.ranqueamento.entity.ModuloEntity;
 import br.com.vemrankser.ranqueamento.entity.TrilhaEntity;
 import br.com.vemrankser.ranqueamento.enums.AtividadeStatus;
@@ -21,7 +20,6 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.util.ReflectionTestUtils;
 
@@ -114,7 +112,7 @@ public class AtividadeServiceTest {
         AtividadeDTO atividadeDTOCreate = atividadeService.createAtividade(atividadeCreateDTO, idModulo, List.of(1, 2, 3));
         // Verificação (ASSERT)
         assertNotNull(atividadeDTOCreate);
-        assertEquals("Spring Data",atividadeDTOCreate.getTitulo());
+        assertEquals("Spring Data", atividadeDTOCreate.getTitulo());
     }
 
     @Test
@@ -323,7 +321,7 @@ public class AtividadeServiceTest {
         return atividadeEntity;
     }
 
-    public static AtividadeNotaDTO getAtividadeNotaDTO () {
+    public static AtividadeNotaDTO getAtividadeNotaDTO() {
         AtividadeNotaDTO atividadeNotaDTO = new AtividadeNotaDTO();
 
         atividadeNotaDTO.setIdAtividade(11);
@@ -333,7 +331,7 @@ public class AtividadeServiceTest {
         return atividadeNotaDTO;
     }
 
-    public static AtividadeNotaPageDTO getAtividadeNotaPageDTO () {
+    public static AtividadeNotaPageDTO getAtividadeNotaPageDTO() {
         AtividadeNotaPageDTO atividadeNotaPageDTO = new AtividadeNotaPageDTO();
 
         atividadeNotaPageDTO.setIdAtividade(11);
@@ -375,7 +373,7 @@ public class AtividadeServiceTest {
 
     public static AtividadePaginacaoDTO getAtividadePaginacaoDTO() {
         AtividadePaginacaoDTO atividadePaginacaoDTO = new AtividadePaginacaoDTO();
-        atividadePaginacaoDTO.setElementos(List.of(1,2,3,4,5));
+        atividadePaginacaoDTO.setElementos(List.of(1, 2, 3, 4, 5));
         atividadePaginacaoDTO.setPagina(0);
         atividadePaginacaoDTO.setQuantidadePaginas(3);
         atividadePaginacaoDTO.setTamanho(5);
