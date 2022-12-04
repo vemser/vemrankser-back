@@ -58,11 +58,11 @@ public class UsuarioService {
                 .toList();
     }
 
-    public Set<TrilhaDTO> getTrilhaDTO(Set<TrilhaEntity> trilhaEntities) {
-        return trilhaEntities.stream()
-                .map(trilhaEntity -> objectMapper.convertValue(trilhaEntity, TrilhaDTO.class))
-                .collect(Collectors.toSet());
-    }
+//    public Set<TrilhaDTO> getTrilhaDTO(Set<TrilhaEntity> trilhaEntities) {
+//        return trilhaEntities.stream()
+//                .map(trilhaEntity -> objectMapper.convertValue(trilhaEntity, TrilhaDTO.class))
+//                .collect(Collectors.toSet());
+//    }
 
     public UsuarioDTO pegarLogin(String login) throws RegraDeNegocioException {
         UsuarioEntity usuarioEncontrado = usuarioRepository.findByLoginIgnoreCase(login);
@@ -244,13 +244,13 @@ public class UsuarioService {
                 .orElseThrow(() -> new RegraDeNegocioException("Usuario não encontrado!"));
     }
 
-    public List<UsuarioEntity> findTop5ByOrderByPontuacaoDesc() {
-        return usuarioRepository.findTop5ByOrderByPontuacaoAlunoDesc();
-    }
-
-    public UsuarioEntity save(UsuarioEntity usuarioEntity) {
-        return usuarioRepository.save(usuarioEntity);
-    }
+//    public List<UsuarioEntity> findTop5ByOrderByPontuacaoDesc() {
+//        return usuarioRepository.findTop5ByOrderByPontuacaoAlunoDesc();
+//    }
+//
+//    public UsuarioEntity save(UsuarioEntity usuarioEntity) {
+//        return usuarioRepository.save(usuarioEntity);
+//    }
 
     public PageDTO<AlunoTrilhaPersonalizadoDTO> listAlunoTrilhaQuery(Integer pagina, Integer tamanho, String nome, Integer idTrilha) {
 
