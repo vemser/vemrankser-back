@@ -85,20 +85,20 @@ public class AtividadeService {
 
     }
 
-    public AtividadeAvaliarDTO avaliarAtividade(AtividadeAvaliarDTO atividadeAvaliarDTO, Integer idAtividade) throws RegraDeNegocioException {
-        AtividadeEntity atividadeAvaliacao = buscarPorIdAtividade(idAtividade);
-        atividadeAvaliacao.setStatusAtividade(AtividadeStatus.CONCLUIDA);
-        atividadeAvaliacao.setPontuacao(atividadeAvaliarDTO.getPontuacao());
-        atividadeAvaliacao.getAlunos().forEach(aluno -> aluno.setPontuacaoAluno(calcularPontuacao(aluno, atividadeAvaliacao)));
-        atividadeRepository.save(atividadeAvaliacao);
+//    public AtividadeAvaliarDTO avaliarAtividade(AtividadeAvaliarDTO atividadeAvaliarDTO, Integer idAtividade) throws RegraDeNegocioException {
+//        AtividadeEntity atividadeAvaliacao = buscarPorIdAtividade(idAtividade);
+//        atividadeAvaliacao.setStatusAtividade(AtividadeStatus.CONCLUIDA);
+//        atividadeAvaliacao.setPontuacao(atividadeAvaliarDTO.getPontuacao());
+//        atividadeAvaliacao.getAlunos().forEach(aluno -> aluno.setPontuacaoAluno(calcularPontuacao(aluno, atividadeAvaliacao)));
+//        atividadeRepository.save(atividadeAvaliacao);
+//
+//
+//        return objectMapper.convertValue(atividadeAvaliacao, AtividadeAvaliarDTO.class);
+//    }
 
-
-        return objectMapper.convertValue(atividadeAvaliacao, AtividadeAvaliarDTO.class);
-    }
-
-    private Integer calcularPontuacao(UsuarioEntity usuarioEntity, AtividadeEntity atividadeEntity) {
-        return usuarioEntity.getPontuacaoAluno() + atividadeEntity.getPontuacao();
-    }
+//    private Integer calcularPontuacao(UsuarioEntity usuarioEntity, AtividadeEntity atividadeEntity) {
+//        return usuarioEntity.getPontuacaoAluno() + atividadeEntity.getPontuacao();
+//    }
 
     public AtividadeDTO colocarAtividadeComoConcluida(Integer idAtividade) throws RegraDeNegocioException {
         AtividadeEntity atividadeEntity = buscarPorIdAtividade(idAtividade);
@@ -109,26 +109,26 @@ public class AtividadeService {
 
     }
 
-    public AtividadeAlunoEnviarDTO entregarAtividade(AtividadeAlunoEnviarDTO atividadeAlunoEnviarDTO, Integer idAtividade) throws RegraDeNegocioException {
-        AtividadeEntity atividadeEntity = buscarPorIdAtividade(idAtividade);
-        AtividadeEntity atividadeEntityRecuperado = objectMapper.convertValue(atividadeAlunoEnviarDTO, AtividadeEntity.class);
-
-        atividadeEntityRecuperado.setIdAtividade(idAtividade);
-        atividadeEntityRecuperado.setIdModulo(atividadeEntity.getIdModulo());
-        atividadeEntityRecuperado.setTitulo(atividadeEntity.getTitulo());
-        atividadeEntityRecuperado.setInstrucoes(atividadeEntity.getInstrucoes());
-        atividadeEntityRecuperado.setPesoAtividade(atividadeEntity.getPesoAtividade());
-        atividadeEntityRecuperado.setDataCriacao(atividadeEntity.getDataCriacao());
-        atividadeEntityRecuperado.setDataEntrega(atividadeEntity.getDataEntrega());
-        atividadeEntityRecuperado.setPontuacao(atividadeEntity.getPontuacao());
-        //  atividadeEntityRecuperado.setLink(atividadeAlunoEnviarDTO.getLink());
-        atividadeEntityRecuperado.setStatusAtividade(AtividadeStatus.CONCLUIDA);
-        atividadeEntityRecuperado.setNomeInstrutor(atividadeEntity.getNomeInstrutor());
-
-        atividadeRepository.save(atividadeEntityRecuperado);
-
-        return objectMapper.convertValue(atividadeEntityRecuperado, AtividadeAlunoEnviarDTO.class);
-    }
+//    public AtividadeAlunoEnviarDTO entregarAtividade(AtividadeAlunoEnviarDTO atividadeAlunoEnviarDTO, Integer idAtividade) throws RegraDeNegocioException {
+//        AtividadeEntity atividadeEntity = buscarPorIdAtividade(idAtividade);
+//        AtividadeEntity atividadeEntityRecuperado = objectMapper.convertValue(atividadeAlunoEnviarDTO, AtividadeEntity.class);
+//
+//        atividadeEntityRecuperado.setIdAtividade(idAtividade);
+//        atividadeEntityRecuperado.setIdModulo(atividadeEntity.getIdModulo());
+//        atividadeEntityRecuperado.setTitulo(atividadeEntity.getTitulo());
+//        atividadeEntityRecuperado.setInstrucoes(atividadeEntity.getInstrucoes());
+//        atividadeEntityRecuperado.setPesoAtividade(atividadeEntity.getPesoAtividade());
+//        atividadeEntityRecuperado.setDataCriacao(atividadeEntity.getDataCriacao());
+//        atividadeEntityRecuperado.setDataEntrega(atividadeEntity.getDataEntrega());
+//        atividadeEntityRecuperado.setPontuacao(atividadeEntity.getPontuacao());
+//        //  atividadeEntityRecuperado.setLink(atividadeAlunoEnviarDTO.getLink());
+//        atividadeEntityRecuperado.setStatusAtividade(AtividadeStatus.CONCLUIDA);
+//        atividadeEntityRecuperado.setNomeInstrutor(atividadeEntity.getNomeInstrutor());
+//
+//        atividadeRepository.save(atividadeEntityRecuperado);
+//
+//        return objectMapper.convertValue(atividadeEntityRecuperado, AtividadeAlunoEnviarDTO.class);
+//    }
 
     public PageDTO<AtividadeTrilhaDTO> listarAtividadePorStatus(Integer pagina, Integer tamanho, Integer idTrilha, AtividadeStatus atividadeStatus) throws RegraDeNegocioException {
         PageRequest pageRequest = PageRequest.of(pagina, tamanho);

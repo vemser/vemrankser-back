@@ -1,11 +1,9 @@
 package br.com.vemrankser.ranqueamento.service;
 
-import br.com.vemrankser.ranqueamento.dto.ModuloCreateDTO;
-import br.com.vemrankser.ranqueamento.dto.ModuloDTO;
-import br.com.vemrankser.ranqueamento.dto.ModuloTrilhaDTO;
-import br.com.vemrankser.ranqueamento.dto.TrilhaCreateDTO;
+import br.com.vemrankser.ranqueamento.dto.*;
 import br.com.vemrankser.ranqueamento.entity.ModuloEntity;
 import br.com.vemrankser.ranqueamento.entity.TrilhaEntity;
+import br.com.vemrankser.ranqueamento.entity.UsuarioEntity;
 import br.com.vemrankser.ranqueamento.enums.StatusModulo;
 import br.com.vemrankser.ranqueamento.exceptions.RegraDeNegocioException;
 import br.com.vemrankser.ranqueamento.repository.ModuloRepository;
@@ -99,57 +97,43 @@ public class ModuloServiceTest {
         assertNotNull(list);
     }
 
-    @Test(expected = RegraDeNegocioException.class)
-    public void deveTestarListAllModulos() throws RegraDeNegocioException {
 
-        Integer id = 1;
+    @Test
+    public void deveTestarVincularModuloTrilha() throws RegraDeNegocioException {
+
+
         ModuloEntity moduloEntity = getModuloEntity(1);
-        TrilhaEntity trilha = getTrilhaEntity(1);
+        ModuloTrilhaDTO moduloTrilhaDTO = objectMapper.convertValue(moduloEntity, ModuloTrilhaDTO.class);
+        moduloEntity.setIdModulo(1);
 
-        when(trilhaService.findById(any())).thenReturn(trilha);
-        when(moduloRepository.save(any())).thenReturn(moduloEntity);
+        TrilhaEntity trilhaEntity = new TrilhaEntity();
+        trilhaEntity.setIdTrilha(1);
 
-        ModuloEntity moduloEntity1 = moduloService.buscarPorIdModulo(1);
-        List<ModuloDTO> list = moduloService.listAllModulos();
 
-        assertNotNull(moduloEntity);
-        assertNotNull(moduloEntity1);
-        assertTrue(list.size() > 0);
-        assertEquals(1, list.size());
+        when(moduloRepository.findById(anyInt())).thenReturn(Optional.of(moduloEntity));
+        when(trilhaService.findById(anyInt())).thenReturn(trilhaEntity);
 
-        verify(moduloRepository, times(1)).findAll();
-        verify(moduloRepository, times(1)).save(moduloEntity);
+        ModuloDTO moduloDTO = moduloService.vincularModuloTrilha(moduloEntity.getIdModulo(), trilhaEntity.getIdTrilha(), moduloTrilhaDTO);
+
+
+       assertNotNull(moduloDTO);
+
     }
 
-//    @Test
-//    public void deveTestarVincularModuloTrilha() throws RegraDeNegocioException {
-//     List<ModuloEntity> modulo = new ArrayList<>();
-//        modulo.add(getModuloEntity(1));
-//
-//
-//        ModuloEntity modulo1 = new ModuloEntity();
-//        ModuloTrilhaDTO moduloTrilhaDTO = getModuloTrilhaDTO();
-//
-//        when(moduloRepository.findById(any())).thenReturn(Optional.of(getModuloEntity(1)));
-////        when(moduloRepository.save(any())).thenReturn(modulo);
-//
-////
-//        moduloRepository.save(modulo1);
-//
-////        verify(moduloRepository, times(1)).save(trilha);
-//
-////        assertNotNull(trilha);
-//        verify(moduloRepository, times(1)).save(modulo1);
-//
-//    }
+    @Test
+    public void deveTestarFindAllComSucesso() {
+        // Criar variaveis (SETUP)
+       List<ModuloEntity> moduloEntityList = new ArrayList<>();
+        ModuloEntity moduloEntity = getModuloEntity(1);
+        moduloEntityList.add(moduloEntity);
+        when(moduloRepository.findAll()).thenReturn(moduloEntityList);
+        // Ação (ACT)
+        List<ModuloDTO> moduloDTOS = moduloService.listAllModulos();
 
-
-
-
-
-
-
-
+        // Verificação (ASSERT)
+        assertNotNull(moduloDTOS);
+        assertEquals(1, moduloDTOS.size());
+    }
 
 
     private ModuloEntity getModuloEntity(Integer idModulo) {

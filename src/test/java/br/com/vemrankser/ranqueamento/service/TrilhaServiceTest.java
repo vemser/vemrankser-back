@@ -37,16 +37,17 @@ public class TrilhaServiceTest {
 
     @InjectMocks
     private TrilhaService trilhaService;
-    @InjectMocks
-    private UsuarioService usuarioService;
     @Mock
     private TrilhaRepository trilhaRepository;
     @Mock
     private UsuarioRepository usuarioRepository;
-    @Mock
-    private ObjectMapper objectMapper ;
 
-    private Mapper mapper = new Mapper();
+    @Mock
+    private UsuarioService usuarioService;
+
+    private ObjectMapper objectMapper = new ObjectMapper();
+
+
 
     @Before
     public void init() {
@@ -60,14 +61,14 @@ public class TrilhaServiceTest {
     public void deveTestarCreateComSucesso() throws RegraDeNegocioException {
 
         TrilhaCreateDTO trilhaCreateDTO = getTrilhaCreateDTO();
+        TrilhaEntity trilhaEntity = objectMapper.convertValue(trilhaCreateDTO, TrilhaEntity.class);
 
-//        TrilhaDTO trilhaDTO = getTrilhaDTO();
 
-//        TrilhaEntity trilhaEntity = getTrilhaEntity();
-
-        when(trilhaRepository.save(any())).thenReturn(getTrilhaEntity());
+        when(trilhaRepository.save(any())).thenReturn(trilhaEntity);
 
         TrilhaDTO trilhaDTO1 = trilhaService.adicionar(trilhaCreateDTO);
+
+
 
 
         assertNotNull(trilhaDTO1);
@@ -150,7 +151,7 @@ public class TrilhaServiceTest {
     }
 
     @Test
-    public void deveTestarAdicionarAlunoTrilha() {
+    public void deveTestarListarAlunosTrilha() {
 
         Integer pagina = 5;
         Integer quantidade = 3;
@@ -168,34 +169,53 @@ public class TrilhaServiceTest {
 
     }
 
-//    @Test
-//    public void deveTestarAdicionarIntrutorTrilha() throws RegraDeNegocioException {
-//
-//        Set<UsuarioEntity> usuarioEntities = new HashSet<>();
-//        UsuarioEntity usuarioEntity = new UsuarioEntity();
-//        usuarioEntity.setTipoPerfil(3);
-//        usuarioEntity.setStatusUsuario(1);
-//        Mockito.spy(usuarioEntity);
-//
-//        TrilhaEntity trilha = new TrilhaEntity();
-//
-//        String login = "paulo.pires";
-//        UsuarioDTO usuarioDTO = getUsuarioDTO();
-//
-//        LoginTrilhaDTO loginTrilhaDTO = getLoginTrilhaDTO();
-//
-//        doReturn(usuarioEntity).when(usuarioRepository).findByLoginIgnoreCase(login);
-//        when(usuarioRepository.findByLoginIgnoreCase(any())).thenReturn(usuarioEntity);
-////        doReturn(usuarioDTO).when(objectMapper).convertValue( usuarioEntity,UsuarioDTO.class);
-//        when(usuarioService.pegarLoginInstrutor(any())).thenReturn(any());
-//        when(trilhaRepository.save(any())).thenReturn(trilha);
-////        when(trilhaRepository.save(any())).thenReturn(usuarioEntities);
-//
-////        trilhaService.adicionarIntrustorTrilha(login,List.of(1),loginTrilhaDTO);
-//
-//        verify(trilhaRepository, times(1)).save(any());
-//
-//    }
+    @Test
+    public void deveTestarAdicionarIntrutorTrilha() throws RegraDeNegocioException {
+
+        UsuarioEntity usuarioEntity = new UsuarioEntity();
+        usuarioEntity.setTipoPerfil(3);
+        usuarioEntity.setStatusUsuario(1);
+        Mockito.spy(usuarioEntity);
+        UsuarioDTO usuarioDTO = objectMapper.convertValue(usuarioEntity, UsuarioDTO.class);
+
+        String login = "paulo.pires";
+        TrilhaEntity trilhaEntity = new TrilhaEntity();
+        trilhaEntity.setIdTrilha(1);
+
+
+        when(usuarioService.pegarLoginInstrutor(anyString())).thenReturn(usuarioDTO);
+        when(trilhaRepository.save(any())).thenReturn(trilhaEntity);
+        when(trilhaRepository.findById(anyInt())).thenReturn(Optional.of(trilhaEntity));
+
+        trilhaService.adicionarIntrustorTrilha(login, List.of(1),null);
+
+        verify(trilhaRepository, times(1)).save(any());
+
+    }
+
+    @Test
+    public void deveTestarAdicionarAlunoTrilha() throws RegraDeNegocioException {
+
+        UsuarioEntity usuarioEntity = new UsuarioEntity();
+        usuarioEntity.setTipoPerfil(3);
+        usuarioEntity.setStatusUsuario(1);
+        Mockito.spy(usuarioEntity);
+        UsuarioDTO usuarioDTO = objectMapper.convertValue(usuarioEntity, UsuarioDTO.class);
+
+        String login = "paulo.pires";
+        TrilhaEntity trilhaEntity = new TrilhaEntity();
+        trilhaEntity.setIdTrilha(1);
+
+
+        when(usuarioService.pegarLogin(anyString())).thenReturn(usuarioDTO);
+        when(trilhaRepository.save(any())).thenReturn(trilhaEntity);
+        when(trilhaRepository.findById(anyInt())).thenReturn(Optional.of(trilhaEntity));
+
+        trilhaService.adicionarAlunoTrilha(login, List.of(1),null);
+
+        verify(trilhaRepository, times(1)).save(any());
+
+    }
 
 
     @Test
