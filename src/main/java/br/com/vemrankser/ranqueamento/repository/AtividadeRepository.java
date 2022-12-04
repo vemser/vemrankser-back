@@ -34,21 +34,22 @@ public interface AtividadeRepository extends JpaRepository<AtividadeEntity, Inte
     Page<AtividadeTrilhaDTO> listarAtividadePorStatus(Pageable pageable, Integer idTrilha, AtividadeStatus atividadeStatus);
 
     @Query("  select new br.com.vemrankser.ranqueamento.dto.AtividadeMuralDTO ( " +
-            " atr.atividade.idAtividade, " +
-            " atr.atividade.nomeInstrutor, " +
-            " atr.atividade.titulo, " +
-            " atr.atividade.instrucoes, " +
-            " atr.atividade.pesoAtividade, " +
-            " atr.atividade.dataCriacao, " +
-            " atr.atividade.dataEntrega, " +
-            " atr.atividade.idModulo, " +
-            " atr.atividade.statusAtividade, " +
-            " atr.atividade.modulo.nome, " +
-            " atr.trilha.nome, " +
-            " atr.trilha.edicao " +
+            " a.idAtividade, " +
+            " a.nomeInstrutor, " +
+            " a.titulo, " +
+            " a.instrucoes, " +
+            " a.pesoAtividade, " +
+            " a.dataCriacao, " +
+            " a.dataEntrega, " +
+            " a.idModulo, " +
+            " a.statusAtividade, " +
+            " a.modulo.nome, " +
+            " atr.nome, " +
+            " atr.edicao " +
             " ) " +
-            " from ATIVIDADE_TRILHA atr " +
-            " where (atr.trilha.idTrilha = :idTrilha ) " +
+            " from ATIVIDADE a " +
+            " inner join a.trilhas atr " +
+            " where (atr.idTrilha = :idTrilha or :idTrilha is null ) " +
             " ")
     Page<AtividadeMuralDTO> listarAtividadeMuralInstrutor(Pageable pageable, Integer idTrilha);
 
