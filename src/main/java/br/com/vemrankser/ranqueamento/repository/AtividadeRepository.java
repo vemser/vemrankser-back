@@ -74,21 +74,17 @@ public interface AtividadeRepository extends JpaRepository<AtividadeEntity, Inte
 
 
     @Query("  select distinct new br.com.vemrankser.ranqueamento.dto.AtividadeNotaPageDTO ( " +
+            " u.idUsuario, " +
             " u.nome, " +
             " au.idAtividade, " +
             " au.pontuacao, " +
             " aul.link " +
             " ) " +
-//            " from ATIVIDADE_USUARIO au, LINK aua" +
             " from USUARIO u " +
             " left join u.trilhas ut " +
             " left join ut.modulos utm" +
             " left join u.atividades au" +
             " left join au.links aul " +
-//            " inner join au.atividade aua" +
-//            " inner join aua.trilhas atr  " +
-//            " join au.usuarioEntity.trilhas atr" +
-//            " inner join aua.link " +
             " on ( au.idModulo = :idModulo and ut.idTrilha = :idTrilha and au.statusAtividade = :atividadeStatus ) " +
             "  ")
     Page<AtividadeNotaPageDTO> listarAtividadePorIdTrilhaIdModulo(Pageable pageable, Integer idTrilha, Integer idModulo, AtividadeStatus atividadeStatus);

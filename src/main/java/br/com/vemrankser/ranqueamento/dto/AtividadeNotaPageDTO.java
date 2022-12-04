@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 public class AtividadeNotaPageDTO {
 
+    private Integer idUsuario;
     private String nome;
     private Integer idAtividade;
     private Integer nota;
