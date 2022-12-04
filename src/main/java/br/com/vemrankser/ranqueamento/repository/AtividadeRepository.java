@@ -16,59 +16,63 @@ import java.util.List;
 public interface AtividadeRepository extends JpaRepository<AtividadeEntity, Integer> {
 
     @Query("  select new br.com.vemrankser.ranqueamento.dto.AtividadeTrilhaDTO ( " +
-            " atr.atividade.idAtividade, " +
-            " atr.atividade.nomeInstrutor, " +
-            " atr.atividade.titulo, " +
-            " atr.atividade.pesoAtividade, " +
-            " atr.atividade.dataCriacao, " +
-            " atr.atividade.dataEntrega, " +
-            " atr.trilha.nome, " +
-            " atr.trilha.edicao, " +
-            " atr.trilha.anoEdicao " +
+            " a.idAtividade, " +
+            " a.nomeInstrutor, " +
+            " a.titulo, " +
+            " a.pesoAtividade, " +
+            " a.dataCriacao, " +
+            " a.dataEntrega, " +
+            " atr.nome, " +
+            " atr.edicao, " +
+            " atr.anoEdicao " +
             " ) " +
-            " from ATIVIDADE_TRILHA atr" +
-            " where (atr.trilha.idTrilha = :idTrilha and atr.trilha.idTrilha = :idTrilha and atr.atividade.statusAtividade = :atividadeStatus ) " +
+            " from ATIVIDADE a " +
+            " inner join a.trilhas atr " +
+            " on (atr.idTrilha = :idTrilha or :idTrilha is null) " +
+            " where (a.statusAtividade = :atividadeStatus or :atividadeStatus is null ) " +
             " ")
     Page<AtividadeTrilhaDTO> listarAtividadePorStatus(Pageable pageable, Integer idTrilha, AtividadeStatus atividadeStatus);
 
     @Query("  select new br.com.vemrankser.ranqueamento.dto.AtividadeMuralDTO ( " +
-            " atr.atividade.idAtividade, " +
-            " atr.atividade.nomeInstrutor, " +
-            " atr.atividade.titulo, " +
-            " atr.atividade.instrucoes, " +
-            " atr.atividade.pesoAtividade, " +
-            " atr.atividade.dataCriacao, " +
-            " atr.atividade.dataEntrega, " +
-            " atr.atividade.idModulo, " +
-            " atr.atividade.statusAtividade, " +
-            " atr.atividade.modulo.nome, " +
-            " atr.trilha.nome, " +
-            " atr.trilha.edicao " +
+            " a.idAtividade, " +
+            " a.nomeInstrutor, " +
+            " a.titulo, " +
+            " a.instrucoes, " +
+            " a.pesoAtividade, " +
+            " a.dataCriacao, " +
+            " a.dataEntrega, " +
+            " a.idModulo, " +
+            " a.statusAtividade, " +
+            " a.modulo.nome, " +
+            " atr.nome, " +
+            " atr.edicao " +
             " ) " +
-            " from ATIVIDADE_TRILHA atr " +
-            " where (atr.trilha.idTrilha = :idTrilha ) " +
+            " from ATIVIDADE a " +
+            " inner join a.trilhas atr " +
+            " where (atr.idTrilha = :idTrilha or :idTrilha is null ) " +
             " ")
     Page<AtividadeMuralDTO> listarAtividadeMuralInstrutor(Pageable pageable, Integer idTrilha);
 
 
     @Query("  select distinct new br.com.vemrankser.ranqueamento.dto.AtividadeMuralAlunoDTO ( " +
-            " au.atividade.idAtividade, " +
-            " au.usuarioEntity.idUsuario, " +
-            " au.atividade.titulo, " +
-            " au.atividade.instrucoes, " +
-            " au.atividade.pesoAtividade, " +
-            " au.atividade.dataCriacao, " +
-            " au.atividade.dataEntrega, " +
-            " au.atividade.idModulo, " +
-            " au.atividade.statusAtividade, " +
-            " au.atividade.modulo.nome, " +
+            " au.idAtividade, " +
+            " u.idUsuario, " +
+            " au.titulo, " +
+            " au.instrucoes, " +
+            " au.pesoAtividade, " +
+            " au.dataCriacao, " +
+            " au.dataEntrega, " +
+            " au.idModulo, " +
+            " au.statusAtividade, " +
+            " u.nome, " +
             " atr.nome, " +
             " atr.edicao " +
             " ) " +
-            " from ATIVIDADE_USUARIO au " +
-            " left join au.atividade aua " +
-            " left join aua.trilhas atr" +
-            " where (au.usuarioEntity.idUsuario = :idUsuario and au.atividade.statusAtividade = :atividadeStatus) " +
+            " from USUARIO u " +
+            " inner join u.atividades au " +
+            " inner join au.trilhas atr " +
+            " on ( u.idUsuario = :idUsuario or :idUsuario is null ) " +
+            " where ( au.statusAtividade = :atividadeStatus or :atividadeStatus is null) " +
             "  ")
     Page<AtividadeMuralAlunoDTO> listarAtividadeMuralAluno(Integer idUsuario, AtividadeStatus atividadeStatus,Pageable pageable);
 
