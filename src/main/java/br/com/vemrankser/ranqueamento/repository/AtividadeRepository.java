@@ -16,18 +16,20 @@ import java.util.List;
 public interface AtividadeRepository extends JpaRepository<AtividadeEntity, Integer> {
 
     @Query("  select new br.com.vemrankser.ranqueamento.dto.AtividadeTrilhaDTO ( " +
-            " atr.atividade.idAtividade, " +
-            " atr.atividade.nomeInstrutor, " +
-            " atr.atividade.titulo, " +
-            " atr.atividade.pesoAtividade, " +
-            " atr.atividade.dataCriacao, " +
-            " atr.atividade.dataEntrega, " +
-            " atr.trilha.nome, " +
-            " atr.trilha.edicao, " +
-            " atr.trilha.anoEdicao " +
+            " a.idAtividade, " +
+            " a.nomeInstrutor, " +
+            " a.titulo, " +
+            " a.pesoAtividade, " +
+            " a.dataCriacao, " +
+            " a.dataEntrega, " +
+            " atr.nome, " +
+            " atr.edicao, " +
+            " atr.anoEdicao " +
             " ) " +
-            " from ATIVIDADE_TRILHA atr" +
-            " where (atr.trilha.idTrilha = :idTrilha and atr.trilha.idTrilha = :idTrilha and atr.atividade.statusAtividade = :atividadeStatus ) " +
+            " from ATIVIDADE a " +
+            " inner join a.trilhas atr " +
+            " on (atr.idTrilha = :idTrilha or :idTrilha is null) " +
+            " where (a.statusAtividade = :atividadeStatus or :atividadeStatus is null ) " +
             " ")
     Page<AtividadeTrilhaDTO> listarAtividadePorStatus(Pageable pageable, Integer idTrilha, AtividadeStatus atividadeStatus);
 
