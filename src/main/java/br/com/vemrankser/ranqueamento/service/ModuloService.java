@@ -49,7 +49,7 @@ public class ModuloService {
 
     }
 
-    private List<ModuloDTO> listarModulo() {
+    List<ModuloDTO> listarModulo() {
         return moduloRepository.findAll()
                 .stream()
                 .map(modulo -> objectMapper.convertValue(modulo, ModuloDTO.class))
@@ -62,14 +62,6 @@ public class ModuloService {
         moduloEntity.getTrilhas().add(trilhaEntity);
         moduloRepository.save(moduloEntity);
         return objectMapper.convertValue(moduloEntity, ModuloDTO.class);
-    }
-    public void delete(Integer idModulo) throws RegraDeNegocioException {
-
-        ModuloDTO moduloRecuperado = findById(idModulo);
-        ModuloEntity contatoEntity = objectMapper.convertValue(moduloRecuperado, ModuloEntity.class);
-        moduloRepository.delete(contatoEntity);
-
-
     }
 
     public List<ModuloDTO> listAllModulos() {

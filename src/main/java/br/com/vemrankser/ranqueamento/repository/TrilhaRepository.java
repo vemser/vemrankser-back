@@ -1,5 +1,6 @@
 package br.com.vemrankser.ranqueamento.repository;
 
+import br.com.vemrankser.ranqueamento.dto.TrilhaDTO;
 import br.com.vemrankser.ranqueamento.entity.TrilhaEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,7 +17,7 @@ public interface TrilhaRepository extends JpaRepository<TrilhaEntity, Integer> {
 
     Page<TrilhaEntity> findAllByIdTrilha(Integer idTrilha, Pageable pageable);
 
-    Optional<TrilhaEntity> findByEdicao(Integer edicao);
+    Optional<TrilhaEntity> findByEdicao(TrilhaDTO edicao);
 
     Optional<TrilhaEntity> findByNomeIgnoreCase(String nome);
 

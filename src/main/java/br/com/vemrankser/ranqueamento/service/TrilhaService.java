@@ -5,7 +5,6 @@ import br.com.vemrankser.ranqueamento.entity.TrilhaEntity;
 import br.com.vemrankser.ranqueamento.entity.UsuarioEntity;
 import br.com.vemrankser.ranqueamento.exceptions.RegraDeNegocioException;
 import br.com.vemrankser.ranqueamento.repository.TrilhaRepository;
-import br.com.vemrankser.ranqueamento.repository.UsuarioRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -75,7 +74,7 @@ public class TrilhaService {
             trilhaRepository.save(trilhaEntity);
         }
     }
-//  //
+//
 //    public TrilhaDTO adicionarAlunoTrilha2(List<Integer> idTrilha, Integer edicao, String login) throws RegraDeNegocioException {
 //        UsuarioDTO alunoDTO = usuarioService.pegarLogin(login);
 //        UsuarioEntity alunoEncontrado = objectMapper.convertValue(alunoDTO, UsuarioEntity.class);
@@ -197,10 +196,9 @@ public class TrilhaService {
                 .toList();
     }
 
-    public TrilhaEntity buscarTrilhaPorEdicao(Integer edicao) throws RegraDeNegocioException {
+    public TrilhaEntity buscarTrilhaPorEdicao(TrilhaDTO edicao) throws RegraDeNegocioException {
         return trilhaRepository.findByEdicao(edicao)
-                .orElseThrow(() -> new RegraDeNegocioException("Edição da trilha não encontrada."));
-    }
+                .orElseThrow(() -> new RegraDeNegocioException("Edição da trilha não encontrada."));}
 
 
     public List<RankingDTO> rankingtrilha(Integer idTrilha) throws RegraDeNegocioException {
