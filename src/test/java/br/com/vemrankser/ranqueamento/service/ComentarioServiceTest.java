@@ -220,6 +220,24 @@ public class ComentarioServiceTest {
 
     }
 
+    @Test
+    public void deveTestarCalcularPontuacaoComSucesso(){
+        // Criar variaveis (SETUP)
+        UsuarioEntity usuarioEntity = new UsuarioEntity();
+        usuarioEntity.setPontuacaoAluno(10);
+        AtividadeEntity atividadeEntity = new AtividadeEntity();
+        atividadeEntity.setPontuacao(10);
+
+
+        // Ação (ACT)
+        Integer integer = comentarioService.calcularPontuacao(usuarioEntity, atividadeEntity);
+
+        // Verificação (ASSERT)
+        assertNotNull(integer);
+        assertEquals(20, integer);
+
+    }
+
     public static ComentarioEntity getComentarioEntity() {
         ComentarioEntity comentarioEntity = new ComentarioEntity();
 

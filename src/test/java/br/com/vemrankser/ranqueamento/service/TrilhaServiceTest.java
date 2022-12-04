@@ -1,6 +1,7 @@
 package br.com.vemrankser.ranqueamento.service;
 
 import br.com.vemrankser.ranqueamento.dto.*;
+import br.com.vemrankser.ranqueamento.entity.ComentarioEntity;
 import br.com.vemrankser.ranqueamento.entity.TrilhaEntity;
 import br.com.vemrankser.ranqueamento.entity.UsuarioEntity;
 import br.com.vemrankser.ranqueamento.enums.TipoPerfil;
@@ -21,6 +22,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.LocalDate;
@@ -249,6 +251,22 @@ public class TrilhaServiceTest {
         assertEquals(expected.get(0).getPontuacaoAluno(), result.get(0).getPontuacaoAluno());
 
 
+    }
+
+    @Test
+    public void deveTestarListarAllTrilhaPaginadoComSucesso() {
+        // SETUP
+        Integer pagina = 2;
+        Integer tamanho = 9;
+        TrilhaEntity trilhaEntity = getTrilhaEntity();
+        Page<TrilhaEntity> trilhaEntities = new PageImpl<>(List.of(trilhaEntity));
+
+        when(trilhaRepository.findAll(any(Pageable.class))).thenReturn(trilhaEntities);
+
+        // ACT
+        PageDTO<TrilhaDTO> trilhaDTOPageDTO = trilhaService.listarAllTrilhaPaginado(pagina, tamanho);
+        // ASSERT
+        assertNotNull(trilhaDTOPageDTO);
     }
 
 

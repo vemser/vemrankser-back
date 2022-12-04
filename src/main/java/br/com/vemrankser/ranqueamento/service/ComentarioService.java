@@ -78,7 +78,7 @@ public class ComentarioService {
         );
     }
 
-    private Integer calcularPontuacao(UsuarioEntity usuarioEntity, AtividadeEntity atividadeEntity) {
+    public Integer calcularPontuacao(UsuarioEntity usuarioEntity, AtividadeEntity atividadeEntity) {
         return usuarioEntity.getPontuacaoAluno() + atividadeEntity.getPontuacao();
     }
 
