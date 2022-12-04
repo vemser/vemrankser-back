@@ -134,4 +134,17 @@ public class TrilhaController {
     public ResponseEntity<TrilhaDTO> findById(Integer idTrilha) throws RegraDeNegocioException {
         return new ResponseEntity<>(trilhaService.pegarIdTrilha(idTrilha), HttpStatus.OK);
     }
+
+    @Operation(summary = "Pega a lista de trilha paginado", description = "Resgata a lista de trilha paginado do banco de dados")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "Foi resgatado com sucesso"),
+                    @ApiResponse(responseCode = "404", description = "Não encontrado"),
+                    @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção")
+            }
+    )
+    @GetMapping("/lista-trilha-page")
+    public ResponseEntity<PageDTO<TrilhaDTO>> listAllTrilhaPaginado(@RequestParam(required = false,defaultValue = "0") Integer pagina, @RequestParam(required = false,defaultValue = "5") Integer tamanho) {
+        return new ResponseEntity<>(trilhaService.listarAllTrilhaPaginado(pagina, tamanho), HttpStatus.OK);
+    }
 }

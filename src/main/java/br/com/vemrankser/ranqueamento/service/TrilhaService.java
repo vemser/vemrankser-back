@@ -196,6 +196,21 @@ public class TrilhaService {
                 .toList();
     }
 
+    public PageDTO<TrilhaDTO> listarAllTrilhaPaginado(Integer pagina, Integer tamanho) {
+        PageRequest pageRequest = PageRequest.of(pagina, tamanho);
+        Page<TrilhaEntity> trilha = trilhaRepository.findAll(pageRequest);
+
+        List<TrilhaDTO> trilhaDTOList = trilha.getContent().stream()
+                .map(itemEntretenimentoEntity -> objectMapper.convertValue(itemEntretenimentoEntity, TrilhaDTO.class))
+                .toList();
+        return new PageDTO<>(trilha.getTotalElements(),
+                trilha.getTotalPages(),
+                pagina,
+                tamanho,
+                trilhaDTOList
+        );
+    }
+
     public TrilhaEntity buscarTrilhaPorEdicao(TrilhaDTO edicao) throws RegraDeNegocioException {
         return trilhaRepository.findByEdicao(edicao)
                 .orElseThrow(() -> new RegraDeNegocioException("Edição da trilha não encontrada."));}
