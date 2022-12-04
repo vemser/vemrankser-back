@@ -55,23 +55,24 @@ public interface AtividadeRepository extends JpaRepository<AtividadeEntity, Inte
 
 
     @Query("  select distinct new br.com.vemrankser.ranqueamento.dto.AtividadeMuralAlunoDTO ( " +
-            " au.atividade.idAtividade, " +
-            " au.usuarioEntity.idUsuario, " +
-            " au.atividade.titulo, " +
-            " au.atividade.instrucoes, " +
-            " au.atividade.pesoAtividade, " +
-            " au.atividade.dataCriacao, " +
-            " au.atividade.dataEntrega, " +
-            " au.atividade.idModulo, " +
-            " au.atividade.statusAtividade, " +
-            " au.atividade.modulo.nome, " +
+            " au.idAtividade, " +
+            " u.idUsuario, " +
+            " au.titulo, " +
+            " au.instrucoes, " +
+            " au.pesoAtividade, " +
+            " au.dataCriacao, " +
+            " au.dataEntrega, " +
+            " au.idModulo, " +
+            " au.statusAtividade, " +
+            " u.nome, " +
             " atr.nome, " +
             " atr.edicao " +
             " ) " +
-            " from ATIVIDADE_USUARIO au " +
-            " left join au.atividade aua " +
-            " left join aua.trilhas atr" +
-            " where (au.usuarioEntity.idUsuario = :idUsuario and au.atividade.statusAtividade = :atividadeStatus) " +
+            " from USUARIO u " +
+            " inner join u.atividades au " +
+            " inner join au.trilhas atr " +
+            " on ( u.idUsuario = :idUsuario or :idUsuario is null ) " +
+            " where ( au.statusAtividade = :atividadeStatus or :atividadeStatus is null) " +
             "  ")
     Page<AtividadeMuralAlunoDTO> listarAtividadeMuralAluno(Integer idUsuario, AtividadeStatus atividadeStatus,Pageable pageable);
 
