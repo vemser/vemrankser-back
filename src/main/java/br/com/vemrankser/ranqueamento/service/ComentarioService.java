@@ -3,6 +3,7 @@ package br.com.vemrankser.ranqueamento.service;
 import br.com.vemrankser.ranqueamento.dto.AtividadeComentarioAvaliacaoCreateDTO;
 import br.com.vemrankser.ranqueamento.dto.AtividadeComentarioAvaliacaoDTO;
 import br.com.vemrankser.ranqueamento.dto.ComentarioDTO;
+import br.com.vemrankser.ranqueamento.dto.PageDTO;
 import br.com.vemrankser.ranqueamento.entity.AtividadeEntity;
 import br.com.vemrankser.ranqueamento.entity.ComentarioEntity;
 import br.com.vemrankser.ranqueamento.entity.UsuarioEntity;
@@ -11,6 +12,9 @@ import br.com.vemrankser.ranqueamento.exceptions.RegraDeNegocioException;
 import br.com.vemrankser.ranqueamento.repository.ComentarioRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
@@ -87,10 +91,25 @@ public class ComentarioService {
         return comentarioDTO;
     }
 
-    public List<ComentarioDTO> comentariosDoAluno(Integer idAluno) {
-        return comentarioRepository.findAllByIdUsuario(idAluno).stream()
-                .map(comentarioEntity -> objectMapper.convertValue(comentarioEntity, ComentarioDTO.class))
+//    public List<ComentarioDTO> comentariosDoAluno(Integer idAluno) {
+//        return comentarioRepository.findAllByIdUsuario(idAluno).stream()
+//                .map(comentarioEntity -> objectMapper.convertValue(comentarioEntity, ComentarioDTO.class))
+//                .toList();
+//    }
+
+    public PageDTO<ComentarioDTO> comentariosDoAluno(Integer pagina, Integer tamanho, Integer idAluno) {
+
+        PageRequest pageRequest = PageRequest.of(pagina, tamanho);
+        Page<ComentarioEntity> page = comentarioRepository.findAllByIdUsuario(pageRequest, idAluno);
+        List<ComentarioDTO> pessoasDaPagina = page.getContent().stream()
+                .map(itemEntretenimentoEntity -> objectMapper.convertValue(itemEntretenimentoEntity, ComentarioDTO.class))
                 .toList();
+        return new PageDTO<>(page.getTotalElements(),
+                page.getTotalPages(),
+                pagina,
+                tamanho,
+                pessoasDaPagina
+        );
     }
 
     private Integer calcularPontuacao(UsuarioEntity usuarioEntity, AtividadeEntity atividadeEntity) {

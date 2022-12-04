@@ -3,6 +3,7 @@ package br.com.vemrankser.ranqueamento.controller;
 import br.com.vemrankser.ranqueamento.dto.AtividadeComentarioAvaliacaoCreateDTO;
 import br.com.vemrankser.ranqueamento.dto.AtividadeComentarioAvaliacaoDTO;
 import br.com.vemrankser.ranqueamento.dto.ComentarioDTO;
+import br.com.vemrankser.ranqueamento.dto.PageDTO;
 import br.com.vemrankser.ranqueamento.enums.TipoFeedback;
 import br.com.vemrankser.ranqueamento.exceptions.RegraDeNegocioException;
 import br.com.vemrankser.ranqueamento.service.ComentarioService;
@@ -100,8 +101,8 @@ public class ComentarioController {
             }
     )
     @GetMapping("/listar-comentarios-aluno")
-    public ResponseEntity<List<ComentarioDTO>> listarComentariosAluno(Integer idAluno) {
-        return ResponseEntity.ok(comentarioService.comentariosDoAluno(idAluno));
+    public ResponseEntity<PageDTO<ComentarioDTO>> listarComentariosAluno(@RequestParam(required = false, defaultValue = "0") Integer pagina, @RequestParam(required = false, defaultValue = "5") Integer tamanho, Integer idAluno) {
+        return ResponseEntity.ok(comentarioService.comentariosDoAluno(pagina, tamanho, idAluno));
     }
 
     @Operation(summary = "Adicionar feedback ao aluno", description = "Listar comentários de um aluno")

@@ -1,6 +1,8 @@
 package br.com.vemrankser.ranqueamento.repository;
 
 import br.com.vemrankser.ranqueamento.entity.ComentarioEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -12,6 +14,6 @@ public interface ComentarioRepository extends JpaRepository<ComentarioEntity, In
 
     List<ComentarioEntity> findAllByStatusComentario(Integer statusComentario);
 
-    List<ComentarioEntity> findAllByIdUsuario(Integer idAluno);
+    Page<ComentarioEntity> findAllByIdUsuario(Pageable pageable,Integer idAluno);
 
 }
