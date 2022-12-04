@@ -85,21 +85,6 @@ public class AtividadeService {
 
     }
 
-//    public AtividadeAvaliarDTO avaliarAtividade(AtividadeAvaliarDTO atividadeAvaliarDTO, Integer idAtividade) throws RegraDeNegocioException {
-//        AtividadeEntity atividadeAvaliacao = buscarPorIdAtividade(idAtividade);
-//        atividadeAvaliacao.setStatusAtividade(AtividadeStatus.CONCLUIDA);
-//        atividadeAvaliacao.setPontuacao(atividadeAvaliarDTO.getPontuacao());
-//        atividadeAvaliacao.getAlunos().forEach(aluno -> aluno.setPontuacaoAluno(calcularPontuacao(aluno, atividadeAvaliacao)));
-//        atividadeRepository.save(atividadeAvaliacao);
-//
-//
-//        return objectMapper.convertValue(atividadeAvaliacao, AtividadeAvaliarDTO.class);
-//    }
-
-//    private Integer calcularPontuacao(UsuarioEntity usuarioEntity, AtividadeEntity atividadeEntity) {
-//        return usuarioEntity.getPontuacaoAluno() + atividadeEntity.getPontuacao();
-//    }
-
     public AtividadeDTO colocarAtividadeComoConcluida(Integer idAtividade) throws RegraDeNegocioException {
         AtividadeEntity atividadeEntity = buscarPorIdAtividade(idAtividade);
         atividadeEntity.setStatusAtividade(AtividadeStatus.CONCLUIDA);
@@ -108,27 +93,6 @@ public class AtividadeService {
         return objectMapper.convertValue(atividadeEntity, AtividadeDTO.class);
 
     }
-
-//    public AtividadeAlunoEnviarDTO entregarAtividade(AtividadeAlunoEnviarDTO atividadeAlunoEnviarDTO, Integer idAtividade) throws RegraDeNegocioException {
-//        AtividadeEntity atividadeEntity = buscarPorIdAtividade(idAtividade);
-//        AtividadeEntity atividadeEntityRecuperado = objectMapper.convertValue(atividadeAlunoEnviarDTO, AtividadeEntity.class);
-//
-//        atividadeEntityRecuperado.setIdAtividade(idAtividade);
-//        atividadeEntityRecuperado.setIdModulo(atividadeEntity.getIdModulo());
-//        atividadeEntityRecuperado.setTitulo(atividadeEntity.getTitulo());
-//        atividadeEntityRecuperado.setInstrucoes(atividadeEntity.getInstrucoes());
-//        atividadeEntityRecuperado.setPesoAtividade(atividadeEntity.getPesoAtividade());
-//        atividadeEntityRecuperado.setDataCriacao(atividadeEntity.getDataCriacao());
-//        atividadeEntityRecuperado.setDataEntrega(atividadeEntity.getDataEntrega());
-//        atividadeEntityRecuperado.setPontuacao(atividadeEntity.getPontuacao());
-//        //  atividadeEntityRecuperado.setLink(atividadeAlunoEnviarDTO.getLink());
-//        atividadeEntityRecuperado.setStatusAtividade(AtividadeStatus.CONCLUIDA);
-//        atividadeEntityRecuperado.setNomeInstrutor(atividadeEntity.getNomeInstrutor());
-//
-//        atividadeRepository.save(atividadeEntityRecuperado);
-//
-//        return objectMapper.convertValue(atividadeEntityRecuperado, AtividadeAlunoEnviarDTO.class);
-//    }
 
     public PageDTO<AtividadeTrilhaDTO> listarAtividadePorStatus(Integer pagina, Integer tamanho, Integer idTrilha, AtividadeStatus atividadeStatus) throws RegraDeNegocioException {
         PageRequest pageRequest = PageRequest.of(pagina, tamanho);
@@ -181,20 +145,12 @@ public class AtividadeService {
                 .map(atividade -> objectMapper.convertValue(atividade, AtividadeMuralAlunoDTO.class))
                 .toList();
 
-//        if (atividadeMuralDTOList.isEmpty()) {
-//            throw new RegraDeNegocioException("Sem atividades no mural do aluno");
-//        }
-
         return new PageDTO<>(atividadeEntity.getTotalElements(),
                 atividadeEntity.getTotalPages(),
                 pagina,
                 tamanho,
                 atividadeMuralDTOList);
     }
-    // ESSE PAGINADO
-//    public List<AtividadeMuralAlunoDTO> listarAtividadeMuralAluno(AtividadeStatus atividadeStatus, Integer idUsuario){
-//        return atividadeRepository.listarAtividadeMuralAluno(idUsuario, atividadeStatus);
-//    }
 
     public PageDTO<AtividadeNotaPageDTO> listarAtividadePorIdTrilhaIdModulo(Integer pagina, Integer tamanho, Integer idTrilha, Integer idModulo, AtividadeStatus atividadeStatus) throws RegraDeNegocioException {
         PageRequest pageRequest = PageRequest.of(pagina, tamanho);
@@ -207,10 +163,6 @@ public class AtividadeService {
                     return atividadeNotaDTO1;
                 })
                 .toList();
-
-//        if (atividadeNotaDTOList.isEmpty()) {
-//            throw new RegraDeNegocioException("Sem cadastro de notas.");
-//        }
 
         return new PageDTO<>(atividadeEntity.getTotalElements(),
                 atividadeEntity.getTotalPages(),

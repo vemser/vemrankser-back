@@ -31,49 +31,21 @@ public class ComentarioService {
 
     private final ObjectMapper objectMapper;
 
-//    public ComentarioDTO adicionar(ComentarioCreateDTO comentarioCreateDTO, Integer idAtividade,TipoFeedback tipoFeedback) throws RegraDeNegocioException {
-//        AtividadeEntity atividadeEntity = atividadeService.buscarPorIdAtividade(idAtividade);
-//
-//        ComentarioEntity comentarioEntity = objectMapper.convertValue(comentarioCreateDTO, ComentarioEntity.class);
-//        comentarioEntity.setStatusComentario(tipoFeedback.getTipoFeedback());
-//        comentarioEntity.setIdAtividade(atividadeEntity.getIdAtividade());
-//
-//        comentarioEntity.setAtividade(atividadeEntity);
-//        comentarioRepository.save(comentarioEntity);
-//
-//        ComentarioDTO comentarioDTO = objectMapper.convertValue(comentarioEntity, ComentarioDTO.class);
-//
-//        return comentarioDTO;
-//    }
-
     public AtividadeComentarioAvaliacaoDTO adicionarComentarioAvaliar(AtividadeComentarioAvaliacaoCreateDTO atividadeComentarioAvaliacaoCreateDTO, Integer idAluno, Integer idAtividade) throws RegraDeNegocioException {
         AtividadeEntity atividadeEntity = atividadeService.buscarPorIdAtividade(idAtividade);
         UsuarioEntity usuarioEntity = usuarioService.findById(idAluno);
 
         ComentarioEntity comentarioEntity = objectMapper.convertValue(atividadeComentarioAvaliacaoCreateDTO, ComentarioEntity.class);
-        //  comentarioEntity.setStatusComentario(tipoFeedback.getTipoFeedback());
         comentarioEntity.setIdAtividade(atividadeEntity.getIdAtividade());
         comentarioEntity.setAtividade(atividadeEntity);
         comentarioEntity.setIdUsuario(usuarioEntity.getIdUsuario());
         comentarioEntity.setUsuario(usuarioEntity);
-//        Set<ComentarioEntity> comentarioEntitySet = new HashSet<>();
-//        comentarioEntitySet.add(comentarioEntity);
-//        atividadeEntity.setComentarios(comentarioEntitySet);
         comentarioEntity.setComentario(comentarioEntity.getComentario());
         atividadeEntity.setPontuacao(atividadeComentarioAvaliacaoCreateDTO.getNotaAvalicao());
-        //  atividadeEntity.getAlunos().forEach(aluno -> aluno.setPontuacaoAluno(calcularPontuacao(aluno, atividadeEntity)));
         atividadeEntity.getAlunos().stream()
                 .filter(usuarioEntity1 -> usuarioEntity1.getIdUsuario().equals(usuarioEntity.getIdUsuario()))
                 .forEach(aluno -> aluno.setPontuacaoAluno(calcularPontuacao(aluno, atividadeEntity)));
 
-
-//        if (atividadeStatus.equals(AtividadeStatus.CONCLUIDA)) {
-//            atividadeEntity.setStatusAtividade(AtividadeStatus.CONCLUIDA);
-//        } else {
-//            atividadeEntity.setStatusAtividade(AtividadeStatus.PENDENTE);
-//        }
-
-        // comentarioEntity.setAtividade(atividadeEntity);
         comentarioEntity.setComentario(atividadeComentarioAvaliacaoCreateDTO.getComentario());
         comentarioRepository.save(comentarioEntity);
         atividadeService.save(atividadeEntity);
@@ -90,12 +62,6 @@ public class ComentarioService {
         comentarioRepository.save(comentarioEntity);
         return comentarioDTO;
     }
-
-//    public List<ComentarioDTO> comentariosDoAluno(Integer idAluno) {
-//        return comentarioRepository.findAllByIdUsuario(idAluno).stream()
-//                .map(comentarioEntity -> objectMapper.convertValue(comentarioEntity, ComentarioDTO.class))
-//                .toList();
-//    }
 
     public PageDTO<ComentarioDTO> comentariosDoAluno(Integer pagina, Integer tamanho, Integer idAluno) {
 
@@ -140,8 +106,8 @@ public class ComentarioService {
     public void delete(Integer idComentario) throws RegraDeNegocioException {
 
         ComentarioEntity comentarioRecuperado = findById(idComentario);
-        ComentarioEntity contatoEntity = objectMapper.convertValue(comentarioRecuperado, ComentarioEntity.class);
-        comentarioRepository.delete(contatoEntity);
+        ComentarioEntity comentarioEntity = objectMapper.convertValue(comentarioRecuperado, ComentarioEntity.class);
+        comentarioRepository.delete(comentarioEntity);
 
     }
 

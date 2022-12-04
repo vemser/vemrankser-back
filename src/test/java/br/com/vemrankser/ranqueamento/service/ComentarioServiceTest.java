@@ -5,7 +5,9 @@ import br.com.vemrankser.ranqueamento.entity.AtividadeEntity;
 import br.com.vemrankser.ranqueamento.entity.ComentarioEntity;
 import br.com.vemrankser.ranqueamento.entity.UsuarioEntity;
 import br.com.vemrankser.ranqueamento.enums.AtividadeStatus;
+import br.com.vemrankser.ranqueamento.enums.TipoFeedback;
 import br.com.vemrankser.ranqueamento.exceptions.RegraDeNegocioException;
+import br.com.vemrankser.ranqueamento.repository.AtividadeRepository;
 import br.com.vemrankser.ranqueamento.repository.ComentarioRepository;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -17,8 +19,12 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.util.ReflectionTestUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,7 +44,13 @@ public class ComentarioServiceTest {
     private AtividadeService atividadeService;
 
     @Mock
+    private UsuarioService usuarioService;
+
+    @Mock
     private ComentarioRepository comentarioRepository;
+
+    @Mock
+    private AtividadeRepository atividadeRepository;
 
     private ObjectMapper objectMapper = new ObjectMapper();
 
@@ -50,24 +62,63 @@ public class ComentarioServiceTest {
         ReflectionTestUtils.setField(comentarioService, "objectMapper", objectMapper);
     }
 
-//    @Test
-//    public void deveTestarAdicionarComentario() throws RegraDeNegocioException {
-//        // SETUP
-//        Integer idAtividade = 22;
-//        AtividadeEntity atividade = getAtividadeEntity();
-//        ComentarioCreateDTO comentarioCreateDTO = getComentarioCreateDTO();
-//
-//        when(atividadeService.buscarPorIdAtividade(anyInt())).thenReturn(atividade);
-//        //  when(comentarioRepository.save(any())).thenReturn(atividade);
-//
-//        // ACT
-//        ComentarioCreateDTO comentarioCreateDTO1 = comentarioService.adicionar(comentarioCreateDTO, idAtividade);
-//
-//        // ASSERT
-//        assertNotNull(comentarioCreateDTO1);
-////        assertEquals("Pontos de melhoria...", comentarioCreateDTO1.getComentario());
-//    }
+    @Test
+    public void deveTestarAdicionarComentarioAvaliarComSucesso() throws RegraDeNegocioException {
+        // SETUP
+        Integer idAluno = 44;
+        Integer idAtividade = 33;
+        AtividadeComentarioAvaliacaoCreateDTO atividadeComentarioAvaliacaoCreateDTO = getAtividadeComentarioAvaliacaoCreateDTO();
+        AtividadeEntity atividadeEntity = getAtividadeEntity();
+        UsuarioEntity usuarioEntity = getUsuarioEntity();
+        ComentarioEntity comentarioEntity = getComentarioEntity();
 
+        when(atividadeService.buscarPorIdAtividade(anyInt())).thenReturn(atividadeEntity);
+        when(usuarioService.findById(anyInt())).thenReturn(usuarioEntity);
+        when(comentarioRepository.save(any())).thenReturn(comentarioEntity);
+//        when(atividadeRepository.save(any())).thenReturn(atividadeEntity);
+        // ACT
+        AtividadeComentarioAvaliacaoDTO atividadeComentarioAvaliacaoDTO = comentarioService.adicionarComentarioAvaliar(atividadeComentarioAvaliacaoCreateDTO, idAluno, idAtividade);
+        // ASSERT
+        assertNotNull(atividadeComentarioAvaliacaoDTO);
+    }
+
+    @Test
+    public void deveTestarAdicionarFeedbackComSucesso() throws RegraDeNegocioException {
+        // SETUP
+        Integer idAluno = 22;
+        TipoFeedback tipoFeedback = TipoFeedback.POSITIVO;
+        ComentarioEntity comentarioEntity = getComentarioEntity();
+        ComentarioDTO comentarioDTO = getComentarioDTO();
+        UsuarioEntity usuarioEntity = getUsuarioEntity();
+
+        when(usuarioService.findById(anyInt())).thenReturn(usuarioEntity);
+        when(comentarioRepository.save(any())).thenReturn(comentarioEntity);
+
+        // ACT
+        ComentarioCreateDTO comentarioCreateDTO1 = comentarioService.adicionarFeedback(comentarioDTO, idAluno, tipoFeedback);
+
+        // ASSERT
+        assertNotNull(comentarioCreateDTO1);
+        assertEquals("Pontos de melhoria...", comentarioCreateDTO1.getComentario());
+    }
+
+    @Test
+    public void deveTestarComentarioDoAlunoComSucesso() {
+        // SETUP
+        Integer pagina = 2;
+        Integer tamanho = 9;
+        Integer idAluno = 38;
+        ComentarioDTO comentarioDTO = getComentarioDTO();
+        ComentarioEntity comentarioEntity = getComentarioEntity();
+        Page<ComentarioEntity> comentarioEntityPageDTO = new PageImpl<>(List.of(comentarioEntity));
+
+        when(comentarioRepository.findAllByIdUsuario(any(Pageable.class), anyInt())).thenReturn(comentarioEntityPageDTO);
+
+        // ACT
+        PageDTO<ComentarioDTO> comentarioPageServiceDTO = comentarioService.comentariosDoAluno(pagina, tamanho, idAluno);
+        // ASSERT
+        assertNotNull(comentarioPageServiceDTO);
+    }
 
     @Test
     public void deveTestarlistarComentarioPorAtividadeComSucesso() throws RegraDeNegocioException {
@@ -90,6 +141,22 @@ public class ComentarioServiceTest {
         // ASSERT
         assertNotNull(comentarioDTO);
         assertEquals(1, comentarioDTOList.size());
+    }
+
+    @Test
+    public void DeveTestarListarComentarioPorFeedback() {
+        // SETUP
+        TipoFeedback tipoFeedback = TipoFeedback.POSITIVO;
+        ComentarioEntity comentarioEntity = getComentarioEntity();
+        List<ComentarioEntity> comentarioPageDTO = List.of(comentarioEntity);
+
+        when(comentarioRepository.findAllByStatusComentario(anyInt())).thenReturn(comentarioPageDTO);
+
+        // ACT
+        List<ComentarioDTO> comentarioDTO = comentarioService.listarComentarioPorFeedback(tipoFeedback);
+        // ASSERT
+        assertNotNull(comentarioDTO);
+        assertEquals(true, comentarioDTO.size() > 0);
     }
 
     @Test(expected = RegraDeNegocioException.class)
@@ -121,13 +188,13 @@ public class ComentarioServiceTest {
     }
 
     @Test
-    public void deveTestarRemoverComentarioComSucesso() throws RegraDeNegocioException {
+    public void deveTestarDeleteComSucesso() throws RegraDeNegocioException {
         // Criar variaveis (SETUP)
         Integer idComentario = 4;
 
-        ComentarioEntity comentario = getComentarioEntity();
-        comentario.setIdComentario(idComentario);
-        when(comentarioRepository.findById(anyInt())).thenReturn(Optional.of(comentario));
+        ComentarioEntity comentarioEntity = getComentarioEntity();
+        comentarioEntity.setIdComentario(idComentario);
+        when(comentarioRepository.findById(anyInt())).thenReturn(Optional.of(comentarioEntity));
         // Ação (ACT)
         comentarioService.delete(idComentario);
 
@@ -220,5 +287,21 @@ public class ComentarioServiceTest {
         usuarioEntity.setPontuacaoAluno(100);
 
         return usuarioEntity;
+    }
+
+    public static AtividadeComentarioAvaliacaoDTO getAtividadeComentarioAvaliacaoDTO() {
+        AtividadeComentarioAvaliacaoDTO atividadeComentarioAvaliacaoDTO = new AtividadeComentarioAvaliacaoDTO();
+        atividadeComentarioAvaliacaoDTO.setComentario("Pontos de melhoria...");
+        atividadeComentarioAvaliacaoDTO.setNotaAvalicao(100);
+
+        return atividadeComentarioAvaliacaoDTO;
+    }
+
+    public static AtividadeComentarioAvaliacaoCreateDTO getAtividadeComentarioAvaliacaoCreateDTO() {
+        AtividadeComentarioAvaliacaoCreateDTO atividadeComentarioAvaliacaoCreateDTO = new AtividadeComentarioAvaliacaoCreateDTO();
+        atividadeComentarioAvaliacaoCreateDTO.setComentario("Pontos de melhoria...");
+        atividadeComentarioAvaliacaoCreateDTO.setNotaAvalicao(100);
+
+        return atividadeComentarioAvaliacaoCreateDTO;
     }
 }

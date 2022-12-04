@@ -1,12 +1,12 @@
 package br.com.vemrankser.ranqueamento.service;
 
-import br.com.vemrankser.ranqueamento.dto.AtividadeDTO;
-import br.com.vemrankser.ranqueamento.dto.AtividadeNotaDTO;
-import br.com.vemrankser.ranqueamento.dto.ComentarioDTO;
-import br.com.vemrankser.ranqueamento.dto.PageDTO;
+import br.com.vemrankser.ranqueamento.dto.*;
 import br.com.vemrankser.ranqueamento.entity.AtividadeEntity;
 import br.com.vemrankser.ranqueamento.entity.ComentarioEntity;
+import br.com.vemrankser.ranqueamento.entity.ModuloEntity;
+import br.com.vemrankser.ranqueamento.entity.TrilhaEntity;
 import br.com.vemrankser.ranqueamento.enums.AtividadeStatus;
+import br.com.vemrankser.ranqueamento.enums.StatusModulo;
 import br.com.vemrankser.ranqueamento.exceptions.RegraDeNegocioException;
 import br.com.vemrankser.ranqueamento.repository.AtividadeRepository;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -20,7 +20,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.List;
@@ -39,6 +41,15 @@ public class AtividadeServiceTest {
     private AtividadeService atividadeService;
 
     @Mock
+    private UsuarioService usuarioService;
+
+    @Mock
+    private ModuloService moduloService;
+
+    @Mock
+    private TrilhaService trilhaService;
+
+    @Mock
     private AtividadeRepository atividadeRepository;
 
     private ObjectMapper objectMapper = new ObjectMapper();
@@ -51,28 +62,200 @@ public class AtividadeServiceTest {
         ReflectionTestUtils.setField(atividadeService, "objectMapper", objectMapper);
     }
 
-//    @Test
-//    public void deveTestarlistarAtividadePorIdTrilhaIdModuloComSucesso() throws RegraDeNegocioException {
-//        // Criar variaveis (SETUP)
-//        Integer idTrilha = 1;
-//        Integer idModulo = 2;
-//        Integer pagina = 0;
-//        Integer tamanho = 6;
-//        AtividadeNotaDTO atividadeNotaDTO = getAtividadeNotaDTO();
-//        AtividadeEntity atividadeEntity = getAtividadeEntity();
-////        when(atividadeRepository.listarAtividadePorIdTrilhaIdModulo(any(), anyInt(), anyInt(), AtividadeStatus.CONCLUIDA)).thenReturn((Page<AtividadeNotaDTO>) atividadeEntity);
-//
-//        // Ação (ACT)
-//        PageDTO pageDTO = atividadeService.listarAtividadePorIdTrilhaIdModulo(pagina, tamanho, idTrilha, idModulo, AtividadeStatus.CONCLUIDA);
-//
-//        // Verificação (ASSERT)
-//        assertNotNull(pageDTO);
-////        assertEquals(11, pageDTO.getIdAtividade());
-//
-//    }
+    @Test
+    public void DeveTestarListarAtividadesComSucesso() throws RegraDeNegocioException {
+        // Criar variaveis (SETUP)
+        Integer pagina = 1;
+        Integer tamanho = 9;
+        AtividadeEntity atividadeEntity = getAtividadeEntity();
+        AtividadePaginacaoDTO atividadePaginacaoDTO = getAtividadePaginacaoDTO();
+        AtividadeDTO atividadeDTO = getAtividadeDTO();
+        Page<AtividadeEntity> atividadePageDTO = new PageImpl<>(List.of(atividadeEntity));
+
+        when(atividadeRepository.findAll(any(Pageable.class))).thenReturn(atividadePageDTO);
+
+        // Ação (ACT)
+        AtividadePaginacaoDTO atividadeDTO1 = atividadeService.listarAtividades(pagina, tamanho);
+        // Verificação (ASSERT)
+        assertNotNull(atividadeDTO1);
+        assertEquals(1, atividadeDTO1.getPagina());
+    }
+
+    @Test(expected = RegraDeNegocioException.class)
+    public void DeveTestarListarAtividadesComErro() throws RegraDeNegocioException {
+        // Criar variaveis (SETUP)
+        Integer pagina = 1;
+        Integer tamanho = 9;
+        AtividadeEntity atividadeEntity = getAtividadeEntity();
+        AtividadePaginacaoDTO atividadePaginacaoDTO = getAtividadePaginacaoDTO();
+        AtividadeDTO atividadeDTO = getAtividadeDTO();
+        Page<AtividadeEntity> atividadePageDTO = new PageImpl<>(List.of(atividadeEntity));
+
+        when(atividadeRepository.findAll(any(Pageable.class))).thenReturn(Page.empty());
+
+        // Ação (ACT)
+        AtividadePaginacaoDTO atividadeDTO1 = atividadeService.listarAtividades(pagina, tamanho);
+    }
 
     @Test
-    public void deveTestarbuscarPorIdAtividadeComSucesso() throws RegraDeNegocioException {
+    public void deveTestarCreateAtividadeComSucesso() throws RegraDeNegocioException {
+        // Criar variaveis (SETUP)
+        Integer idModulo = 22;
+        UsuarioLogadoDTO usuarioLogadoDTO = getUsuarioLogadoDTO();
+        AtividadeCreateDTO atividadeCreateDTO = getAtividadeCreateDTO();
+        ModuloEntity moduloEntity = getModuloEntity();
+        TrilhaEntity trilhaEntity = getTrilhaEntity();
+
+        when(usuarioService.getLoggedUser()).thenReturn(usuarioLogadoDTO);
+        when(moduloService.buscarPorIdModulo(anyInt())).thenReturn(moduloEntity);
+        when(trilhaService.findById(anyInt())).thenReturn(trilhaEntity);
+
+        // Ação (ACT)
+        AtividadeDTO atividadeDTOCreate = atividadeService.createAtividade(atividadeCreateDTO, idModulo, List.of(1, 2, 3));
+        // Verificação (ASSERT)
+        assertNotNull(atividadeDTOCreate);
+        assertEquals("Spring Data",atividadeDTOCreate.getTitulo());
+    }
+
+    @Test
+    public void deveTestarColocarAtividadeComoConcluidaComSucesso() throws RegraDeNegocioException {
+        // Criar variaveis (SETUP)
+        Integer idAtividade = 11;
+        AtividadeEntity atividadeEntity = getAtividadeEntity();
+        AtividadeDTO atividadeDTO = getAtividadeDTO();
+
+        when(atividadeRepository.findById(anyInt())).thenReturn(Optional.of(atividadeEntity));
+        when(atividadeRepository.save(any())).thenReturn(atividadeEntity);
+
+        // Ação (ACT)
+        AtividadeDTO atividadeDTO1 = atividadeService.colocarAtividadeComoConcluida(atividadeDTO.getIdAtividade());
+
+        // Verificação (ASSERT)
+        assertNotNull(atividadeDTO1);
+    }
+
+    @Test(expected = RegraDeNegocioException.class)
+    public void deveTestarListarAtividadePorStatusComErro() throws RegraDeNegocioException {
+        // Criar variaveis (SETUP)
+        Integer pagina = 0;
+        Integer tamanho = 6;
+        Integer idTrilha = 8;
+        AtividadeStatus atividadeStatus = AtividadeStatus.CONCLUIDA;
+        AtividadeTrilhaDTO atividadeTrilhaDTO = getAtividadeTrilhaDTO();
+        Page<AtividadeTrilhaDTO> atividadeTrilhaDTOS = new PageImpl<>(List.of(atividadeTrilhaDTO));
+
+        when(atividadeRepository.listarAtividadePorStatus(any(Pageable.class), anyInt(), any())).thenReturn(Page.empty());
+
+        // Ação (ACT)
+        atividadeService.listarAtividadePorStatus(pagina, tamanho, idTrilha, atividadeStatus);
+    }
+
+    @Test
+    public void deveTestarListarAtividadePorStatusComSucesso() throws RegraDeNegocioException {
+        // Criar variaveis (SETUP)
+        Integer pagina = 0;
+        Integer tamanho = 6;
+        Integer idTrilha = 8;
+        AtividadeStatus atividadeStatus = AtividadeStatus.CONCLUIDA;
+        AtividadeTrilhaDTO atividadeTrilhaDTO = getAtividadeTrilhaDTO();
+        Page<AtividadeTrilhaDTO> atividadeTrilhaDTOS = new PageImpl<>(List.of(atividadeTrilhaDTO));
+
+        when(atividadeRepository.listarAtividadePorStatus(any(Pageable.class), anyInt(), any())).thenReturn(atividadeTrilhaDTOS);
+
+        // Ação (ACT)
+        PageDTO listarPorStatus = atividadeService.listarAtividadePorStatus(pagina, tamanho, idTrilha, atividadeStatus);
+        // Verificação (ASSERT)
+        assertNotNull(listarPorStatus);
+        assertEquals(1, listarPorStatus.getTotalElementos());
+    }
+
+    @Test(expected = RegraDeNegocioException.class)
+    public void deveTestarListarAtividadeMuralInstrutorComErro() throws RegraDeNegocioException {
+        // Criar variaveis (SETUP)
+        Integer pagina = 0;
+        Integer tamanho = 6;
+        Integer idTrilha = 8;
+        AtividadeMuralDTO atividadeMuralDTO = getAtividadeMuralDTO();
+        Page<AtividadeMuralDTO> atividadeMuralInstrutorDTO = new PageImpl<>(List.of(atividadeMuralDTO));
+
+        when(atividadeRepository.listarAtividadeMuralInstrutor(any(Pageable.class), anyInt())).thenReturn(Page.empty());
+
+        // Ação (ACT)
+        atividadeService.listarAtividadeMuralInstrutor(pagina, tamanho, idTrilha);
+    }
+
+    @Test
+    public void deveTestarListarAtividadeMuralInstrutorComSucesso() throws RegraDeNegocioException {
+        // Criar variaveis (SETUP)
+        Integer pagina = 0;
+        Integer tamanho = 6;
+        Integer idTrilha = 8;
+        AtividadeMuralDTO atividadeMuralDTO = getAtividadeMuralDTO();
+        Page<AtividadeMuralDTO> atividadeMuralInstrutorDTO = new PageImpl<>(List.of(atividadeMuralDTO));
+
+        when(atividadeRepository.listarAtividadeMuralInstrutor(any(Pageable.class), anyInt())).thenReturn(atividadeMuralInstrutorDTO);
+
+        // Ação (ACT)
+        PageDTO listarAtividadeMuralInstrutor = atividadeService.listarAtividadeMuralInstrutor(pagina, tamanho, idTrilha);
+        // Verificação (ASSERT)
+        assertNotNull(listarAtividadeMuralInstrutor);
+        assertEquals(1, listarAtividadeMuralInstrutor.getTotalElementos());
+    }
+
+    @Test
+    public void deveTestarListarAtividadeMuralAlunoComSucesso() throws RegraDeNegocioException {
+        // Criar variaveis (SETUP)
+        Integer pagina = 0;
+        Integer tamanho = 6;
+        Integer idAluno = 8;
+        AtividadeStatus atividadeStatus = AtividadeStatus.CONCLUIDA;
+        AtividadeMuralAlunoDTO atividadeMuralAlunoDTO = getAtividadeMuralAlunoDTO();
+        Page<AtividadeMuralAlunoDTO> atividadeMuralAlunoPage = new PageImpl<>(List.of(atividadeMuralAlunoDTO));
+
+        when(atividadeRepository.listarAtividadeMuralAluno(anyInt(), any(), any(Pageable.class))).thenReturn(atividadeMuralAlunoPage);
+
+        // Ação (ACT)
+        PageDTO listarAtividadeMuralAluno = atividadeService.listarAtividadeMuralAluno(pagina, tamanho, idAluno, atividadeStatus);
+        // Verificação (ASSERT)
+        assertNotNull(listarAtividadeMuralAluno);
+        assertEquals(1, listarAtividadeMuralAluno.getTotalElementos());
+    }
+
+    @Test
+    public void deveTestarListarAtividadePorIdTrilhaIdModuloComSucesso() throws RegraDeNegocioException {
+        // Criar variaveis (SETUP)
+        Integer idTrilha = 1;
+        Integer idModulo = 2;
+        Integer pagina = 0;
+        Integer tamanho = 6;
+        AtividadeNotaPageDTO atividadeNotaPageDTO = getAtividadeNotaPageDTO();
+        Page<AtividadeNotaPageDTO> pageDTO = new PageImpl<>(List.of(atividadeNotaPageDTO));
+        when(atividadeRepository.listarAtividadePorIdTrilhaIdModulo(any(Pageable.class), anyInt(), anyInt(), any())).thenReturn(pageDTO);
+
+        // Ação (ACT)
+        PageDTO pageDTO1 = atividadeService.listarAtividadePorIdTrilhaIdModulo(pagina, tamanho, idTrilha, idModulo, AtividadeStatus.CONCLUIDA);
+
+        // Verificação (ASSERT)
+        assertNotNull(pageDTO1);
+        assertEquals(1, pageDTO1.getTotalElementos());
+
+    }
+
+    @Test(expected = RegraDeNegocioException.class)
+    public void deveTestarBuscarPorIdAtividadeComErro() throws RegraDeNegocioException {
+        // Criar variaveis (SETUP)
+        Integer idAtividade = 11;
+        AtividadeEntity atividadeEntity = getAtividadeEntity();
+        atividadeEntity.setIdAtividade(idAtividade);
+        when(atividadeRepository.findById(anyInt())).thenReturn(Optional.empty());
+
+        // Ação (ACT)
+        AtividadeDTO atividadeDTO = atividadeService.findById(idAtividade);
+
+    }
+
+    @Test
+    public void deveTestarBuscarPorIdAtividadeComSucesso() throws RegraDeNegocioException {
         // Criar variaveis (SETUP)
         Integer idAtividade = 11;
         AtividadeEntity atividadeEntity = getAtividadeEntity();
@@ -120,6 +303,15 @@ public class AtividadeServiceTest {
         return atividadeDTO;
     }
 
+    public static AtividadeCreateDTO getAtividadeCreateDTO() {
+        AtividadeCreateDTO atividadeCreateDTO = new AtividadeCreateDTO();
+        atividadeCreateDTO.setIdModulo(3);
+        atividadeCreateDTO.setTitulo("Spring Data");
+        atividadeCreateDTO.setPesoAtividade(2);
+
+        return atividadeCreateDTO;
+    }
+
     public static AtividadeEntity getAtividadeEntity() {
         AtividadeEntity atividadeEntity = new AtividadeEntity();
 
@@ -140,4 +332,83 @@ public class AtividadeServiceTest {
 
         return atividadeNotaDTO;
     }
+
+    public static AtividadeNotaPageDTO getAtividadeNotaPageDTO () {
+        AtividadeNotaPageDTO atividadeNotaPageDTO = new AtividadeNotaPageDTO();
+
+        atividadeNotaPageDTO.setIdAtividade(11);
+        atividadeNotaPageDTO.setNota(100);
+        atividadeNotaPageDTO.setNome("Java OO");
+
+        return atividadeNotaPageDTO;
+    }
+
+    public static AtividadeMuralAlunoDTO getAtividadeMuralAlunoDTO() {
+        AtividadeMuralAlunoDTO atividadeMuralAlunoDTO = new AtividadeMuralAlunoDTO();
+        atividadeMuralAlunoDTO.setIdAtividade(11);
+        atividadeMuralAlunoDTO.setPesoAtividade(2);
+        atividadeMuralAlunoDTO.setTitulo("Java OO");
+        atividadeMuralAlunoDTO.setStatusAtividade(AtividadeStatus.CONCLUIDA);
+
+        return atividadeMuralAlunoDTO;
+    }
+
+    public static AtividadeMuralDTO getAtividadeMuralDTO() {
+        AtividadeMuralDTO atividadeMuralDTO = new AtividadeMuralDTO();
+        atividadeMuralDTO.setIdAtividade(11);
+        atividadeMuralDTO.setPesoAtividade(2);
+        atividadeMuralDTO.setTitulo("Java OO");
+        atividadeMuralDTO.setStatusAtividade(AtividadeStatus.CONCLUIDA);
+
+        return atividadeMuralDTO;
+    }
+
+    public static AtividadeTrilhaDTO getAtividadeTrilhaDTO() {
+        AtividadeTrilhaDTO atividadeTrilhaDTO = new AtividadeTrilhaDTO();
+        atividadeTrilhaDTO.setIdAtividade(11);
+        atividadeTrilhaDTO.setPesoAtividade(2);
+        atividadeTrilhaDTO.setTitulo("Java OO");
+        atividadeTrilhaDTO.setNomeInstrutor("Robert Plant");
+
+        return atividadeTrilhaDTO;
+    }
+
+    public static AtividadePaginacaoDTO getAtividadePaginacaoDTO() {
+        AtividadePaginacaoDTO atividadePaginacaoDTO = new AtividadePaginacaoDTO();
+        atividadePaginacaoDTO.setElementos(List.of(1,2,3,4,5));
+        atividadePaginacaoDTO.setPagina(0);
+        atividadePaginacaoDTO.setQuantidadePaginas(3);
+        atividadePaginacaoDTO.setTamanho(5);
+        atividadePaginacaoDTO.setTotalElementos(10L);
+
+        return atividadePaginacaoDTO;
+    }
+
+    public static UsuarioLogadoDTO getUsuarioLogadoDTO() {
+        UsuarioLogadoDTO usuarioLogadoDTO = new UsuarioLogadoDTO();
+        usuarioLogadoDTO.setIdUsuario(11);
+        usuarioLogadoDTO.setNome("Robert Plant");
+        usuarioLogadoDTO.setTipoPerfil(2);
+
+        return usuarioLogadoDTO;
+    }
+
+    public static ModuloEntity getModuloEntity() {
+        ModuloEntity moduloEntity = new ModuloEntity();
+        moduloEntity.setIdModulo(22);
+        moduloEntity.setNome("Spring Data");
+        moduloEntity.setStatusModulo(StatusModulo.S);
+
+        return moduloEntity;
+    }
+
+    public static TrilhaEntity getTrilhaEntity() {
+        TrilhaEntity trilhaEntity = new TrilhaEntity();
+        trilhaEntity.setIdTrilha(1);
+        trilhaEntity.setNome("Backend");
+
+        return trilhaEntity;
+    }
+
+
 }
